@@ -13,12 +13,25 @@ import {
 } from "@/components/ui/sheet";
 import { PlusIcon, Trash2Icon } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { checkSchema } from "../api/checkSchema";
 
 export function AddItemSheet() {
-  const { register, control, handleSubmit } = useForm();
+  const { register, control, handleSubmit } = useForm<z.infer<typeof checkSchema>>({
+    resolver: zodResolver(checkSchema),
+    defaultValues: {
+      title: "",
+      items: [
+        {
+          content: "",
+        },
+      ],
+    },
+  });
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "item",
+    name: "items",
   });
 
   const onSubmit = (data: any) => {
@@ -49,7 +62,7 @@ export function AddItemSheet() {
             </Button>
             {fields.map((field, index) => (
               <div key={field.id} className="flex items-center gap-4">
-                <Input {...register(`item.${index}.number`)} />
+                <Input {...register(`items.${index}.content`)} />
                 <Trash2Icon
                   className="w-6 h-6 cursor-pointer opacity-30 hover:opacity-100 transition-opacity"
                   onClick={() => remove(index)}
