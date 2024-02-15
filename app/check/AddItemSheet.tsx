@@ -14,11 +14,14 @@ import {
 import { PlusIcon, Trash2Icon } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { checkSchema } from "../api/checkSchema";
+import { CheckSchemaType, checkSchema } from "../api/checkSchema";
+import axios from "axios";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
+import Link from "next/link";
 
 export function AddItemSheet() {
-  const { register, control, handleSubmit } = useForm<z.infer<typeof checkSchema>>({
+  const { register, control, handleSubmit, reset } = useForm<CheckSchemaType>({
     resolver: zodResolver(checkSchema),
     defaultValues: {
       title: "",
@@ -28,14 +31,38 @@ export function AddItemSheet() {
         },
       ],
     },
+    mode: "onChange",
   });
   const { fields, append, remove } = useFieldArray({
     control,
     name: "items",
   });
+  const { toast } = useToast();
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: CheckSchemaType) => {
     console.log(data);
+    // TODO: 인스턴스 만들기
+    try {
+      const response = await axios.post("/api/checks", data);
+      if (response.status === 201) {
+        toast({
+          title: "성공",
+          description: "등록한 주제로 템플릿을 만들어 보세요.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "네트워크 에러",
+        description: "잠시후 다시 시도해 주세요.",
+        action: (
+          <ToastAction altText="문의하기">
+            {/* TODO: contact 페이지 추가하기 */}
+            <Link href="/contact">문의하기</Link>
+          </ToastAction>
+        ),
+      });
+    }
+    reset();
   };
 
   return (
