@@ -3,7 +3,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -11,7 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { PlusIcon, Trash2Icon } from "lucide-react";
+import { AlertCircle, PlusIcon, Trash2Icon } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ActivityType, activitySchema } from "../../api/checkSchema";
@@ -21,10 +20,21 @@ import Link from "next/link";
 import { useState } from "react";
 import { useSession } from "@supabase/auth-helpers-react";
 import { supabase } from "@/app/utils/supabase/client";
+import { useQueryClient } from "@tanstack/react-query";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import Spinner from "@/app/components/Spinner";
 
 export function AddSheet() {
   const [duplicateError, setDuplicateError] = useState("");
-  const { register, control, handleSubmit, reset, getValues } = useForm<ActivityType>({
+  const [open, setOpen] = useState(false);
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    getValues,
+    formState: { errors, isSubmitting },
+  } = useForm<ActivityType>({
     resolver: zodResolver(activitySchema),
     defaultValues: {
       name: "",
@@ -35,7 +45,7 @@ export function AddSheet() {
         },
       ],
     },
-    mode: "onChange",
+    mode: "onBlur",
   });
   const { fields, append, remove } = useFieldArray({
     control,
@@ -43,6 +53,7 @@ export function AddSheet() {
   });
   const session = useSession();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const onSubmit = async (data: ActivityType) => {
     console.log(data);
@@ -64,6 +75,7 @@ export function AddSheet() {
           </ToastAction>
         ),
       });
+      return;
     }
 
     const questions = getValues("questions").map((question) => ({
@@ -83,6 +95,7 @@ export function AddSheet() {
           </ToastAction>
         ),
       });
+      return;
     }
 
     toast({
@@ -90,7 +103,9 @@ export function AddSheet() {
       description: "등록한 활동으로 템플릿을 만들어 보세요.",
     });
 
+    queryClient.invalidateQueries({ queryKey: ["activities"] });
     reset();
+    setOpen(false);
   };
 
   const checkDuplicateActivity = async () => {
@@ -115,7 +130,7 @@ export function AddSheet() {
   };
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       {session && (
         <SheetTrigger asChild>
           <Button variant="outline">
@@ -134,17 +149,23 @@ export function AddSheet() {
               <Label htmlFor="title">이름</Label>
               <Input id="title" placeholder="역할극" {...register("name")} />
               {duplicateError && <p className="text-xs text-red-500">{duplicateError}</p>}
+              {errors.name && (
+                <Alert variant="destructive" className="text-sm">
+                  <AlertCircle className="w-4 h-4" />
+                  <AlertDescription>{errors.name.message}</AlertDescription>
+                </Alert>
+              )}
               <Button variant="secondary" onClick={checkDuplicateActivity}>
                 중복 검사
               </Button>
             </div>
             <Button type="button" variant="ghost" onClick={() => append({ content: "" })}>
               <PlusIcon className="h-4 w-4 mr-1" />
-              항목 추가하기
+              질문 추가하기
             </Button>
             {fields.map((field, index) => (
               <div key={field.id} className="flex items-center gap-4">
-                <Input {...register(`questions.${index}.content`)} />
+                <Input placeholder="새로운 질문" {...register(`questions.${index}.content`)} />
                 <Trash2Icon
                   className="w-6 h-6 cursor-pointer opacity-30 hover:opacity-100 transition-opacity"
                   onClick={() => remove(index)}
@@ -153,9 +174,10 @@ export function AddSheet() {
             ))}
           </div>
           <SheetFooter>
-            <SheetClose asChild>
-              <Button type="submit">저장하기</Button>
-            </SheetClose>
+            <Button type="submit" disabled={isSubmitting} className="flex gap-2">
+              {isSubmitting && <Spinner />}
+              저장하기
+            </Button>
           </SheetFooter>
         </form>
       </SheetContent>

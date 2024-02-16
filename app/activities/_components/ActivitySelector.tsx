@@ -14,21 +14,16 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useState } from "react";
 import { AddSheet } from "./AddSheet";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/app/utils/supabase/client";
+import { Tables } from "@/app/types/schema";
 
-const ActivitySelector = () => {
+interface Props {
+  activities?: Array<Tables<"activities">>;
+  handleSelectedActivityId: (id: number) => void;
+}
+
+const ActivitySelector = ({ activities, handleSelectedActivityId }: Props) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
-
-  const { data: activities } = useQuery({
-    queryKey: ["activities"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("activities").select("*");
-      if (error) throw new Error(error.message);
-      return data;
-    },
-  });
 
   return (
     <div className="flex items-center gap-2">
@@ -60,6 +55,7 @@ const ActivitySelector = () => {
                   value={item.name}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
+                    handleSelectedActivityId(item.id);
                     setOpen(false);
                   }}
                 >
