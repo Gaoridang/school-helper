@@ -34,23 +34,55 @@ export interface Database {
   }
   public: {
     Tables: {
-      activities: {
+      activity: {
         Row: {
           created_at: string
+          description: string | null
           id: number
           name: string
         }
         Insert: {
           created_at?: string
+          description?: string | null
           id?: number
           name: string
         }
         Update: {
           created_at?: string
+          description?: string | null
           id?: number
           name?: string
         }
         Relationships: []
+      }
+      question: {
+        Row: {
+          activity_id: number | null
+          content: string
+          created_at: string
+          id: number
+        }
+        Insert: {
+          activity_id?: number | null
+          content: string
+          created_at?: string
+          id?: number
+        }
+        Update: {
+          activity_id?: number | null
+          content?: string
+          created_at?: string
+          id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "question_activity_id_fkey"
+            columns: ["activity_id"]
+            isOneToOne: false
+            referencedRelation: "activity"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {
