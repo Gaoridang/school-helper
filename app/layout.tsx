@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import QueryClientProvider from "./QueryClientProvider";
+import SessionContextProvider from "./SessionContextProvider";
 
 const pretendard = localFont({
   src: [
@@ -38,15 +39,17 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={pretendard.className}>
         <QueryClientProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <main className="m-5">{children}</main>
-            <Toaster />
-          </ThemeProvider>
+          <SessionContextProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <main className="m-5">{children}</main>
+              <Toaster />
+            </ThemeProvider>
+          </SessionContextProvider>
         </QueryClientProvider>
       </body>
     </html>
