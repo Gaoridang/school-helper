@@ -14,21 +14,22 @@ import {
 import { PlusIcon, Trash2Icon } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckSchemaType, checkSchema } from "../../api/checkSchema";
-import axios from "axios";
+import { ActivityType, activitySchema } from "../../api/checkSchema";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import Link from "next/link";
-import { supabase } from "@/app/utils/supabase/client";
 import { useState } from "react";
+import { useSession } from "@supabase/auth-helpers-react";
+import { supabase } from "@/app/utils/supabase/client";
 
 export function AddSheet() {
   const [duplicateError, setDuplicateError] = useState("");
-  const { register, control, handleSubmit, reset, getValues } = useForm<CheckSchemaType>({
-    resolver: zodResolver(checkSchema),
+  const { register, control, handleSubmit, reset, getValues } = useForm<ActivityType>({
+    resolver: zodResolver(activitySchema),
     defaultValues: {
-      title: "",
-      items: [
+      name: "",
+      description: "",
+      questions: [
         {
           content: "",
         },
@@ -38,25 +39,24 @@ export function AddSheet() {
   });
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "items",
+    name: "questions",
   });
+  const session = useSession();
   const { toast } = useToast();
 
-  const onSubmit = async (data: CheckSchemaType) => {
+  const onSubmit = async (data: ActivityType) => {
     console.log(data);
-    // TODO: 인스턴스 만들기
-    try {
-      const response = await axios.post("/api/activities", data);
-      if (response.status === 201) {
-        toast({
-          title: "성공",
-          description: "등록한 주제로 템플릿을 만들어 보세요.",
-        });
-      }
-    } catch (error) {
+
+    const { data: activitiesData, error: activitiesError } = await supabase
+      .from("activities")
+      .insert([{ name: getValues("name"), description: getValues("description") }])
+      .select()
+      .single();
+
+    if (activitiesError) {
       toast({
-        title: "네트워크 에러",
-        description: "잠시후 다시 시도해 주세요.",
+        title: "활동 등록에 실패했습니다.",
+        description: "계속될 경우 고객센터로 문의 해주세요.",
         action: (
           <ToastAction altText="문의하기">
             {/* TODO: contact 페이지 추가하기 */}
@@ -65,24 +65,40 @@ export function AddSheet() {
         ),
       });
     }
-    reset();
-  };
 
-  const addActivity = async () => {
-    // TODO: DB 권한 다시 지정하기
-    await checkDuplicateActivity();
-    await supabase
-      .from("activity")
-      .insert([{ name: getValues("title") }])
-      .select();
+    const questions = getValues("questions").map((question) => ({
+      ...question,
+      activity_id: activitiesData?.id,
+    }));
+
+    const { error: QuestionsError } = await supabase.from("questions").insert(questions);
+
+    if (QuestionsError) {
+      toast({
+        title: "질문 등록에 실패했습니다.",
+        description: "계속될 경우 고객센터로 문의 해주세요.",
+        action: (
+          <ToastAction altText="문의하기">
+            <Link href="/contact">문의하기</Link>
+          </ToastAction>
+        ),
+      });
+    }
+
+    toast({
+      title: "성공",
+      description: "등록한 활동으로 템플릿을 만들어 보세요.",
+    });
+
+    reset();
   };
 
   const checkDuplicateActivity = async () => {
     try {
       const { data, error } = await supabase
-        .from("activity")
+        .from("activities")
         .select()
-        .eq("name", getValues("title"));
+        .eq("name", getValues("name"));
 
       if (error) throw error;
       if (data.length > 0) {
@@ -100,11 +116,13 @@ export function AddSheet() {
 
   return (
     <Sheet>
-      <SheetTrigger asChild>
-        <Button variant="outline">
-          <PlusIcon className="h-4 w-4 mr-1 opacity-70" /> 직접 추가하기
-        </Button>
-      </SheetTrigger>
+      {session && (
+        <SheetTrigger asChild>
+          <Button variant="outline">
+            <PlusIcon className="h-4 w-4 mr-1 opacity-70" /> 직접 추가하기
+          </Button>
+        </SheetTrigger>
+      )}
       <SheetContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <SheetHeader>
@@ -114,9 +132,9 @@ export function AddSheet() {
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="title">이름</Label>
-              <Input id="title" placeholder="역할극" {...register("title")} />
+              <Input id="title" placeholder="역할극" {...register("name")} />
               {duplicateError && <p className="text-xs text-red-500">{duplicateError}</p>}
-              <Button variant="secondary" onClick={addActivity}>
+              <Button variant="secondary" onClick={checkDuplicateActivity}>
                 중복 검사
               </Button>
             </div>
@@ -126,7 +144,7 @@ export function AddSheet() {
             </Button>
             {fields.map((field, index) => (
               <div key={field.id} className="flex items-center gap-4">
-                <Input {...register(`items.${index}.content`)} />
+                <Input {...register(`questions.${index}.content`)} />
                 <Trash2Icon
                   className="w-6 h-6 cursor-pointer opacity-30 hover:opacity-100 transition-opacity"
                   onClick={() => remove(index)}

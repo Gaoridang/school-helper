@@ -24,8 +24,7 @@ const ActivitySelector = () => {
   const { data: activities } = useQuery({
     queryKey: ["activities"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("activity").select("*");
-      console.log(data);
+      const { data, error } = await supabase.from("activities").select("*");
       if (error) throw new Error(error.message);
       return data;
     },
@@ -49,7 +48,10 @@ const ActivitySelector = () => {
           <Command>
             <CommandInput placeholder="역할극" />
             <CommandEmpty>
-              <Button>추가하기</Button>
+              <p>
+                우측 버튼을 눌러
+                <br /> 직접 추가해 보세요!
+              </p>
             </CommandEmpty>
             <CommandGroup>
               {activities?.map((item) => (
