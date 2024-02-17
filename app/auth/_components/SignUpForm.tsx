@@ -1,5 +1,7 @@
 import { SignUpType, signUpSchema } from "@/app/api/authSchema";
+import Spinner from "@/app/components/Spinner";
 import { supabase } from "@/app/utils/supabase/client";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
@@ -14,7 +16,8 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import { CheckCircle } from "lucide-react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
 const SignUpForm = () => {
@@ -27,10 +30,11 @@ const SignUpForm = () => {
     },
     mode: "onBlur",
   });
-
-  supabase.auth.getUser;
+  const [emailConfirm, setEmailConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = async (values: SignUpType) => {
+    setLoading(true);
     const validation = signUpSchema.safeParse(values);
     if (!validation.success) {
       console.log(validation.error.errors);
@@ -49,14 +53,16 @@ const SignUpForm = () => {
         title: "회원가입 실패",
         description: "학교를 등록해주세요.",
       });
+    } else if (data.user?.identities?.length === 0) {
+      toast({
+        title: "회원가입 실패",
+        description: "이미 가입된 이메일입니다.",
+      });
     } else {
-      if (data.user?.identities?.length === 0) {
-        toast({
-          title: "회원가입 실패",
-          description: "이미 가입된 이메일입니다.",
-        });
-      }
+      setEmailConfirm(true);
     }
+
+    setLoading(false);
   };
 
   return (
@@ -114,9 +120,18 @@ const SignUpForm = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit">회원가입</Button>
+            <Button type="submit" disabled={loading} className="flex items-center space-x-2">
+              {loading && <Spinner />} <span>회원가입</span>
+            </Button>
           </form>
         </Form>
+        {emailConfirm && (
+          <Alert>
+            <CheckCircle className="w-4 h-4" />
+            <AlertTitle>이메일 인증</AlertTitle>
+            <AlertDescription>회원가입 시 입력한 이메일을 확인해주세요.</AlertDescription>
+          </Alert>
+        )}
       </CardContent>
     </Card>
   );
