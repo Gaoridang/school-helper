@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import QueryClientProvider from "./QueryClientProvider";
 import SessionContextProvider from "./SessionContextProvider";
+import Navbar from "./Navbar";
 
 const pretendard = localFont({
   src: [
@@ -46,7 +47,8 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <main className="m-5">{children}</main>
+              <Navbar />
+              <main className="p-5">{children}</main>
               <Toaster />
             </ThemeProvider>
           </SessionContextProvider>
