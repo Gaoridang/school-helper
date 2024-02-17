@@ -3,7 +3,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -47,28 +46,44 @@ const QuestionsTable = ({ activityId }: Props) => {
   });
 
   return (
-    <Table>
-      <TableCaption>해당 활동에 대한 질문을 선택하세요.</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead>
-            <Checkbox id="select-all" />
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {questions?.map((question) => (
-          <TableRow key={question.id}>
-            <TableCell>
-              <Checkbox id={question.id.toString()} />
-            </TableCell>
-            <TableCell>
-              <p>{question.content}</p>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <div className="rounded-md border mt-5 max-w-xl">
+      {!activityId ? (
+        <p className="p-4 text-sm">활동을 선택하세요</p>
+      ) : questions?.length === 0 ? (
+        <p className="p-4 text-sm">저장된 질문이 없습니다.</p>
+      ) : (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>
+                <Checkbox id="select-all" />
+              </TableHead>
+              <TableHead>
+                <span>질문</span>
+              </TableHead>
+              <TableHead className="text-right w-48">
+                <span>태그</span>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {questions?.map((question) => (
+              <TableRow key={question.id}>
+                <TableCell>
+                  <Checkbox id={question.id.toString()} />
+                </TableCell>
+                <TableCell>
+                  <p>{question.content}</p>
+                </TableCell>
+                <TableCell className="text-right">
+                  <p>인</p>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
+    </div>
   );
 };
 
