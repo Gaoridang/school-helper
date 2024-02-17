@@ -1,18 +1,19 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 
 const AuthPage = () => {
+  const [email, setEmail] = useState("");
+  const sendConfirmEmail = async () => {
+    await axios.post("/api/send", email);
+  };
+
   return (
     <div className="flex justify-center items-center p-10">
       <Tabs defaultValue="signin" className="w-[400px]">
@@ -28,7 +29,13 @@ const AuthPage = () => {
             <CardContent className="space-y-2">
               <div className="space-y-1">
                 <Label htmlFor="name">이메일</Label>
-                <Input id="name" defaultValue="Pedro Duarte" />
+                <Input
+                  id="name"
+                  placeholder="example@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <Button onClick={sendConfirmEmail}>이메일 확인</Button>
               </div>
               <div className="space-y-1">
                 <Label htmlFor="username">비밀번호</Label>
