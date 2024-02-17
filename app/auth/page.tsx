@@ -11,7 +11,15 @@ import axios from "axios";
 const AuthPage = () => {
   const [email, setEmail] = useState("");
   const sendConfirmEmail = async () => {
-    await axios.post("/api/send", email);
+    await axios.post(
+      "/api/send",
+      { email },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
   };
 
   return (
