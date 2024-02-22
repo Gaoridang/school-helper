@@ -1,4 +1,6 @@
-import { supabase } from "@/app/utils/supabase/client";
+"use client";
+
+import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
@@ -8,82 +10,78 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ToastAction } from "@/components/ui/toast";
-import { toast } from "@/components/ui/use-toast";
-import { useQuery } from "@tanstack/react-query";
-import { Link } from "lucide-react";
-import React from "react";
+import { CheckedState } from "@radix-ui/react-checkbox";
+import React, { useState } from "react";
+import { Tables } from "@/app/types/schema";
 
 interface Props {
-  activityId?: number;
+  questions: Tables<"questions">[];
 }
 
-const QuestionsTable = ({ activityId }: Props) => {
-  const { data: questions, error } = useQuery({
-    queryKey: ["questions", activityId],
-    queryFn: async () => {
-      if (!activityId) {
-        return [];
-      }
-      const { data, error } = await supabase
-        .from("questions")
-        .select("*")
-        .eq("activity_id", activityId);
-      if (error) {
-        toast({
-          title: "네트워크 에러",
-          description: "계속될 경우 고객센터로 문의 해주세요.",
-          action: (
-            <ToastAction altText="문의하기">
-              <Link href="/contact">문의하기</Link>
-            </ToastAction>
-          ),
-        });
-      } else {
-        return data;
-      }
-    },
-  });
+const QuestionsTable = ({ questions }: Props) => {
+  const [checkedIds, setCheckedIds] = useState<number[]>([]);
+
+  const handleCheck = (checked: CheckedState, id: number) => {
+    if (checked) {
+      setCheckedIds((prev) => [...prev, id]);
+    } else {
+      setCheckedIds((prev) => prev.filter((checkedId) => checkedId !== id));
+    }
+  };
+
+  const checkAll = (checked: CheckedState) => {
+    if (checked) {
+      const allIds = questions.map((question) => question.id) ?? [];
+      setCheckedIds(allIds);
+    } else {
+      setCheckedIds([]);
+    }
+  };
+
+  const isAllChecked = questions.length === checkedIds.length;
+  const isSomeChecked = questions.length > checkedIds.length && checkedIds;
+  const allCheckState: CheckedState = isAllChecked ? true : isSomeChecked ? "indeterminate" : false;
 
   return (
-    <div className="rounded-md border mt-5 max-w-xl">
-      {!activityId ? (
-        <p className="p-4 text-sm">활동을 선택하세요</p>
-      ) : questions?.length === 0 ? (
-        <p className="p-4 text-sm">저장된 질문이 없습니다.</p>
-      ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>
-                <Checkbox id="select-all" />
-              </TableHead>
-              <TableHead>
-                <span>질문</span>
-              </TableHead>
-              <TableHead className="text-right w-48">
-                <span>태그</span>
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {questions?.map((question) => (
-              <TableRow key={question.id}>
-                <TableCell>
-                  <Checkbox id={question.id.toString()} />
-                </TableCell>
-                <TableCell>
-                  <p>{question.content}</p>
-                </TableCell>
-                <TableCell className="text-right">
-                  <p>인</p>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      )}
-    </div>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>
+            <Checkbox
+              checked={allCheckState}
+              name="select-all"
+              onCheckedChange={(checked) => checkAll(checked)}
+            />
+          </TableHead>
+          <TableHead>
+            <span>질문</span>
+          </TableHead>
+          <TableHead className="text-right pl-0">
+            <span className="whitespace-nowrap">태그</span>
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {questions?.map((question) => (
+          <TableRow key={question.id}>
+            <TableCell>
+              <Checkbox
+                name="question"
+                aria-checked={checkedIds.includes(question.id) ? "true" : "false"}
+                checked={checkedIds.includes(question.id)}
+                onCheckedChange={(checked) => handleCheck(checked, question.id)}
+              />
+            </TableCell>
+            <TableCell>
+              <span className="max-w-12 truncate">{question.content}</span>
+            </TableCell>
+            <TableCell className="text-right pl-0">
+              <Badge>인</Badge>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 };
 

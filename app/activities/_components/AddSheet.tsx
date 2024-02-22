@@ -19,10 +19,10 @@ import { ToastAction } from "@/components/ui/toast";
 import Link from "next/link";
 import { useState } from "react";
 import { useSession } from "@supabase/auth-helpers-react";
-import { supabase } from "@/app/utils/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Spinner from "@/app/components/Spinner";
+import { createClient } from "@/app/utils/supabase/client";
 
 export function AddSheet() {
   const [duplicateError, setDuplicateError] = useState("");
@@ -54,6 +54,7 @@ export function AddSheet() {
   const session = useSession();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const supabase = createClient();
 
   const onSubmit = async (data: ActivityType) => {
     console.log(data);
