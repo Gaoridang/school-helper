@@ -4,8 +4,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import QueryClientProvider from "./QueryClientProvider";
-import SessionContextProvider from "./SessionContextProvider";
-import Navbar from "./Navbar";
+import { cn } from "@/lib/utils";
+import { Navbar } from "./Navbar";
 
 const pretendard = localFont({
   src: [
@@ -36,22 +36,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // Why this?
-    <html lang="en" suppressHydrationWarning>
-      <body className={pretendard.className}>
+    <html lang="en" suppressHydrationWarning className="h-full">
+      <body className={cn(pretendard.className)}>
         <QueryClientProvider>
-          <SessionContextProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <Navbar />
-              <main className="p-5">{children}</main>
-              <Toaster />
-            </ThemeProvider>
-          </SessionContextProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navbar />
+            <main className="p-5">{children}</main>
+            <Toaster />
+          </ThemeProvider>
         </QueryClientProvider>
       </body>
     </html>
