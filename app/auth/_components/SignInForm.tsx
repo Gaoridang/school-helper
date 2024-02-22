@@ -1,14 +1,12 @@
 "use client";
 
-import { supabase } from "@/app/utils/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { FormField, FormItem, FormLabel, FormControl, Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { login } from "../actions";
 
 interface FormValues {
   email: string;
@@ -22,27 +20,6 @@ const SignInForm = () => {
       password: "",
     },
   });
-  const router = useRouter();
-
-  const onSubmit = async (values: FormValues) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: values.email,
-      password: values.password,
-    });
-
-    if (error) {
-      toast({
-        title: "로그인 실패",
-        description: "아이디 혹은 비밀번호를 확인해주세요.",
-      });
-    } else {
-      toast({
-        title: data.user.email,
-        description: "로그인 성공",
-      });
-      router.push("/");
-    }
-  };
 
   return (
     <Card>
@@ -51,7 +28,7 @@ const SignInForm = () => {
       </CardHeader>
       <CardContent className="space-y-2">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="grid space-y-4">
+          <form className="grid space-y-4">
             <FormField
               name="email"
               control={form.control}
@@ -77,7 +54,7 @@ const SignInForm = () => {
               )}
             />
             <div className="flex space-x-2">
-              <Button type="submit">로그인</Button>
+              <Button formAction={login}>로그인</Button>
               <Button variant="ghost">비밀번호 재설정</Button>
             </div>
           </form>

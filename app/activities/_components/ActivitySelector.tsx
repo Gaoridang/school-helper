@@ -1,7 +1,6 @@
 "use client";
 
 import { Check, ChevronsUpDown } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,27 +13,32 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useState } from "react";
 import { AddSheet } from "./AddSheet";
+import { useRouter } from "next/navigation";
 import { Tables } from "@/app/types/schema";
+import { createClient } from "@/app/utils/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 
-interface Props {
-  activities?: Array<Tables<"activities">>;
-  handleSelectedActivityId: (id: number) => void;
-}
-
-const ActivitySelector = ({ activities, handleSelectedActivityId }: Props) => {
+const ActivitySelector = () => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
+  const router = useRouter();
+
+  const supabase = createClient();
+  const { data: activities } = useQuery({
+    queryKey: ["activities"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("activities").select("*");
+      if (error) throw error;
+
+      return data;
+    },
+  });
 
   return (
     <div className="flex items-center gap-2">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-[200px] justify-between"
-          >
+          <Button variant="outline" role="combobox" aria-expanded={open}>
             {value ? activities?.find((item) => item.name === value)?.name : "활동"}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
@@ -55,7 +59,7 @@ const ActivitySelector = ({ activities, handleSelectedActivityId }: Props) => {
                   value={item.name}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
-                    handleSelectedActivityId(item.id);
+                    router.push(`/activities/${item.id}`);
                     setOpen(false);
                   }}
                 >

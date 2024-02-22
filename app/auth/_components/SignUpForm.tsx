@@ -1,6 +1,8 @@
+"use client";
+
 import { SignUpType, signUpSchema } from "@/app/api/authSchema";
 import Spinner from "@/app/components/Spinner";
-import { supabase } from "@/app/utils/supabase/client";
+import { createClient } from "@/app/utils/supabase/client";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -30,11 +32,10 @@ const SignUpForm = () => {
     },
     mode: "onBlur",
   });
-  const [emailConfirm, setEmailConfirm] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const isLoading = form.formState.isSubmitting;
+  const supabase = createClient();
 
   const onSubmit = async (values: SignUpType) => {
-    setLoading(true);
     const validation = signUpSchema.safeParse(values);
     if (!validation.success) {
       console.log(validation.error.errors);
@@ -58,11 +59,7 @@ const SignUpForm = () => {
         title: "회원가입 실패",
         description: "이미 가입된 이메일입니다.",
       });
-    } else {
-      setEmailConfirm(true);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -120,12 +117,12 @@ const SignUpForm = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={loading} className="flex items-center space-x-2">
-              {loading && <Spinner />} <span>회원가입</span>
+            <Button type="submit" disabled={isLoading} className="flex items-center space-x-2">
+              {isLoading && <Spinner />} <span>회원가입</span>
             </Button>
           </form>
         </Form>
-        {emailConfirm && (
+        {form.formState.isSubmitSuccessful && (
           <Alert>
             <CheckCircle className="w-4 h-4" />
             <AlertTitle>이메일 인증</AlertTitle>
