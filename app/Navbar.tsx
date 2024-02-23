@@ -14,8 +14,13 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { useSession } from "@supabase/auth-helpers-react";
+import useUser from "./_hooks/useUser";
 
 export function Navbar() {
+  const session = useSession();
+  const { data: user } = useUser();
+
   return (
     <div className="p-2 border-b">
       <NavigationMenu>
@@ -39,20 +44,32 @@ export function Navbar() {
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/signin" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                로그인
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/signup" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                회원가입
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
+          {!session ? (
+            <>
+              <NavigationMenuItem>
+                <Link href="/signin" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    로그인
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link href="/signup" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    회원가입
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+            </>
+          ) : (
+            <NavigationMenuItem>
+              <Link href="/signout" legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  {user?.school} {user?.grade} {user?.class_number}
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+          )}
           <NavigationMenuItem>
             <Link href="/contact" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
