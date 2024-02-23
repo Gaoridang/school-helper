@@ -59,15 +59,6 @@ const AssessmentPage = () => {
 
   return (
     <div className="grid gap-4 grid-cols-4">
-      <Link href="/" className="col-span-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>체크리스트 만들기</CardTitle>
-            <CardDescription>학생 개인에게 적합한 체크리스트를 함께 만들어 보아요.</CardDescription>
-          </CardHeader>
-        </Card>
-      </Link>
-
       <Card className="col-span-2">
         <CardHeader>
           <CardTitle>오늘의 점검 현황</CardTitle>
