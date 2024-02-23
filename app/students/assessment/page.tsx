@@ -57,8 +57,8 @@ const AssessmentPage = () => {
   console.log(date?.to?.toISOString(), date?.from?.toISOString());
 
   return (
-    <div className="grid gap-4 md:grid-cols-4">
-      <Card className="col-span-2">
+    <div className="flex flex-col gap-4 md:flex-row">
+      <Card>
         <CardHeader>
           <CardTitle>오늘의 점검 현황</CardTitle>
           <CardDescription>학생 개인에게 적합한 체크리스트를 함께 만들어 보아요.</CardDescription>
@@ -68,7 +68,7 @@ const AssessmentPage = () => {
         </CardContent>
       </Card>
 
-      <Card className="col-span-2">
+      <Card className=" flex-1">
         <CardHeader>
           <CardTitle>이재준</CardTitle>
           <CardDescription>날짜별 체크리스트 달성 현황</CardDescription>

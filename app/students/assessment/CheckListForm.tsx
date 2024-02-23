@@ -93,7 +93,7 @@ const CheckListForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col min-w-[360px]">
         <div className="flex mb-4">
           {days.map((day, dayIndex) => (
             <div key={day} className="flex flex-col gap-2 mr-2 last:mr-0">
