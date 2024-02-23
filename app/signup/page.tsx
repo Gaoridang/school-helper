@@ -4,7 +4,14 @@ import React, { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { SignUpType, SignUpSchema } from "../api/authSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormDescription, FormField, FormItem } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
@@ -26,6 +33,7 @@ import { Label } from "@/components/ui/label";
 import axios from "axios";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { createClient } from "../utils/supabase/client";
+import { useRouter } from "next/navigation";
 
 const formFields = [
   { value: "email", label: "이메일", type: "input" },
@@ -47,6 +55,7 @@ const SignUpPage = () => {
   const [schools, setSchools] = useState<School[]>([]);
   const [selectedSchool, setSelectedSchool] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const router = useRouter();
   const form = useForm<SignUpType>({
     resolver: zodResolver(SignUpSchema),
     defaultValues: {
@@ -100,6 +109,8 @@ const SignUpPage = () => {
         })
         .match({ email: values.email });
     }
+
+    router.push("/signup/confirm-email");
   };
 
   return (
@@ -116,13 +127,16 @@ const SignUpPage = () => {
                   {
                     {
                       input: (
-                        <FormControl>
-                          <Input
-                            {...field}
-                            id={formField.value}
-                            type={formField.value.includes("password") ? "password" : "text"}
-                          />
-                        </FormControl>
+                        <>
+                          <FormLabel htmlFor={formField.value}>{formField.label}</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              id={formField.value}
+                              type={formField.value.includes("password") ? "password" : "text"}
+                            />
+                          </FormControl>
+                        </>
                       ),
                       select: (
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -205,8 +219,8 @@ const SignUpPage = () => {
                       ),
                     }[formField.type]
                   }
-                  <FormDescription>
-                    {fieldState.error?.message && <div>{fieldState.error.message}</div>}
+                  <FormDescription className="text-red-500">
+                    {fieldState.error?.message && fieldState.error.message}
                   </FormDescription>
                 </FormItem>
               )}
