@@ -11,7 +11,6 @@ import { useQuery } from "@tanstack/react-query";
 import { format, subDays } from "date-fns";
 import { ko } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
-import Link from "next/link";
 import React, { useState } from "react";
 import { DateRange } from "react-day-picker";
 import {
@@ -58,7 +57,7 @@ const AssessmentPage = () => {
   console.log(date?.to?.toISOString(), date?.from?.toISOString());
 
   return (
-    <div className="grid gap-4 grid-cols-4">
+    <div className="grid gap-4 md:grid-cols-4">
       <Card className="col-span-2">
         <CardHeader>
           <CardTitle>오늘의 점검 현황</CardTitle>
