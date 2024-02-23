@@ -55,6 +55,41 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          class_number: string | null
+          email: string | null
+          grade: string | null
+          id: string
+          school: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          class_number?: string | null
+          email?: string | null
+          grade?: string | null
+          id: string
+          school?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          class_number?: string | null
+          email?: string | null
+          grade?: string | null
+          id?: string
+          school?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       questions: {
         Row: {
           activity_id: number | null
