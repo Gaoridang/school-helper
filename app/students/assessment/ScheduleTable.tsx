@@ -20,9 +20,11 @@ const ScheduleTable = ({ schedule }: Props) => {
     <Table>
       <TableHeader className="bg-gray-50">
         <TableRow>
-          <TableHead>교시/요일</TableHead>
+          <TableHead className="min-w-[90px]"></TableHead>
           {schedule.schedule.map((day, dayIndex) => (
-            <TableHead key={dayIndex}>{["월", "화", "수", "목", "금"][dayIndex]}</TableHead>
+            <TableHead className="min-w-[80px]" key={dayIndex}>
+              {["월", "화", "수", "목", "금"][dayIndex]}
+            </TableHead>
           ))}
         </TableRow>
       </TableHeader>

@@ -63,7 +63,7 @@ const AssessmentPage = () => {
           <CardTitle>오늘의 점검 현황</CardTitle>
           <CardDescription>학생 개인에게 적합한 체크리스트를 함께 만들어 보아요.</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-auto w-full">
           <CheckListForm />
         </CardContent>
       </Card>
