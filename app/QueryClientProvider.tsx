@@ -6,7 +6,14 @@ import {
 } from "@tanstack/react-query";
 import { PropsWithChildren } from "react";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 0,
+    },
+  },
+});
 
 const QueryClientProvider = ({ children }: PropsWithChildren) => {
   return <ReactQueryClientProvider client={queryClient}>{children}</ReactQueryClientProvider>;
