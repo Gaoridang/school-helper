@@ -6,7 +6,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { format, subDays } from "date-fns";
 import { ko } from "date-fns/locale";
@@ -15,14 +15,15 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { DateRange } from "react-day-picker";
 import {
-  ResponsiveContainer,
-  LineChart,
+  CartesianGrid,
   Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
 } from "recharts";
+import CheckListForm from "./CheckListForm";
 
 // Override console.error
 // This is a hack to suppress the warning about missing defaultProps in recharts library as of version 2.12
@@ -33,22 +34,12 @@ console.error = (...args: any) => {
   error(...args);
 };
 
-const data = [
-  { date: "12/10", 점수: 1 },
-  { date: "12/11", 점수: 2 },
-  { date: "12/12", 점수: 3 },
-  { date: "12/13", 점수: 4 },
-  { date: "12/14", 점수: 5 },
-  { date: "12/15", 점수: 2 },
-];
-
 const AssessmentPage = () => {
   const [isOpenPopover, setOpenPopover] = useState(false);
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: subDays(new Date(), 5),
     to: new Date(),
   });
-  const queryClient = useQueryClient();
 
   const supabase = createClient();
   const { data: scores, refetch } = useQuery({
@@ -67,8 +58,8 @@ const AssessmentPage = () => {
   console.log(date?.to?.toISOString(), date?.from?.toISOString());
 
   return (
-    <div className="grid gap-4">
-      <Link href="/">
+    <div className="grid gap-4 grid-cols-4">
+      <Link href="/" className="col-span-2">
         <Card>
           <CardHeader>
             <CardTitle>체크리스트 만들기</CardTitle>
@@ -76,7 +67,18 @@ const AssessmentPage = () => {
           </CardHeader>
         </Card>
       </Link>
-      <Card>
+
+      <Card className="col-span-2">
+        <CardHeader>
+          <CardTitle>오늘의 점검 현황</CardTitle>
+          <CardDescription>학생 개인에게 적합한 체크리스트를 함께 만들어 보아요.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <CheckListForm />
+        </CardContent>
+      </Card>
+
+      <Card className="col-span-2">
         <CardHeader>
           <CardTitle>이재준</CardTitle>
           <CardDescription>날짜별 체크리스트 달성 현황</CardDescription>
