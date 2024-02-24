@@ -1,4 +1,4 @@
-import React from "react";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import useSchedules from "./hooks/useSchedules";
+import Link from "next/link";
 
 interface Props {
   schedule: string[][];
@@ -21,7 +21,7 @@ const ScheduleTable = ({ schedule }: Props) => {
       <TableHeader className="bg-gray-50">
         <TableRow>
           <TableHead className="min-w-[90px]"></TableHead>
-          {schedule.map((day, dayIndex) => (
+          {schedule.map((_day, dayIndex) => (
             <TableHead className="min-w-[80px]" key={dayIndex}>
               {["월", "화", "수", "목", "금"][dayIndex]}
             </TableHead>
@@ -29,11 +29,20 @@ const ScheduleTable = ({ schedule }: Props) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {schedule.map((_period, periodIndex) => (
+        {schedule[0].map((_period, periodIndex) => (
           <TableRow key={periodIndex}>
             <TableCell>{periodIndex + 1}교시</TableCell>
             {schedule.map((day, dayIndex) => (
-              <TableCell key={dayIndex}>{day[periodIndex]}</TableCell>
+              <TableCell key={dayIndex} className="py-0">
+                <Link href={`/assessment?subject=${day[periodIndex]}&period=${periodIndex + 1}`}>
+                  <Button
+                    className="p-0 flex justify-center items-center underline hover:font-semibold md:text-base"
+                    variant="link"
+                  >
+                    {day[periodIndex]}
+                  </Button>
+                </Link>
+              </TableCell>
             ))}
           </TableRow>
         ))}

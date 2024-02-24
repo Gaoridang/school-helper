@@ -1,26 +1,18 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import PageTitle from "./components/PageTitle";
-import { useQuery } from "@tanstack/react-query";
-
-import { cookies } from "next/headers";
-import { createClient } from "./utils/supabase/client";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import ScheduleCard from "./assessment/ScheduleCard";
 
 export default function Home() {
-  const supabase = createClient();
-
-  const { data: schedule, error } = useQuery({
-    queryKey: ["schedule"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("schedules").select("*");
-      if (error) throw error;
-      return data;
-    },
-  });
-
-  console.log(schedule);
-
-  return <h1>Hi</h1>;
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>시간표</CardTitle>
+        <CardDescription>과목을 눌러서 평가를 시작해보세요.</CardDescription>
+      </CardHeader>
+      <CardContent className="overflow-auto w-full">
+        <ScheduleCard />
+      </CardContent>
+    </Card>
+  );
 }

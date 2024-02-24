@@ -1,9 +1,12 @@
 import React from "react";
-import { DataTable } from "./DataTable";
-import { columns } from "./Columns";
+import AssessmentCards from "./AssessmentCards";
 
 const StudentsPage = () => {
-  return <DataTable columns={columns} data={[]} />;
+  return (
+    <div>
+      <AssessmentCards />
+    </div>
+  );
 };
 
 export default StudentsPage;
