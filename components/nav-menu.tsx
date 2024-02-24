@@ -32,7 +32,7 @@ const NavMenus = ({ user }: { user: Tables<"profiles"> | null }) => {
                 <ListItem href="/students" title="특별 학생">
                   관심이 필요한 학생 관리
                 </ListItem>
-                <ListItem href="/students/assessment" title="점검">
+                <ListItem href="/assessment" title="점검">
                   행동 점검 체크리스트 템플릿 제작
                 </ListItem>
               </ul>
