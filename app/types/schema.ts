@@ -119,6 +119,35 @@ export type Database = {
           }
         ]
       }
+      schedules: {
+        Row: {
+          created_at: string
+          profile_id: string
+          schedule: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          profile_id?: string
+          schedule?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          profile_id?: string
+          schedule?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_schedules_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       scores: {
         Row: {
           created_at: string

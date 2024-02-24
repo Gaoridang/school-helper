@@ -11,10 +11,10 @@ import {
   navigationMenuTriggerStyle,
 } from "./ui/navigation-menu";
 import Link from "next/link";
-import { User } from "@supabase/supabase-js";
 import { cn } from "@/lib/utils";
+import { Tables } from "@/app/types/schema";
 
-const NavMenus = ({ user }: { user: User | null }) => {
+const NavMenus = ({ user }: { user: Tables<"profiles"> | null }) => {
   return (
     <div className="p-2 border-b">
       <NavigationMenu>
@@ -59,7 +59,7 @@ const NavMenus = ({ user }: { user: User | null }) => {
             <NavigationMenuItem>
               <Link href="/signout" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  {user.email}
+                  {user.school} {user.grade} {user.class_number}
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>

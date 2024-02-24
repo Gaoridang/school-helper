@@ -4,11 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { createClient } from "../utils/supabase/client";
-import { useRouter } from "next/navigation";
+
+import { signIn } from "./actions";
 
 interface SignInFormData {
   email: string;
@@ -29,24 +28,9 @@ const SignInPage = () => {
     },
   });
 
-  const router = useRouter();
-  const supabase = createClient();
-  const onSubmit = async (data: SignInFormData) => {
-    const validation = SignInSchema.safeParse(data);
-    if (!validation.success) return;
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email: data.email,
-      password: data.password,
-    });
-    if (!error) {
-      router.push("/students/assessment");
-    }
-  };
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      <form action={signIn} className="flex flex-col gap-4">
         <FormField
           name="email"
           control={form.control}
