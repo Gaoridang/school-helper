@@ -22,7 +22,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import CheckListForm from "./CheckListForm";
+import ScheduleCard from "./ScheduleCard";
 
 // Override console.error
 // This is a hack to suppress the warning about missing defaultProps in recharts library as of version 2.12
@@ -64,7 +64,7 @@ const AssessmentPage = () => {
           <CardDescription>학생 개인에게 적합한 체크리스트를 함께 만들어 보아요.</CardDescription>
         </CardHeader>
         <CardContent className="overflow-auto w-full">
-          <CheckListForm />
+          <ScheduleCard />
         </CardContent>
       </Card>
 

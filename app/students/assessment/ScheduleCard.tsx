@@ -7,11 +7,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUser } from "@supabase/auth-helpers-react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ScheduleTable from "./ScheduleTable";
+import useSchedules from "./hooks/useSchedules";
 
 const days = ["월", "화", "수", "목", "금"];
 const periods = Array.from({ length: 6 }, (_, index) => `${index + 1}교시`);
@@ -28,7 +29,7 @@ export interface ScheduleDataType {
   schedule: ScheduleFormData["schedule"];
 }
 
-const CheckListForm = () => {
+const ScheduleCard = () => {
   const [editing, setEditing] = useState(false);
   const queryClient = useQueryClient();
   const form = useForm<ScheduleFormData>({
@@ -48,35 +49,19 @@ const CheckListForm = () => {
       console.log(validation.error.errors);
     }
 
-    await supabase.from("schedules").upsert(
-      { schedule: data.schedule, profile_id: user?.id },
-      {
-        onConflict: "profile_id",
-      },
-    );
+    await supabase
+      .from("schedules")
+      .upsert({ schedule: data.schedule, profile_id: user?.id }, { onConflict: "profile_id" });
 
     queryClient.invalidateQueries({ queryKey: ["schedule", user?.id] });
     setEditing(false);
   };
 
-  const { data: schedule } = useQuery({
-    queryKey: ["schedule", user?.id],
-    queryFn: async () => {
-      if (!user?.id) throw new Error("User ID is undefined");
-      const { data, error } = await supabase
-        .from("schedules")
-        .select("schedule")
-        .match({ profile_id: user.id })
-        .single();
-      if (error) throw error;
-      return data as ScheduleDataType;
-    },
-    enabled: !!user?.id,
-  });
+  const { schedule } = useSchedules();
 
   useEffect(() => {
     if (schedule) {
-      form.reset({ schedule: schedule.schedule, confirm: false });
+      form.reset({ schedule: schedule, confirm: false });
     }
   }, [schedule, form]);
 
@@ -152,4 +137,4 @@ const CheckListForm = () => {
   );
 };
 
-export default CheckListForm;
+export default ScheduleCard;
