@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import QueryClientProvider from "./QueryClientProvider";
 import { cn } from "@/lib/utils";
 import { Navbar } from "./Navbar";
-import SessionContextProvider from "./SessionContextProvider";
 
 const pretendard = localFont({
   src: [
@@ -40,18 +38,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className="h-full">
       <body className={cn(pretendard.className)}>
         <QueryClientProvider>
-          <SessionContextProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <Navbar />
-              <main className="p-5">{children}</main>
-              <Toaster />
-            </ThemeProvider>
-          </SessionContextProvider>
+          <Navbar />
+          <main className="p-5">{children}</main>
+          <Toaster />
         </QueryClientProvider>
       </body>
     </html>
