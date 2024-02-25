@@ -36,10 +36,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className="h-full">
-      <body className={cn(pretendard.className)}>
+      <body className={cn(pretendard.className, "h-full")}>
         <QueryClientProvider>
           <Navbar />
-          <main className="p-5">{children}</main>
+          <main className="p-5 max-w-2xl m-auto">{children}</main>
           <Toaster />
         </QueryClientProvider>
       </body>
