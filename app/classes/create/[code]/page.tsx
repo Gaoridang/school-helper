@@ -21,6 +21,7 @@ import { z } from "zod";
 import { BANs, GRADEs } from "../../constants";
 import useSchools from "../../hooks/useSchools";
 import { createClient } from "@/app/utils/supabase/client";
+import { useRouter } from "next/navigation";
 
 interface Props {
   params: { code: string };
@@ -47,23 +48,31 @@ const CreateClassPage = ({ params }: Props) => {
   const debouncedValue = useDebounce(value);
   const { data: schools } = useSchools(debouncedValue);
   const supabase = createClient();
+  const router = useRouter();
 
   const onSubmit = async (data: CreateClass) => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
-    const { error } = await supabase.from("classes").insert({
-      code: params.code,
-      school: data.school,
-      grade: data.grade,
-      class_number: data.classNumber,
-      teacher_id: user!.id,
-    });
+    const { data: createdClass, error } = await supabase
+      .from("classes")
+      .insert({
+        code: params.code,
+        school: data.school,
+        grade: data.grade,
+        class_number: data.classNumber,
+        teacher_id: user!.id,
+      })
+      .select()
+      .single();
 
     if (error) {
       console.error(error);
     }
+
+    form.reset();
+    router.push(`/classes/${createdClass?.id}`);
   };
 
   return (
