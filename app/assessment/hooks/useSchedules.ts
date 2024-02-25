@@ -3,18 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 
 const fetchSchedules = async () => {
   const supabase = createClient();
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) throw authError;
 
   const { data: schedule, error: scheduleError } = await supabase
     .from("schedules")
     .select("*")
-    .eq("profile_id", user.id)
-    .single();
+    .maybeSingle();
 
   if (scheduleError) throw scheduleError;
 

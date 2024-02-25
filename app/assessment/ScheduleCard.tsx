@@ -6,7 +6,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useUser } from "@supabase/auth-helpers-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -40,8 +39,6 @@ const ScheduleCard = () => {
     },
   });
 
-  const user = useUser();
-
   const supabase = createClient();
   const onSubmit = async (data: ScheduleFormData) => {
     const validation = ScheduleSchema.safeParse(data);
@@ -51,9 +48,13 @@ const ScheduleCard = () => {
 
     await supabase
       .from("schedules")
-      .upsert({ schedule: data.schedule, profile_id: user?.id }, { onConflict: "profile_id" });
+      .upsert(
+        { schedule: data.schedule, class_id: "b857e7ca-6c3f-4744-b1ff-fd03331f94b5" },
+        { onConflict: "class_id" },
+      )
+      .select();
 
-    queryClient.invalidateQueries({ queryKey: ["schedule", user?.id] });
+    queryClient.invalidateQueries({ queryKey: ["schedule"] });
     setEditing(false);
   };
 
