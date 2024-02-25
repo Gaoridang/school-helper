@@ -55,12 +55,51 @@ export type Database = {
         }
         Relationships: []
       }
+      classes: {
+        Row: {
+          class_number: string
+          code: string
+          created_at: string
+          grade: string
+          id: string
+          school: string
+          teacher_id: string | null
+        }
+        Insert: {
+          class_number: string
+          code: string
+          created_at?: string
+          grade: string
+          id?: string
+          school: string
+          teacher_id?: string | null
+        }
+        Update: {
+          class_number?: string
+          code?: string
+          created_at?: string
+          grade?: string
+          id?: string
+          school?: string
+          teacher_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_classes_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       profiles: {
         Row: {
           class_number: string | null
           email: string | null
           grade: string | null
           id: string
+          role: Database["public"]["Enums"]["role"]
           school: string | null
           updated_at: string | null
         }
@@ -69,6 +108,7 @@ export type Database = {
           email?: string | null
           grade?: string | null
           id: string
+          role?: Database["public"]["Enums"]["role"]
           school?: string | null
           updated_at?: string | null
         }
@@ -77,6 +117,7 @@ export type Database = {
           email?: string | null
           grade?: string | null
           id?: string
+          role?: Database["public"]["Enums"]["role"]
           school?: string | null
           updated_at?: string | null
         }
@@ -121,29 +162,32 @@ export type Database = {
       }
       schedules: {
         Row: {
+          class_id: string
           created_at: string
-          profile_id: string
+          id: string
           schedule: Json | null
           updated_at: string | null
         }
         Insert: {
+          class_id?: string
           created_at?: string
-          profile_id?: string
+          id?: string
           schedule?: Json | null
           updated_at?: string | null
         }
         Update: {
+          class_id?: string
           created_at?: string
-          profile_id?: string
+          id?: string
           schedule?: Json | null
           updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "public_schedules_profile_id_fkey"
-            columns: ["profile_id"]
+            foreignKeyName: "public_schedules_class_id_fkey"
+            columns: ["class_id"]
             isOneToOne: true
-            referencedRelation: "profiles"
+            referencedRelation: "classes"
             referencedColumns: ["id"]
           }
         ]
@@ -166,6 +210,44 @@ export type Database = {
         }
         Relationships: []
       }
+      students: {
+        Row: {
+          class_code: string | null
+          created_at: string
+          id: string
+          name: string
+          role: Database["public"]["Enums"]["role"]
+          student_code: string
+          student_number: number
+        }
+        Insert: {
+          class_code?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          role?: Database["public"]["Enums"]["role"]
+          student_code: string
+          student_number: number
+        }
+        Update: {
+          class_code?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          role?: Database["public"]["Enums"]["role"]
+          student_code?: string
+          student_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_students_class_code_fkey"
+            columns: ["class_code"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["code"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -174,7 +256,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      role: "teacher" | "student" | "parents"
     }
     CompositeTypes: {
       [_ in never]: never
