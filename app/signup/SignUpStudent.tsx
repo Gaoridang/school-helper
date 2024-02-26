@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { createRandomCode } from "../classes/utils/getRandomCode";
 import { signUpStudent } from "./actions";
+import Spinner from "../components/Spinner";
 
 const formValues = [
   { label: "이름", value: "name", placeholder: "홍길동" },
@@ -97,7 +98,14 @@ const SignUpStudent = () => {
             )}
           />
         ))}
-        <Button type="submit">회원가입</Button>
+        <Button
+          type="submit"
+          disabled={form.formState.isSubmitting}
+          className="flex items-center gap-1"
+        >
+          <Spinner />
+          회원가입
+        </Button>
       </form>
     </Form>
   );

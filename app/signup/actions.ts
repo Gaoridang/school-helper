@@ -37,17 +37,11 @@ export const signUpStudent = async (formData: SignUpStudentType) => {
     console.error(error);
   }
 
-  console.log(data);
+  redirect("/");
+};
 
-  // if (!error) {
-  //   await supabase.from("students").update({
-  //     name: name,
-  //     student_number: parseInt(studentNumber),
-  //     student_code: code,
-  //     class_code: classCode,
-  //     role: "student",
-  //   });
-  // }
-
+export const signOut = async () => {
+  const supabase = createClient();
+  await supabase.auth.signOut();
   redirect("/");
 };

@@ -1,20 +1,25 @@
 "use server";
 
 import { createClient } from "@/app/utils/supabase/server";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
-export async function signIn(formData: FormData) {
+import { SignInDataType } from "./page";
+
+export async function signIn(formData: SignInDataType) {
   const supabase = createClient();
   const { error } = await supabase.auth.signInWithPassword({
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
+    email: formData.email,
+    password: formData.password,
   });
 
   if (error) {
-    redirect("/signin");
+    if (error.status === 400) {
+      console.log(error);
+      return {
+        status: 400,
+        message: "아이디 또는 비밀번호가 틀렸습니다.",
+      };
+    }
   }
 
-  revalidatePath("/", "layout");
-  redirect("/");
+  return { status: 200, message: "" };
 }
