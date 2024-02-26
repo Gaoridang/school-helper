@@ -1,6 +1,5 @@
 "use client";
 
-import type { User } from "@/app/utils/getUserInfo";
 import { ChevronDown, LogOut, User as LucideUser, Settings } from "lucide-react";
 import { Button } from "./ui/button";
 import {
@@ -12,15 +11,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { createClient } from "@/app/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { getUserByRole } from "@/app/utils/getUserByRole";
+import useSupabaseBrowser from "@/app/utils/supabase/client";
 
-const NavMenus = ({ data }: { data: User | null }) => {
+const NavMenus = () => {
   const router = useRouter();
   const signOut = async () => {
-    const supabase = createClient();
+    const supabase = useSupabaseBrowser();
     const { error } = await supabase.auth.signOut();
 
     if (error) {
@@ -31,13 +29,13 @@ const NavMenus = ({ data }: { data: User | null }) => {
     router.refresh();
   };
 
-  if (!data)
-    return (
-      <div className="flex items-center gap-4 py-2">
-        <Link href="/signin">로그인</Link>
-        <Link href="/signup">회원가입</Link>
-      </div>
-    );
+  // if (!data)
+  //   return (
+  //     <div className="flex items-center gap-4 py-2">
+  //       <Link href="/signin">로그인</Link>
+  //       <Link href="/signup">회원가입</Link>
+  //     </div>
+  //   );
 
   return (
     <div>
@@ -51,7 +49,7 @@ const NavMenus = ({ data }: { data: User | null }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>{getUserByRole(data)}</DropdownMenuLabel>
+          <DropdownMenuLabel></DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>

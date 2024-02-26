@@ -1,7 +1,6 @@
 "use client";
 
 import useDebounce from "@/app/hooks/useDebounce";
-import { createClient } from "@/app/utils/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Command, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
@@ -24,6 +23,7 @@ import { BANs, GRADEs } from "../constants";
 import useSchools from "../hooks/useSchools";
 import { copyToClipboard } from "../utils/copyToClipBoard";
 import { createRandomCode } from "../utils/getRandomCode";
+import useSupabaseBrowser from "@/app/utils/supabase/client";
 
 const CreateClassSchema = z.object({
   school: z.string().min(1, "학교를 선택하세요."),
@@ -45,7 +45,7 @@ const CreateClassPage = () => {
   const [value, setValue] = useState("");
   const debouncedValue = useDebounce(value);
   const { data: schools } = useSchools(debouncedValue);
-  const supabase = createClient();
+  const supabase = useSupabaseBrowser();
   const router = useRouter();
 
   // FIXME: 새로고침 시 클래스 코드 서버, 클라이언트 다르게 생성되는 문제 해결 필요

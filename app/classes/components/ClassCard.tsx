@@ -1,12 +1,12 @@
-import { createClient } from "@/app/utils/supabase/server";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import React from "react";
 import ClassStudentsNumber from "./ClassStudents";
 import Link from "next/link";
 import CodeCopyButton from "./CodeCopyButton";
+import useSupabaseBrowser from "@/app/utils/supabase/client";
 
 const ClassCard = async () => {
-  const supabase = createClient();
+  const supabase = useSupabaseBrowser();
   const { data: classes } = await supabase.from("classes").select("*");
 
   if (!classes || classes.length === 0) {

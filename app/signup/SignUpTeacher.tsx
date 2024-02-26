@@ -32,7 +32,7 @@ import {
 import { Label } from "@/components/ui/label";
 import axios from "axios";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { createClient } from "../utils/supabase/client";
+import useSupabaseClient from "../utils/supabase/client";
 import { useRouter } from "next/navigation";
 
 const formFields = [
@@ -83,7 +83,7 @@ const SignUpTeacher = () => {
     setSchools(schoolInfo);
   };
 
-  const supabase = createClient();
+  const supabase = useSupabaseClient();
 
   const onSubmit = async (values: SignUpType) => {
     const validation = SignUpSchema.safeParse(values);

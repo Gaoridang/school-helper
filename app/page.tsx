@@ -2,11 +2,24 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { ArrowRightCircle, NotebookIcon } from "lucide-react";
 import Link from "next/link";
 import UserInfo from "./components/UserInfo";
-import { getUserInfo } from "./utils/getUserInfo";
 import { redirect } from "next/navigation";
+import useSupabaseServer from "./utils/supabase/server";
+import { cookies } from "next/headers";
+import { QueryClient } from "@tanstack/react-query";
 
 export default async function Home() {
-  const user = await getUserInfo();
+  const queryClient = new QueryClient();
+  const cookieStore = cookies();
+  const supabase = useSupabaseServer(cookieStore);
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error) {
+    redirect("/error");
+  }
 
   if (!user) {
     redirect("/signin");

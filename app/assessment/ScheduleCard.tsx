@@ -1,6 +1,5 @@
 "use client";
 
-import { createClient } from "@/app/utils/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
@@ -11,7 +10,9 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ScheduleTable from "./ScheduleTable";
-import useSchedules from "./hooks/useSchedules";
+import useSupabaseBrowser from "../utils/supabase/client";
+import { getSchedules } from "../queries/getSchedule";
+import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";
 
 const days = ["월", "화", "수", "목", "금"];
 const periods = Array.from({ length: 6 }, (_, index) => `${index + 1}교시`);
@@ -39,7 +40,10 @@ const ScheduleCard = () => {
     },
   });
 
-  const supabase = createClient();
+  const supabase = useSupabaseBrowser();
+  const { data } = useQuery(getSchedules(supabase));
+  const schedule = data?.schedule as string[][];
+
   const onSubmit = async (data: ScheduleFormData) => {
     const validation = ScheduleSchema.safeParse(data);
     if (!validation.success) {
@@ -57,8 +61,6 @@ const ScheduleCard = () => {
     queryClient.invalidateQueries({ queryKey: ["schedule"] });
     setEditing(false);
   };
-
-  const { schedule } = useSchedules();
 
   useEffect(() => {
     if (schedule) {

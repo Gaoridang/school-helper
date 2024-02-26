@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
-import QueryClientProvider from "./QueryClientProvider";
+import { ReactQueryClientProvider } from "./QueryClientProvider";
 import { cn } from "@/lib/utils";
 import { Navbar } from "./Navbar";
 
@@ -35,14 +35,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className="h-full">
-      <body className={cn(pretendard.className, "h-full")}>
-        <QueryClientProvider>
+    <ReactQueryClientProvider>
+      <html lang="en" suppressHydrationWarning className="h-full">
+        <body className={cn(pretendard.className, "h-full")}>
           <Navbar />
           <main className="p-5 max-w-2xl m-auto">{children}</main>
           <Toaster />
-        </QueryClientProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ReactQueryClientProvider>
   );
 }

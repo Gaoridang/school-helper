@@ -1,15 +1,17 @@
-import { createClient } from "@/app/utils/supabase/server";
+import useSupabaseServer from "@/app/utils/supabase/server";
 import { QueryData } from "@supabase/supabase-js";
 import React from "react";
 import StudentTable from "./StudentTable";
 import { columns } from "./columns";
+import { cookies } from "next/headers";
 
 interface Props {
   classId: string;
 }
 
 const StudentList = async ({ classId }: Props) => {
-  const supabase = createClient();
+  const cookieStore = cookies();
+  const supabase = useSupabaseServer(cookieStore);
   const classesWithStudentsQuery = supabase
     .from("classes")
     .select(

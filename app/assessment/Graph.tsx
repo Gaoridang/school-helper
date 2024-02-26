@@ -1,6 +1,5 @@
 "use client";
 
-import { createClient } from "@/app/utils/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,6 +21,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import useSupabaseBrowser from "../utils/supabase/client";
 
 // Override console.error
 // This is a hack to suppress the warning about missing defaultProps in recharts library as of version 2.12
@@ -39,7 +39,7 @@ const AssessmentGraph = () => {
     to: new Date(),
   });
 
-  const supabase = createClient();
+  const supabase = useSupabaseBrowser();
   const { data: scores, refetch } = useQuery({
     queryKey: ["scores"],
     queryFn: async () => {
