@@ -16,7 +16,7 @@ import { createRandomCode } from "../classes/utils/getRandomCode";
 import { signUpStudent } from "./actions";
 
 const formValues = [
-  { label: "영어 닉네임", value: "name", placeholder: "dog" },
+  { label: "이름", value: "name", placeholder: "홍길동" },
   { label: "번호", value: "student_number", placeholder: "12" },
   { label: "학급코드", value: "class_code", placeholder: "선생님께 받은 학급 코드를 입력하세요." },
   { label: "고유번호", value: "code", placeholder: "고유번호를 입력하세요" },
@@ -34,7 +34,7 @@ const SignUpStudentSchema = z.object({
 export type SignUpStudentType = z.infer<typeof SignUpStudentSchema>;
 
 const SignUpStudent = () => {
-  const initialCode = createRandomCode();
+  const initialCode = createRandomCode("student");
   const form = useForm<SignUpStudentType>({
     resolver: zodResolver(SignUpStudentSchema),
     defaultValues: {
@@ -75,7 +75,7 @@ const SignUpStudent = () => {
                       type="button"
                       variant="outline"
                       onClick={() => {
-                        const newRandomCode = createRandomCode();
+                        const newRandomCode = createRandomCode("student");
                         form.setValue("code", newRandomCode);
                         form.setValue("password", newRandomCode);
                       }}

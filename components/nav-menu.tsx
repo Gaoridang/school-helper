@@ -12,9 +12,9 @@ import {
 } from "./ui/navigation-menu";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { Tables } from "@/app/types/schema";
+import { User } from "@/app/utils/getUserInfo";
 
-const NavMenus = ({ user }: { user: Tables<"profiles"> | null }) => {
+const NavMenus = ({ data }: { data: User | null }) => {
   return (
     <div className="p-2 border-b">
       <NavigationMenu>
@@ -43,7 +43,7 @@ const NavMenus = ({ user }: { user: Tables<"profiles"> | null }) => {
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
-          {!user ? (
+          {!data ? (
             <>
               <NavigationMenuItem>
                 <Link href="/signin" legacyBehavior passHref>
@@ -62,11 +62,25 @@ const NavMenus = ({ user }: { user: Tables<"profiles"> | null }) => {
             </>
           ) : (
             <NavigationMenuItem>
-              <Link href="/signout" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  {user.school} {user.grade} {user.class_number}
-                </NavigationMenuLink>
-              </Link>
+              <NavigationMenuTrigger>
+                {data.role === "teacher" ? (
+                  <span>
+                    {data.user.school} {data.user.grade} {data.user.class_number}
+                  </span>
+                ) : (
+                  <span>{data.user.name}</span>
+                )}
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid gap-3 p-6 w-[200px]">
+                  <ListItem href="/profile" title="프로필">
+                    프로필
+                  </ListItem>
+                  <ListItem href="/signout" title="로그아웃">
+                    로그아웃
+                  </ListItem>
+                </ul>
+              </NavigationMenuContent>
             </NavigationMenuItem>
           )}
           <NavigationMenuItem>

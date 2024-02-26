@@ -95,22 +95,21 @@ const SignUpTeacher = () => {
       email: values.email,
       password: values.password,
       options: {
-        emailRedirectTo: "https://www.togethers.info",
-      },
-    });
-
-    if (!error) {
-      await supabase
-        .from("profiles")
-        .update({
+        data: {
+          role: "teacher",
           school: values.school,
           grade: values.grade,
           class_number: values.classNumber,
-        })
-        .match({ email: values.email });
+        },
+      },
+    });
+
+    if (error) {
+      console.error(error);
     }
 
     router.push("/signup/confirm-email");
+    router.refresh();
   };
 
   return (

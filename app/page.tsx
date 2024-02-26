@@ -1,31 +1,13 @@
 "use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import ScheduleCard from "./assessment/ScheduleCard";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowRightCircle, NotebookIcon } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { ArrowRightCircle, CalendarIcon, NotebookIcon } from "lucide-react";
 
 export default function Home() {
-  const [code, setCode] = useState("");
-
-  useEffect(() => {
-    const createRandomCode = () => {
-      const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-      let result = "";
-      const charactersLength = characters.length;
-      for (let i = 0; i < 6; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      }
-      return result;
-    };
-
-    setCode(createRandomCode());
-  }, []);
-
   return (
     <div className="flex flex-col gap-4">
-      <Link href={`/classes/create/${code}`}>
+      <Link href={`/classes/create`}>
         <Card className="group bg-slate-100">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -46,17 +28,6 @@ export default function Home() {
           </CardHeader>
         </Card>
       </Link>
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            시간표 <CalendarIcon className="w-5 h-5" />{" "}
-          </CardTitle>
-          <CardDescription>과목을 눌러서 평가를 시작해보세요.</CardDescription>
-        </CardHeader>
-        <CardContent className="overflow-auto w-full">
-          <ScheduleCard />
-        </CardContent>
-      </Card>
     </div>
   );
 }

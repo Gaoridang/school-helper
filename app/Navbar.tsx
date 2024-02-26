@@ -1,9 +1,8 @@
 import NavMenus from "@/components/nav-menu";
-import { createClient } from "./utils/supabase/server";
+import { getUserInfo } from "./utils/getUserInfo";
 
 export async function Navbar() {
-  const supabase = createClient();
-  const { data: user } = await supabase.from("profiles").select("*").single();
+  const user = await getUserInfo();
 
-  return <NavMenus user={user} />;
+  return <NavMenus data={user} />;
 }
