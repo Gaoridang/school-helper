@@ -19,26 +19,35 @@ export const signUpStudent = async (formData: SignUpStudentType) => {
     return `${code}@student.com`;
   };
 
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email: getEmailWithName(),
     password,
+    options: {
+      data: {
+        role: "student",
+        name,
+        student_number: studentNumber,
+        student_code: code,
+        class_code: classCode,
+      },
+    },
   });
 
   if (error) {
     console.error(error);
   }
 
-  if (!error) {
-    await supabase.from("students").insert([
-      {
-        name: name,
-        student_number: parseInt(studentNumber),
-        student_code: code,
-        class_code: classCode,
-        role: "student",
-      },
-    ]);
-  }
+  console.log(data);
+
+  // if (!error) {
+  //   await supabase.from("students").update({
+  //     name: name,
+  //     student_number: parseInt(studentNumber),
+  //     student_code: code,
+  //     class_code: classCode,
+  //     role: "student",
+  //   });
+  // }
 
   redirect("/");
 };
