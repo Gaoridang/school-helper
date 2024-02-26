@@ -8,6 +8,10 @@ const ClassCard = async () => {
   const supabase = createClient();
   const { data: classes } = await supabase.from("classes").select("*");
 
+  if (!classes || classes.length === 0) {
+    return <div>나의 학급이 없습니다.</div>;
+  }
+
   return (
     <div className="grid gap-4">
       {classes?.map((c) => (

@@ -47,7 +47,8 @@ const CreateClassPage = () => {
   const { data: schools } = useSchools(debouncedValue);
   const supabase = createClient();
   const router = useRouter();
-  const classCode = createRandomCode("class");
+
+  const [classCode, _setClassCode] = useState(() => createRandomCode("class"));
 
   const onSubmit = async (data: CreateClass) => {
     const {
