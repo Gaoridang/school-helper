@@ -5,7 +5,7 @@ interface Props {
   code: string;
 }
 
-const ClassStudents = async ({ code }: Props) => {
+const ClassStudentsNumber = async ({ code }: Props) => {
   const supabase = createClient();
   const { data: students } = await supabase
     .from("students")
@@ -23,4 +23,4 @@ const ClassStudents = async ({ code }: Props) => {
   );
 };
 
-export default ClassStudents;
+export default ClassStudentsNumber;
