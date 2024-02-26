@@ -1,7 +1,7 @@
 import React from "react";
 import ClassCard from "./components/ClassCard";
 
-const ClassesPage = async () => {
+const ClassesPage = () => {
   return (
     <div>
       <ClassCard />

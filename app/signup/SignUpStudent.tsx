@@ -13,8 +13,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { createRandomCode } from "../classes/utils/getRandomCode";
-import { signUpStudent } from "./actions";
 import Spinner from "../components/Spinner";
+import useSupabaseBrowser from "../utils/supabase/client";
 
 const formValues = [
   { label: "이름", value: "name", placeholder: "홍길동" },
@@ -35,6 +35,7 @@ const SignUpStudentSchema = z.object({
 export type SignUpStudentType = z.infer<typeof SignUpStudentSchema>;
 
 const SignUpStudent = () => {
+  const supabase = useSupabaseBrowser();
   const initialCode = createRandomCode("student");
   const form = useForm<SignUpStudentType>({
     resolver: zodResolver(SignUpStudentSchema),
@@ -47,8 +48,19 @@ const SignUpStudent = () => {
     },
   });
 
-  const onSubmit = (data: SignUpStudentType) => {
-    signUpStudent(data);
+  const onSubmit = async (values: SignUpStudentType) => {
+    const { data, error } = await supabase.auth.signUp({
+      email: `${values.code}@student.com`,
+      password: values.password,
+      options: {
+        data: {
+          name: values.name,
+          student_number: values.student_number,
+          class_code: values.class_code,
+          code: values.code,
+        },
+      },
+    });
   };
 
   return (

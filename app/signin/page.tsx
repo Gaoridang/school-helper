@@ -6,8 +6,6 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-import { signIn } from "./actions";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import Spinner from "../components/Spinner";
@@ -31,23 +29,23 @@ const SignInPage = () => {
   const router = useRouter();
 
   const onSubmit = async (formData: SignInDataType) => {
-    try {
-      const result = await signIn(formData);
-      if (result.status === 400) {
-        toast({
-          title: "로그인 실패",
-          description: result.message,
-        });
-      } else {
-        router.push("/");
-        router.refresh();
-      }
-    } catch (error) {
-      toast({
-        title: "서버 에러",
-        description: "문제가 계속될 시 문의하세요.",
-      });
-    }
+    // try {
+    //   const result = await signIn(formData);
+    //   if (result.status === 400) {
+    //     toast({
+    //       title: "로그인 실패",
+    //       description: result.message,
+    //     });
+    //   } else {
+    //     router.push("/");
+    //     router.refresh();
+    //   }
+    // } catch (error) {
+    //   toast({
+    //     title: "서버 에러",
+    //     description: "문제가 계속될 시 문의하세요.",
+    //   });
+    // }
   };
 
   return (
