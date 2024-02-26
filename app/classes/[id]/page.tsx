@@ -1,9 +1,15 @@
 import ScheduleCard from "@/app/assessment/ScheduleCard";
 import React from "react";
+import StudentList from "./StudentList";
 
-const ClassDetailPage = () => {
+interface Props {
+  params: { id: string };
+}
+
+const ClassDetailPage = ({ params }: Props) => {
   return (
     <>
+      <StudentList classId={params.id} />
       <ScheduleCard />
     </>
   );
