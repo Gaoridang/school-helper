@@ -108,7 +108,7 @@ const SignUpTeacher = () => {
       console.error(error);
     }
 
-    router.push("/signup/confirm-email");
+    router.push("/");
     router.refresh();
   };
 

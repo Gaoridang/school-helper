@@ -1,20 +1,17 @@
+import useDebounce from "@/app/hooks/useDebounce";
 import { Card, CardContent } from "@/components/ui/card";
-import useSchools from "../../hooks/useSchools";
-import useDebounce from "@/app/_hooks/useDebounce";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useSelectSchool } from "../../hooks/useSelectSchool";
+import useSchools from "../hooks/useSchools";
+import { useSelectSchool } from "../hooks/useSelectSchool";
 
 interface Props {
   value: string;
   code: string;
 }
 
-const SchoolListCard = ({ value, code }: Props) => {
+const SchoolListCard = ({ value }: Props) => {
   const debouncedValue = useDebounce(value);
   const { data: schools } = useSchools(debouncedValue);
-  const { school: selectedSchool, setSchool: setSelectedSchool } = useSelectSchool();
-  const router = useRouter();
+  const { setSchool: setSelectedSchool } = useSelectSchool();
 
   if (!schools)
     return (
