@@ -48,6 +48,7 @@ const CreateClassPage = () => {
   const supabase = createClient();
   const router = useRouter();
 
+  // FIXME: 새로고침 시 클래스 코드 서버, 클라이언트 다르게 생성되는 문제 해결 필요
   const [classCode, _setClassCode] = useState(() => createRandomCode("class"));
 
   const onSubmit = async (data: CreateClass) => {
