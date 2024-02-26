@@ -1,7 +1,7 @@
 import useDebounce from "@/app/hooks/useDebounce";
 import { Card, CardContent } from "@/components/ui/card";
-import useSchools from "../hooks/useSchools";
 import { useSelectSchool } from "../hooks/useSelectSchool";
+import useSchools from "@/app/queries/getSchools";
 
 interface Props {
   value: string;
@@ -11,7 +11,7 @@ interface Props {
 const SchoolListCard = ({ value }: Props) => {
   const debouncedValue = useDebounce(value);
   const { data: schools } = useSchools(debouncedValue);
-  const { setSchool: setSelectedSchool } = useSelectSchool();
+  const { setSelectedSchool } = useSelectSchool();
 
   if (!schools)
     return (

@@ -57,75 +57,40 @@ export type Database = {
       }
       classes: {
         Row: {
-          class_number: string
-          code: string
+          class_code: string
+          class_number: number
           created_at: string
-          grade: string
+          grade: number
           id: string
           school: string
           teacher_id: string | null
+          updated_at: string | null
         }
         Insert: {
-          class_number: string
-          code: string
+          class_code: string
+          class_number: number
           created_at?: string
-          grade: string
+          grade: number
           id?: string
           school: string
           teacher_id?: string | null
+          updated_at?: string | null
         }
         Update: {
-          class_number?: string
-          code?: string
+          class_code?: string
+          class_number?: number
           created_at?: string
-          grade?: string
+          grade?: number
           id?: string
           school?: string
           teacher_id?: string | null
+          updated_at?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "public_classes_teacher_id_fkey"
             columns: ["teacher_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      profiles: {
-        Row: {
-          class_number: string | null
-          email: string | null
-          grade: string | null
-          id: string
-          role: Database["public"]["Enums"]["role"]
-          school: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          class_number?: string | null
-          email?: string | null
-          grade?: string | null
-          id: string
-          role?: Database["public"]["Enums"]["role"]
-          school?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          class_number?: string | null
-          email?: string | null
-          grade?: string | null
-          id?: string
-          role?: Database["public"]["Enums"]["role"]
-          school?: string | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "profiles_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
@@ -182,15 +147,7 @@ export type Database = {
           schedule?: Json | null
           updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "public_schedules_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: true
-            referencedRelation: "classes"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       scores: {
         Row: {
@@ -210,43 +167,71 @@ export type Database = {
         }
         Relationships: []
       }
-      students: {
+      user_classes: {
         Row: {
-          class_code: string | null
-          created_at: string
-          id: string
-          name: string
-          role: Database["public"]["Enums"]["role"]
-          student_code: string
-          student_number: number
+          class_id: string
+          enrollment_date: string | null
+          user_id: string
         }
         Insert: {
-          class_code?: string | null
-          created_at?: string
-          id?: string
-          name: string
-          role?: Database["public"]["Enums"]["role"]
-          student_code: string
-          student_number: number
+          class_id: string
+          enrollment_date?: string | null
+          user_id: string
         }
         Update: {
-          class_code?: string | null
-          created_at?: string
-          id?: string
-          name?: string
-          role?: Database["public"]["Enums"]["role"]
-          student_code?: string
-          student_number?: number
+          class_id?: string
+          enrollment_date?: string | null
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "public_students_class_code_fkey"
-            columns: ["class_code"]
+            foreignKeyName: "user_classes_class_id_fkey"
+            columns: ["class_id"]
             isOneToOne: false
             referencedRelation: "classes"
-            referencedColumns: ["code"]
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_classes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
           }
         ]
+      }
+      users: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string
+          role: string
+          student_code: string | null
+          student_number: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          role: string
+          student_code?: string | null
+          student_number?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          role?: string
+          student_code?: string | null
+          student_number?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
     }
     Views: {

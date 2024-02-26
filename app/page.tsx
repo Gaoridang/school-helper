@@ -5,10 +5,8 @@ import UserInfo from "./components/UserInfo";
 import { redirect } from "next/navigation";
 import useSupabaseServer from "./utils/supabase/server";
 import { cookies } from "next/headers";
-import { QueryClient } from "@tanstack/react-query";
 
 export default async function Home() {
-  const queryClient = new QueryClient();
   const cookieStore = cookies();
   const supabase = useSupabaseServer(cookieStore);
 
