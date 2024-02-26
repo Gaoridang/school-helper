@@ -17,7 +17,7 @@ export default async function Home() {
       <div className="flex flex-col gap-4">
         <UserInfo />
         <Link href={`/classes/create`}>
-          <Card className="group bg-slate-100">
+          <Card className="group">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 학급 만들기{" "}
