@@ -20,10 +20,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { BANs, GRADEs } from "../constants";
-import useSchools from "../hooks/useSchools";
 import { copyToClipboard } from "../utils/copyToClipBoard";
 import { createRandomCode } from "../utils/getRandomCode";
 import useSupabaseBrowser from "@/app/utils/supabase/client";
+import useSchools from "@/app/queries/getSchools";
 
 const CreateClassSchema = z.object({
   school: z.string().min(1, "학교를 선택하세요."),
@@ -56,24 +56,24 @@ const CreateClassPage = () => {
       data: { user },
     } = await supabase.auth.getUser();
 
-    const { data: createdClass, error } = await supabase
-      .from("classes")
-      .insert({
-        code: classCode,
-        school: data.school,
-        grade: data.grade,
-        class_number: data.classNumber,
-        teacher_id: user!.id,
-      })
-      .select()
-      .single();
+    // const { data: createdClass, error } = await supabase
+    //   .from("classes")
+    //   .insert({
+    //     school: data.school,
+    //     grade: parseInt(data.grade),
+    //     classNumber: data.classNumber,
+    //     teacherId: user?.id,
+    //     classCode,
+    //   })
+    //   .select()
+    //   .single();
 
-    if (error) {
-      console.error(error);
-    }
+    // if (error) {
+    //   console.error(error);
+    // }
 
-    form.reset();
-    router.push(`/classes/${createdClass?.id}`);
+    // form.reset();
+    // router.push(`/classes/${createdClass?.id}`);
   };
 
   return (
