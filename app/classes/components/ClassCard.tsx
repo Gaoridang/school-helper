@@ -22,7 +22,7 @@ const ClassCard = async () => {
               <Link href={`/classes/${c.id}`} className="underline underline-offset-8">
                 {c.school}
               </Link>
-              <CodeCopyButton code={c.code} />
+              <CodeCopyButton code={c.class_code} />
             </CardTitle>
             <CardDescription className="">
               <span>
@@ -31,7 +31,7 @@ const ClassCard = async () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ClassStudentsNumber code={c.code} />
+            <ClassStudentsNumber code={c.class_code} />
           </CardContent>
         </Card>
       ))}
