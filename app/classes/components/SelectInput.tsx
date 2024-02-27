@@ -1,6 +1,6 @@
 "use client";
 
-import { FormControl, FormDescription, FormMessage } from "@/components/ui/form";
+import { FormControl, FormMessage } from "@/components/ui/form";
 import {
   Select,
   SelectContent,
@@ -8,15 +8,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import React from "react";
+import { FieldValues } from "react-hook-form";
 import { CommonInputTypes } from "../../signup/types/formTypes";
-import { CreateClassData, CreateClassFormItemType } from "../types/classTypes";
 
-type SelectInputProps = CommonInputTypes<CreateClassData, CreateClassFormItemType> & {
+type SelectInputProps<T extends FieldValues, VItem extends { label: string }> = CommonInputTypes<
+  T,
+  VItem
+> & {
   data: { label: string; value: string }[];
 };
 
-const SelectInput = ({ field, formField, data }: SelectInputProps) => {
+const SelectInput = <T extends FieldValues, VItem extends { label: string }>({
+  field,
+  formField,
+  data,
+}: SelectInputProps<T, VItem>) => {
   return (
     <Select onValueChange={field.onChange} defaultValue={field.value}>
       <FormControl>
