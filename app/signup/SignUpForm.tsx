@@ -10,7 +10,8 @@ import { type SignUpFormItemType, SignUpData, SignUpSchema } from "./types/formT
 import SelectRole from "./SelectRole";
 import { Button } from "@/components/ui/button";
 import useSupabaseBrowser from "../utils/supabase/client";
-import { toast } from "sonner";
+import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 export const formItems: SignUpFormItemType[] = [
   { label: "역할", name: "role", type: "select", placeholder: "" },
@@ -64,14 +65,16 @@ const SignUpForm = () => {
       student_number: "",
     },
   });
-
   const role = form.watch("role");
 
+  const router = useRouter();
+  const { toast } = useToast();
   const supabase = useSupabaseBrowser();
   const onSubmit = async (value: SignUpData) => {
-    console.log(value);
-
-    const { data, error } = await supabase.auth.signUp({
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.signUp({
       email: `${value.id}@togethers.com`,
       password: value.password,
       options: {
@@ -84,12 +87,21 @@ const SignUpForm = () => {
       },
     });
 
-    console.log(data);
-
     if (error) {
-      toast("회원가입에 실패했습니다.");
-      return;
+      return toast({
+        title: "회원가입에 실패했습니다.",
+        description: "이미 존재하는 아이디입니다.",
+      });
     }
+
+    toast({
+      title: "회원가입되었습니다.",
+    });
+
+    localStorage.setItem("user", JSON.stringify(user));
+
+    router.push("/");
+    router.refresh();
   };
 
   return (
