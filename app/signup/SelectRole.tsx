@@ -1,5 +1,5 @@
 import React from "react";
-import { CommonInputTypes } from "./types/formTypes";
+import { CommonInputTypes, SignUpData, SignUpFormItemType } from "./types/formTypes";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { FormControl, FormItem, FormLabel } from "@/components/ui/form";
 
@@ -11,7 +11,7 @@ const data = [
 
 // group-data-[state=open]:rotate-180
 
-const SelectRole = ({ field }: CommonInputTypes) => {
+const SelectRole = ({ field }: CommonInputTypes<SignUpData, SignUpFormItemType>) => {
   return (
     <FormControl>
       <RadioGroup

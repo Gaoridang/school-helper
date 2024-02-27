@@ -1,4 +1,4 @@
-import { ControllerRenderProps } from "react-hook-form";
+import { ControllerRenderProps, FieldValues, Path } from "react-hook-form";
 import { z } from "zod";
 
 export const SignUpSchema = z
@@ -17,7 +17,7 @@ export const SignUpSchema = z
   });
 
 export type SignUpData = z.infer<typeof SignUpSchema>;
-export type FormItemType = {
+export type SignUpFormItemType = {
   label: string;
   name: keyof SignUpData;
   type: "email" | "password" | "text" | "select";
@@ -26,9 +26,9 @@ export type FormItemType = {
   condition?: "student" | "teacher" | "parents";
 };
 
-export interface CommonInputTypes {
-  field: ControllerRenderProps<SignUpData, keyof SignUpData>;
-  formField: FormItemType;
+export interface CommonInputTypes<T extends FieldValues, VItem> {
+  field: ControllerRenderProps<T, Path<T>>;
+  formField: VItem;
 }
 
 export interface School {

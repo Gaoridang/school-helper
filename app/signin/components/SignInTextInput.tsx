@@ -2,13 +2,13 @@
 
 import { FormControl, FormDescription, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import React from "react";
-import { CommonInputTypes, SignUpData, SignUpFormItemType } from "./types/formTypes";
+import { SignInDataType, SignInFormItemType } from "../types/signInFormTypes";
+import { CommonInputTypes } from "@/app/signup/types/formTypes";
 
-const SignUpTextInput = ({
+const SignInTextInput = ({
   field,
   formField,
-}: CommonInputTypes<SignUpData, SignUpFormItemType>) => {
+}: CommonInputTypes<SignInDataType, SignInFormItemType>) => {
   return (
     <>
       <FormLabel></FormLabel>
@@ -21,4 +21,4 @@ const SignUpTextInput = ({
   );
 };
 
-export default SignUpTextInput;
+export default SignInTextInput;
