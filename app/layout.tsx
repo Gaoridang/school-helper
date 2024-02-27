@@ -37,9 +37,9 @@ export default function RootLayout({
   return (
     <ReactQueryClientProvider>
       <html lang="en" suppressHydrationWarning className="h-full">
-        <body className={cn(pretendard.className, "h-full")}>
+        <body className={cn(pretendard.className, "h-full grid grid-rows-[auto_1fr_auto]")}>
           <Navbar />
-          <main className="p-5 max-w-2xl m-auto">{children}</main>
+          <main className="px-5 m-auto w-full h-full">{children}</main>
           <Toaster />
         </body>
       </html>
