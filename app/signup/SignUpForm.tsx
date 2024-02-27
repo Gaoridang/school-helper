@@ -4,15 +4,15 @@ import { Form, FormField, FormItem } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
-import TextInput from "./TextInput";
+import SignUpTextInput from "./TextInput";
 
-import { type FormItemType, SignUpData, SignUpSchema } from "./types/formTypes";
+import { type SignUpFormItemType, SignUpData, SignUpSchema } from "./types/formTypes";
 import SelectRole from "./SelectRole";
 import { Button } from "@/components/ui/button";
 import useSupabaseBrowser from "../utils/supabase/client";
 import { toast } from "sonner";
 
-export const formItems: FormItemType[] = [
+export const formItems: SignUpFormItemType[] = [
   { label: "역할", name: "role", type: "select", placeholder: "" },
   {
     label: "이름",
@@ -97,7 +97,7 @@ const SignUpForm = () => {
       <form className="grid gap-2 w-full" onSubmit={form.handleSubmit(onSubmit)}>
         {formItems.map((item) => {
           if (item.condition === "student" && role !== "student") return null;
-          const Component = item.type === "select" ? SelectRole : TextInput;
+          const Component = item.type === "select" ? SelectRole : SignUpTextInput;
 
           return (
             <FormField
