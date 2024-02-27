@@ -54,7 +54,21 @@ export async function middleware(request: NextRequest) {
     },
   );
 
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // if user is not teacher, redirect to should-be-teacher page
+  if (request.nextUrl.pathname.startsWith("/classes")) {
+    if (user?.user_metadata.role !== "teacher") {
+      return NextResponse.redirect(new URL("/should-be-teacher", request.url));
+    }
+  }
+
+  // if user is signed in, redirect to home page
+  if (request.nextUrl.pathname.startsWith("/sign") && user) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
 
   return response;
 }

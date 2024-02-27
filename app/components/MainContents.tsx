@@ -1,31 +1,24 @@
-"use client";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import useSupabaseServer from "../utils/supabase/server";
 
-import { Button } from "@/components/ui/button";
-import { User } from "@supabase/supabase-js";
-import { LogIn } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+const MainContents = async () => {
+  const cookieStore = cookies();
+  const supabase = useSupabaseServer(cookieStore);
 
-const MainContents = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      setUser(JSON.parse(user));
-    }
-  }, []);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) {
-    return (
-      <Button onClick={() => router.push("/signin")}>
-        로그인 하러가기 <LogIn className="w-4 h-4 ml-2" />
-      </Button>
-    );
+    redirect("/signin");
   }
 
-  return <div>MainContents</div>;
+  if (user.user_metadata.role === "teacher") {
+    return <div>선생님 메인 페이지</div>;
+  }
+
+  return <div>학생 메인 페이지</div>;
 };
 
 export default MainContents;
