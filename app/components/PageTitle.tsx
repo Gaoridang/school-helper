@@ -1,13 +1,17 @@
-import { cn } from "@/lib/utils";
 import React from "react";
 
 interface Props {
   title: string;
-  className?: string;
+  description?: string;
 }
 
-const PageTitle = ({ title, className }: Props) => {
-  return <h1 className={cn("text-2xl font-semibold", className)}>{title}</h1>;
+const PageTitle = ({ title, description }: Props) => {
+  return (
+    <>
+      <h1 className="text-2xl font-semibold">{title}</h1>
+      <p className="text-slate-600">{description}</p>
+    </>
+  );
 };
 
 export default PageTitle;
