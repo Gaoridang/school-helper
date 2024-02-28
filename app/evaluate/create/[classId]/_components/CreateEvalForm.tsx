@@ -20,7 +20,7 @@ import useSupabaseBrowser from "@/app/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { format, sub } from "date-fns";
+import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -61,6 +61,26 @@ const CreateEvalForm = ({ classId, user }: Props) => {
   const onSubmit = async (values: CreateEvalData) => {
     const { date, subject, period, contents, evaluation_type } = values;
     const dateToString = format(date, "yyyy-MM-dd");
+
+    const { data: templateData, error: templateError } = await supabase
+      .from("evaluation_templates")
+      .insert({
+        class_id: classId,
+        date: dateToString,
+        subject_name: subject,
+        period: period,
+        creator_id: user.id,
+      })
+      .select()
+      .single();
+
+    if (templateError) {
+      return toast({
+        title: "평가지 만들기 실패",
+        description: "평가지를 만들지 못했습니다. 다시 시도해주세요.",
+      });
+    }
+
     const insertingData = contents.map((content) => {
       return {
         date: dateToString,
@@ -70,19 +90,25 @@ const CreateEvalForm = ({ classId, user }: Props) => {
         content: content.content,
         evaluation_type,
         creator_id: user.id,
+        template_id: templateData.id,
       };
     });
 
-    const { data, error } = await supabase.from("evaluation_items").insert(insertingData).select();
+    const { data: itemsData, error: itemsError } = await supabase
+      .from("evaluation_items")
+      .insert(insertingData)
+      .select();
 
-    if (error) {
+    if (itemsError) {
       return toast({
-        title: "평가지 만들기 실패",
-        description: "평가지를 만들지 못했습니다. 다시 시도해주세요.",
+        title: "평가 항목 생성 실패",
+        description: "평가 항목을 만들지 못했습니다. 다시 시도해주세요.",
       });
     }
 
-    router.push(`/evaluate/${classId}/${dateToString}/${subject}/${period}`);
+    router.push(
+      `/evaluate/${templateData.id}?class_id=${classId}&subject=${subject}&period=${period}`,
+    );
   };
 
   return (

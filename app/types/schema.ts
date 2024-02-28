@@ -107,6 +107,7 @@ export type Database = {
           id: number
           period: string
           subject_name: string
+          template_id: number | null
           updated_at: string | null
         }
         Insert: {
@@ -119,6 +120,7 @@ export type Database = {
           id?: number
           period: string
           subject_name: string
+          template_id?: number | null
           updated_at?: string | null
         }
         Update: {
@@ -131,6 +133,7 @@ export type Database = {
           id?: number
           period?: string
           subject_name?: string
+          template_id?: number | null
           updated_at?: string | null
         }
         Relationships: [
@@ -146,6 +149,13 @@ export type Database = {
             columns: ["creator_id"]
             isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_template"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "evaluation_templates"
             referencedColumns: ["id"]
           }
         ]
@@ -217,6 +227,54 @@ export type Database = {
           {
             foreignKeyName: "fk_student"
             columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      evaluation_templates: {
+        Row: {
+          class_id: string
+          created_at: string | null
+          creator_id: string
+          date: string
+          id: number
+          period: string
+          subject_name: string
+          updated_at: string | null
+        }
+        Insert: {
+          class_id: string
+          created_at?: string | null
+          creator_id: string
+          date: string
+          id?: number
+          period: string
+          subject_name: string
+          updated_at?: string | null
+        }
+        Update: {
+          class_id?: string
+          created_at?: string | null
+          creator_id?: string
+          date?: string
+          id?: number
+          period?: string
+          subject_name?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_class"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_creator"
+            columns: ["creator_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
