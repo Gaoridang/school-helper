@@ -7,7 +7,7 @@ import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";
 import { useState } from "react";
 import SelectSchool from "./SelectSchool";
 
-const TeacherSidebar = () => {
+const Sidebar = () => {
   const [classId, setClassId] = useState("");
 
   const supabase = useSupabaseBrowser();
@@ -26,7 +26,7 @@ const TeacherSidebar = () => {
   console.log(classId);
 
   return (
-    <div className=" border-r py-4 pr-4">
+    <div className="border-r py-4 pr-4">
       <SelectSchool
         classes={classes}
         handleSelectClass={handleSelectClass}
@@ -37,4 +37,4 @@ const TeacherSidebar = () => {
   );
 };
 
-export default TeacherSidebar;
+export default Sidebar;

@@ -1,7 +1,7 @@
 import React from "react";
 
 const TeacherMainPage = () => {
-  return <div>pdage</div>;
+  return <div>d</div>;
 };
 
 export default TeacherMainPage;
