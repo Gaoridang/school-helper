@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const createEvalSchema = z.object({
+  date: z.date(),
   subject: z.string().min(1, "과목을 선택하세요."),
   period: z.string().min(1, "교시를 선택하세요."),
   contents: z.array(

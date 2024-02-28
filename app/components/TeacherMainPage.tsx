@@ -49,7 +49,7 @@ const TeacherMainPage = () => {
         />
       )}
       {students && <StudentListTable columns={columns} data={students} />}
-      <Button onClick={() => router.push(`/evaluate/${classId}`)}>평가지 만들기</Button>
+      <Button onClick={() => router.push(`/evaluate/create/${classId}`)}>평가지 만들기</Button>
     </div>
   );
 };
