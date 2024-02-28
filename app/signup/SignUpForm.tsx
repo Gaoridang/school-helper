@@ -82,7 +82,7 @@ const SignUpForm = () => {
           name: value.name,
           role: value.role,
           student_code: value.student_code,
-          student_number: value.student_number,
+          student_number: parseInt(value.student_number!),
         },
       },
     });
