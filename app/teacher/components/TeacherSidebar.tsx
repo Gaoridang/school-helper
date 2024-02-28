@@ -26,7 +26,7 @@ const TeacherSidebar = () => {
   console.log(classId);
 
   return (
-    <div>
+    <div className=" border-r py-4 pr-4">
       <SelectSchool
         classes={classes}
         handleSelectClass={handleSelectClass}

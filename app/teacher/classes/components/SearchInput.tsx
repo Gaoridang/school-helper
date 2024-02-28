@@ -11,10 +11,10 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import React, { ChangeEvent, useState } from "react";
-import { CommonInputTypes } from "../../signup/types/formTypes";
+import { CommonInputTypes } from "../../../signup/types/formTypes";
 import { useSelectSchool } from "../hooks/useSelectSchool";
-import useSchools from "../../queries/getSchools";
-import useDebounce from "../../hooks/useDebounce";
+import useSchools from "../../../queries/getSchools";
+import useDebounce from "../../../hooks/useDebounce";
 import FormTitle from "./FormTitle";
 import { CreateClassData, CreateClassFormItemType } from "../types/classTypes";
 import { SearchIcon } from "lucide-react";

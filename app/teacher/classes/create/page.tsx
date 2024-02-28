@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormField, FormItem } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import SearchInput from "@/app/classes/components/SearchInput";
+import SearchInput from "@/app/teacher/classes/components/SearchInput";
 import PageTitle from "@/app/components/PageTitle";
 import SelectClassNumber from "../components/SelectClassNumber";
 import SelectGrade from "../components/SelectGrade";
