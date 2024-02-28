@@ -1,11 +1,11 @@
 "use client";
 
 import { useFieldArray, useForm } from "react-hook-form";
-import { CreateEvalData, createEvalSchema } from "../../types/types";
+import { CreateEvalData, createEvalSchema } from "../../../types/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { CalendarIcon, X } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -14,10 +14,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { periods, subjects } from "../../constants";
+import { periods, subjects } from "../../../constants";
 import PageTitle from "@/app/components/PageTitle";
 import useSupabaseBrowser from "@/app/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format, sub } from "date-fns";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Props {
   classId: string;
@@ -25,9 +32,11 @@ interface Props {
 }
 
 const CreateEvalForm = ({ classId, user }: Props) => {
+  const [date, setDate] = useState<Date | undefined>(new Date());
   const form = useForm<CreateEvalData>({
     resolver: zodResolver(createEvalSchema),
     defaultValues: {
+      date: new Date(),
       subject: "",
       period: "",
       contents: [
@@ -46,12 +55,15 @@ const CreateEvalForm = ({ classId, user }: Props) => {
     name: "contents",
   });
 
+  const router = useRouter();
+  const { toast } = useToast();
   const supabase = useSupabaseBrowser();
   const onSubmit = async (values: CreateEvalData) => {
-    const { subject, period, contents, evaluation_type } = values;
-
+    const { date, subject, period, contents, evaluation_type } = values;
+    const dateToString = format(date, "yyyy-MM-dd");
     const insertingData = contents.map((content) => {
       return {
+        date: dateToString,
         class_id: classId,
         subject_name: subject,
         period,
@@ -61,7 +73,16 @@ const CreateEvalForm = ({ classId, user }: Props) => {
       };
     });
 
-    await supabase.from("evaluation_items").insert(insertingData);
+    const { data, error } = await supabase.from("evaluation_items").insert(insertingData).select();
+
+    if (error) {
+      return toast({
+        title: "평가지 만들기 실패",
+        description: "평가지를 만들지 못했습니다. 다시 시도해주세요.",
+      });
+    }
+
+    router.push(`/evaluate/${classId}/${dateToString}/${subject}/${period}`);
   };
 
   return (
@@ -70,6 +91,45 @@ const CreateEvalForm = ({ classId, user }: Props) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="mt-5">
           <div className="grid md:flex gap-4">
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground",
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>날짜를 선택하세요.</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={setDate}
+                        disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="subject"

@@ -102,6 +102,7 @@ export type Database = {
           content: string
           created_at: string | null
           creator_id: string
+          date: string | null
           evaluation_type: string
           id: number
           period: string
@@ -113,6 +114,7 @@ export type Database = {
           content: string
           created_at?: string | null
           creator_id: string
+          date?: string | null
           evaluation_type: string
           id?: number
           period: string
@@ -124,6 +126,7 @@ export type Database = {
           content?: string
           created_at?: string | null
           creator_id?: string
+          date?: string | null
           evaluation_type?: string
           id?: number
           period?: string
