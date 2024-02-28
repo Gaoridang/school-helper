@@ -5,12 +5,12 @@ import { getClasses } from "../queries/getClasses";
 import { getStudentsByClassId } from "../queries/getStudentsByClassId";
 import useSupabaseBrowser from "../utils/supabase/client";
 import { useQuery } from "@supabase-cache-helpers/postgrest-react-query";
-import SelectSchool from "./components/SelectSchool";
-import StudentListTable from "./components/StudentListTable";
-import { columns } from "./components/columns";
-import { Student } from "./types";
-import PageTitle from "../components/PageTitle";
-import ClassListLoadingSkeleton from "./components/ClassListLoadingSkeleton";
+import SelectSchool from "../(teacher)/components/SelectSchool";
+import StudentListTable from "../(teacher)/components/StudentListTable";
+import { columns } from "../(teacher)/components/columns";
+import { Student } from "../(teacher)/types";
+import PageTitle from "./PageTitle";
+import ClassListLoadingSkeleton from "../(teacher)/components/ClassListLoadingSkeleton";
 
 const TeacherMainPage = () => {
   const [classId, setClassId] = useState("");

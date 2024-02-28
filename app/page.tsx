@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import useSupabaseServer from "./utils/supabase/server";
-import TeacherMainPage from "./(teacher)/page";
-import StudentMainPage from "./(student)/page";
+import TeacherMainPage from "./components/TeacherMainPage";
+import StudentMainPage from "./components/StudentMainPage";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
