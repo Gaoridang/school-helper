@@ -7,10 +7,10 @@ interface Props {
 
 const PageTitle = ({ title, description }: Props) => {
   return (
-    <>
-      <h1 className="text-2xl font-semibold">{title}</h1>
+    <div>
+      <h1 className="text-2xl font-semibold mt-5 mb-2">{title}</h1>
       <p className="text-slate-600">{description}</p>
-    </>
+    </div>
   );
 };
 
