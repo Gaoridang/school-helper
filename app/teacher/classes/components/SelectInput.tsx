@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { FieldValues } from "react-hook-form";
-import { CommonInputTypes } from "../../signup/types/formTypes";
+import { CommonInputTypes } from "../../../signup/types/formTypes";
 
 type SelectInputProps<T extends FieldValues, VItem extends { label: string }> = CommonInputTypes<
   T,

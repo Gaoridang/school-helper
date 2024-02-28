@@ -1,6 +1,6 @@
 import React from "react";
 import SelectInput from "./SelectInput";
-import { CommonInputTypes, SignUpData } from "../../signup/types/formTypes";
+import { CommonInputTypes, SignUpData } from "../../../signup/types/formTypes";
 import { CreateClassData, CreateClassFormItemType } from "../types/classTypes";
 
 const data = [

@@ -13,7 +13,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 
 const formItems: SignInFormItemType[] = [
-  { label: "이메일", name: "email", type: "text", placeholder: "아이디를 입력하세요." },
+  { label: "이메일", name: "id", type: "text", placeholder: "아이디를 입력하세요." },
   { label: "비밀번호", name: "password", type: "password", placeholder: "비밀번호를 입력하세요." },
 ];
 
@@ -21,7 +21,7 @@ const SignInForm = () => {
   const form = useForm<SignInDataType>({
     resolver: zodResolver(SignInSchema),
     defaultValues: {
-      email: "",
+      id: "",
       password: "",
     },
   });
@@ -34,7 +34,7 @@ const SignInForm = () => {
       data: { user },
       error,
     } = await supabase.auth.signInWithPassword({
-      email: `${values.email}@togethers.com`,
+      email: `${values.id}@togethers.com`,
       password: values.password,
     });
 
