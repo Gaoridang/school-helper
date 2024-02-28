@@ -96,6 +96,130 @@ export type Database = {
           }
         ]
       }
+      evaluation_items: {
+        Row: {
+          class_id: string
+          content: string
+          created_at: string | null
+          creator_id: string
+          evaluation_type: string
+          id: number
+          period: string
+          subject_name: string
+          updated_at: string | null
+        }
+        Insert: {
+          class_id: string
+          content: string
+          created_at?: string | null
+          creator_id: string
+          evaluation_type: string
+          id?: number
+          period: string
+          subject_name: string
+          updated_at?: string | null
+        }
+        Update: {
+          class_id?: string
+          content?: string
+          created_at?: string | null
+          creator_id?: string
+          evaluation_type?: string
+          id?: number
+          period?: string
+          subject_name?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_class"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_creator"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      evaluation_results: {
+        Row: {
+          created_at: string | null
+          evaluation_item_id: number
+          evaluator_id: string
+          id: number
+          result: boolean
+          student_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          evaluation_item_id: number
+          evaluator_id: string
+          id?: number
+          result: boolean
+          student_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          evaluation_item_id?: number
+          evaluator_id?: string
+          id?: number
+          result?: boolean
+          student_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evaluation_results_evaluation_item_id_fkey"
+            columns: ["evaluation_item_id"]
+            isOneToOne: false
+            referencedRelation: "evaluation_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evaluation_results_evaluator_id_fkey"
+            columns: ["evaluator_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evaluation_results_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_evaluation_item"
+            columns: ["evaluation_item_id"]
+            isOneToOne: false
+            referencedRelation: "evaluation_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_evaluator"
+            columns: ["evaluator_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_student"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       questions: {
         Row: {
           activity_id: number | null
@@ -128,44 +252,40 @@ export type Database = {
       schedules: {
         Row: {
           class_id: string
-          created_at: string
-          id: string
-          schedule: Json | null
+          created_at: string | null
+          id: number
+          period: string
+          schedule_date: string | null
+          subject_id: string
           updated_at: string | null
         }
         Insert: {
-          class_id?: string
-          created_at?: string
-          id?: string
-          schedule?: Json | null
+          class_id: string
+          created_at?: string | null
+          id?: number
+          period: string
+          schedule_date?: string | null
+          subject_id: string
           updated_at?: string | null
         }
         Update: {
           class_id?: string
-          created_at?: string
-          id?: string
-          schedule?: Json | null
+          created_at?: string | null
+          id?: number
+          period?: string
+          schedule_date?: string | null
+          subject_id?: string
           updated_at?: string | null
         }
-        Relationships: []
-      }
-      scores: {
-        Row: {
-          created_at: string
-          id: number
-          score: number
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-          score: number
-        }
-        Update: {
-          created_at?: string
-          id?: number
-          score?: number
-        }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_class"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       user_classes: {
         Row: {

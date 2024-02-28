@@ -11,9 +11,12 @@ import { columns } from "../(teacher)/components/columns";
 import { Student } from "../(teacher)/types";
 import PageTitle from "./PageTitle";
 import ClassListLoadingSkeleton from "../(teacher)/components/ClassListLoadingSkeleton";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 const TeacherMainPage = () => {
   const [classId, setClassId] = useState("");
+  const router = useRouter();
 
   const supabase = useSupabaseBrowser();
   const { data: classes, isLoading } = useQuery(getClasses(supabase));
@@ -46,6 +49,7 @@ const TeacherMainPage = () => {
         />
       )}
       {students && <StudentListTable columns={columns} data={students} />}
+      <Button onClick={() => router.push(`/evaluate/${classId}`)}>평가지 만들기</Button>
     </div>
   );
 };
