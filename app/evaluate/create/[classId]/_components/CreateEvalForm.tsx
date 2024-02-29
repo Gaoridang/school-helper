@@ -114,8 +114,13 @@ const CreateEvalForm = ({ classId, user }: Props) => {
       });
     }
 
+    toast({
+      title: "평가지 만들기 성공",
+      description: "평가지를 만들었습니다.",
+    });
+
     router.push(
-      `/evaluate/${templateData.id}?class_id=${classId}&subject=${subject}&period=${period}`,
+      `/evaluate/${templateData.id}?class_id=${classId}&subject=${subject}&period=${period}&type=${evaluation_type}`,
     );
   };
 

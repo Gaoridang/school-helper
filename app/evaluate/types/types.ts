@@ -12,6 +12,10 @@ export const createEvalSchema = z.object({
   evaluation_type: z.string().min(1, "평가 유형을 선택하세요."),
 });
 
+export const submitEvalSchema = z.object({
+  items: z.array(z.number()),
+});
+
 export type CreateEvalData = z.infer<typeof createEvalSchema>;
 export type CreateEvalFormItemType = {
   label: string;
@@ -19,3 +23,5 @@ export type CreateEvalFormItemType = {
   type: string;
   placeholder: string;
 };
+
+export type SubmitEvalData = z.infer<typeof submitEvalSchema>;

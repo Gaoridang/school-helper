@@ -162,59 +162,44 @@ export type Database = {
       }
       evaluation_results: {
         Row: {
+          comments: string | null
           created_at: string | null
-          evaluation_item_id: number
+          evaluatee_id: string
           evaluator_id: string
           id: number
-          result: boolean
-          student_id: string
+          item_id: number
+          score: boolean | null
+          template_id: number
           updated_at: string | null
         }
         Insert: {
+          comments?: string | null
           created_at?: string | null
-          evaluation_item_id: number
+          evaluatee_id: string
           evaluator_id: string
           id?: number
-          result: boolean
-          student_id: string
+          item_id: number
+          score?: boolean | null
+          template_id: number
           updated_at?: string | null
         }
         Update: {
+          comments?: string | null
           created_at?: string | null
-          evaluation_item_id?: number
+          evaluatee_id?: string
           evaluator_id?: string
           id?: number
-          result?: boolean
-          student_id?: string
+          item_id?: number
+          score?: boolean | null
+          template_id?: number
           updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "evaluation_results_evaluation_item_id_fkey"
-            columns: ["evaluation_item_id"]
-            isOneToOne: false
-            referencedRelation: "evaluation_items"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "evaluation_results_evaluator_id_fkey"
-            columns: ["evaluator_id"]
+            foreignKeyName: "fk_evaluatee"
+            columns: ["evaluatee_id"]
             isOneToOne: false
             referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "evaluation_results_student_id_fkey"
-            columns: ["student_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_evaluation_item"
-            columns: ["evaluation_item_id"]
-            isOneToOne: false
-            referencedRelation: "evaluation_items"
             referencedColumns: ["id"]
           },
           {
@@ -225,10 +210,17 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "fk_student"
-            columns: ["student_id"]
+            foreignKeyName: "fk_item"
+            columns: ["item_id"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "evaluation_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_template"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "evaluation_templates"
             referencedColumns: ["id"]
           }
         ]
