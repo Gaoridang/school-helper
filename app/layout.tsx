@@ -39,7 +39,7 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning className="h-full">
         <body className={cn(pretendard.className, "h-full grid grid-rows-[auto_1fr_auto]")}>
           <Navbar />
-          <main className="px-5 m-auto w-full h-full">{children}</main>
+          <main className="px-5 mt-5 m-auto max-w-2xl h-full">{children}</main>
           <Toaster />
         </body>
       </html>
