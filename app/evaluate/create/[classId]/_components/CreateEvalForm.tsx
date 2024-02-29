@@ -25,6 +25,8 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
+import dynamic from "next/dynamic";
+const PrevEvalItems = dynamic(() => import("./PrevEvalItems"), { ssr: false });
 
 interface Props {
   classId: string;
@@ -54,6 +56,12 @@ const CreateEvalForm = ({ classId, user }: Props) => {
     control: form.control,
     name: "contents",
   });
+
+  const handleSelectedItems = (selectedItems: string[]) => {
+    const newContents = selectedItems.map((content) => ({ content }));
+
+    form.setValue("contents", newContents);
+  };
 
   const router = useRouter();
   const { toast } = useToast();
@@ -116,7 +124,7 @@ const CreateEvalForm = ({ classId, user }: Props) => {
       <PageTitle title="평가지 만들기" description="평가지를 만들어보세요!" />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="mt-5">
-          <div className="grid md:flex gap-4">
+          <div className="grid md:flex gap-2">
             <FormField
               control={form.control}
               name="date"
@@ -156,83 +164,85 @@ const CreateEvalForm = ({ classId, user }: Props) => {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="subject"
-              render={({ field }) => {
-                return (
-                  <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="무슨 과목인가요?" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {subjects.map((subject) => (
-                          <SelectItem key={subject.value} value={subject.value}>
-                            {subject.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
-            <FormField
-              control={form.control}
-              name="period"
-              render={({ field }) => {
-                return (
-                  <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="몇 교시 인가요?" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {periods.map((period) => (
-                          <SelectItem key={period.value} value={period.value}>
-                            {period.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
-            <FormField
-              control={form.control}
-              name="evaluation_type"
-              render={({ field }) => {
-                return (
-                  <FormItem>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="누구에게 보내나요?" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="self">나에게</SelectItem>
-                        <SelectItem value="peer">친구에게</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
-            />
+            <div className="flex space-x-2">
+              <FormField
+                control={form.control}
+                name="subject"
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="무슨 과목인가요?" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {subjects.map((subject) => (
+                            <SelectItem key={subject.value} value={subject.value}>
+                              {subject.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
+              <FormField
+                control={form.control}
+                name="period"
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="몇 교시 인가요?" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {periods.map((period) => (
+                            <SelectItem key={period.value} value={period.value}>
+                              {period.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
+              <FormField
+                control={form.control}
+                name="evaluation_type"
+                render={({ field }) => {
+                  return (
+                    <FormItem>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="누구에게 보내나요?" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="self">나에게</SelectItem>
+                          <SelectItem value="peer">친구에게</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
+              />
+            </div>
           </div>
-
+          <PrevEvalItems user={user} handleSelectedItems={handleSelectedItems} />
           {fields.map((field, index) => (
             <div key={field.id}>
-              <div className="flex gap-2 my-4">
+              <div className="flex gap-2 space-y-2">
                 <Input
                   {...form.register(`contents.${index}.content` as const)}
                   placeholder="내용을 입력하세요."
