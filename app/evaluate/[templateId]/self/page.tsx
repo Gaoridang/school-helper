@@ -8,8 +8,7 @@ interface Props {
 }
 
 const EvalSelfPage = async ({ params }: Props) => {
-  const cookieStore = cookies();
-  const supabase = useSupabaseServer(cookieStore);
+  const supabase = useSupabaseServer();
 
   const { data: evalItems, error } = await supabase
     .from("evaluation_items")

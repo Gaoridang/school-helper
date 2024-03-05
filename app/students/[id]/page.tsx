@@ -1,14 +1,11 @@
 import useSupabaseServer from "@/app/utils/supabase/server";
-import { cookies } from "next/headers";
-import React from "react";
 
 interface Props {
   params: { id: string };
 }
 
 const StudentDetailPage = async ({ params }: Props) => {
-  const cookieStore = cookies();
-  const supabase = useSupabaseServer(cookieStore);
+  const supabase = useSupabaseServer();
 
   const { data: student, error } = await supabase
     .from("users")
