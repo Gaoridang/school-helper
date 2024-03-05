@@ -9,11 +9,7 @@ export const createEvalSchema = z.object({
       content: z.string().min(1, "평가 내용을 입력하세요."),
     }),
   ),
-  evaluation_type: z.string().min(1, "평가 유형을 선택하세요."),
-});
-
-export const submitEvalSchema = z.object({
-  items: z.array(z.number()),
+  evaluation_type: z.enum(["self", "peer"]),
 });
 
 export type CreateEvalData = z.infer<typeof createEvalSchema>;
@@ -23,5 +19,9 @@ export type CreateEvalFormItemType = {
   type: string;
   placeholder: string;
 };
+
+export const submitEvalSchema = z.object({
+  items: z.array(z.number()),
+});
 
 export type SubmitEvalData = z.infer<typeof submitEvalSchema>;

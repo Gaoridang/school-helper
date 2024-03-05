@@ -26,7 +26,7 @@ interface Props {
     | null;
 }
 
-const SelectSchool = ({ data }: Props) => {
+const SelectClass = ({ data }: Props) => {
   const { setSelectedClassId } = useClass();
 
   const defaultValue = data?.find((item) => item.is_primary)?.class_id;
@@ -55,4 +55,4 @@ const SelectSchool = ({ data }: Props) => {
   );
 };
 
-export default SelectSchool;
+export default SelectClass;
