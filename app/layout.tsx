@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { ReactQueryClientProvider } from "./QueryClientProvider";
 import { cn } from "@/lib/utils";
 import { Navbar } from "./Navbar";
+import { UserProvider } from "./hooks/useUser";
 
 const pretendard = localFont({
   src: [
@@ -36,13 +37,15 @@ export default function RootLayout({
 }>) {
   return (
     <ReactQueryClientProvider>
-      <html lang="en" suppressHydrationWarning className="h-full">
-        <body className={cn(pretendard.className, "h-full grid grid-rows-[auto_1fr_auto]")}>
-          <Navbar />
-          <main className="px-5 mt-5 m-auto max-w-2xl h-full">{children}</main>
-          <Toaster />
-        </body>
-      </html>
+      <UserProvider>
+        <html lang="en" suppressHydrationWarning>
+          <body className={cn(pretendard.className, "min-h-screen")}>
+            <Navbar />
+            <main className="px-4 mt-10 md:px-20 max-w-[1000px] m-auto">{children}</main>
+            <Toaster />
+          </body>
+        </html>
+      </UserProvider>
     </ReactQueryClientProvider>
   );
 }

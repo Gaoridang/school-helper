@@ -52,7 +52,7 @@ const StudentListTable = <TData, TValue>({ columns, data }: StudentTableProps<TD
   });
 
   return (
-    <div className="w-[300px] md:w-full border rounded-md overflow-auto">
+    <div className="rounded-md border">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
