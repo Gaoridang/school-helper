@@ -20,6 +20,7 @@ import useSupabaseBrowser from "@/app/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import { ko } from "date-fns/locale";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -34,7 +35,6 @@ interface Props {
 }
 
 const CreateEvalForm = ({ classId, user }: Props) => {
-  const [date, setDate] = useState<Date | undefined>(new Date());
   const form = useForm<CreateEvalData>({
     resolver: zodResolver(createEvalSchema),
     defaultValues: {
@@ -102,10 +102,7 @@ const CreateEvalForm = ({ classId, user }: Props) => {
       };
     });
 
-    const { data: itemsData, error: itemsError } = await supabase
-      .from("evaluation_items")
-      .insert(insertingData)
-      .select();
+    const { error: itemsError } = await supabase.from("evaluation_items").insert(insertingData);
 
     if (itemsError) {
       return toast({
@@ -125,7 +122,7 @@ const CreateEvalForm = ({ classId, user }: Props) => {
   };
 
   return (
-    <div className="max-w-2xl m-auto">
+    <div>
       <PageTitle title="평가지 만들기" description="평가지를 만들어보세요!" />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="mt-5">
@@ -137,7 +134,7 @@ const CreateEvalForm = ({ classId, user }: Props) => {
                 <FormItem className="flex flex-col">
                   <Popover>
                     <PopoverTrigger asChild>
-                      <FormControl>
+                      <FormControl className="gap-1">
                         <Button
                           variant={"outline"}
                           className={cn(
@@ -146,7 +143,7 @@ const CreateEvalForm = ({ classId, user }: Props) => {
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "PPP")
+                            format(field.value, "y. M. d(E)", { locale: ko })
                           ) : (
                             <span>날짜를 선택하세요.</span>
                           )}
@@ -156,11 +153,10 @@ const CreateEvalForm = ({ classId, user }: Props) => {
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
+                        locale={ko}
                         mode="single"
-                        selected={date}
-                        onSelect={setDate}
-                        disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
-                        initialFocus
+                        selected={field.value}
+                        onSelect={field.onChange}
                       />
                     </PopoverContent>
                   </Popover>
@@ -246,16 +242,14 @@ const CreateEvalForm = ({ classId, user }: Props) => {
           </div>
           <PrevEvalItems user={user} handleSelectedItems={handleSelectedItems} />
           {fields.map((field, index) => (
-            <div key={field.id}>
-              <div className="flex gap-2 space-y-2">
-                <Input
-                  {...form.register(`contents.${index}.content` as const)}
-                  placeholder="내용을 입력하세요."
-                />
-                <Button variant="ghost" type="button" onClick={() => remove(index)}>
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
+            <div key={field.id} className="flex gap-2 mb-2">
+              <Input
+                {...form.register(`contents.${index}.content` as const)}
+                placeholder="내용을 입력하세요."
+              />
+              <Button variant="ghost" type="button" onClick={() => remove(index)}>
+                <X className="w-4 h-4" />
+              </Button>
             </div>
           ))}
           <div className="flex gap-4">

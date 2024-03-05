@@ -1,4 +1,3 @@
-import { getEvalItemsByCreatorId } from "@/app/queries/getEvalItemsByCreatorId";
 import { Tables } from "@/app/types/schema";
 import useSupabaseBrowser from "@/app/utils/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -62,7 +61,7 @@ const PrevEvalItems = ({ user, handleSelectedItems }: Props) => {
             value={value}
             onChange={(e) => setValue(e.target.value)}
           />
-          <ScrollArea className="max-h-[300px]">
+          <ScrollArea className="h-[300px]">
             {filteredItems.map((item) => (
               <div key={item.id} className="flex items-center space-x-2 mt-2">
                 <Checkbox
@@ -85,15 +84,17 @@ const PrevEvalItems = ({ user, handleSelectedItems }: Props) => {
                 취소
               </Button>
             </DialogClose>
-            <Button
-              type="button"
-              onClick={() => {
-                handleSelectedItems(selectedItemsContent);
-                setSelectedItemsContent([]);
-              }}
-            >
-              불러오기
-            </Button>
+            <DialogClose asChild>
+              <Button
+                type="button"
+                onClick={() => {
+                  handleSelectedItems(selectedItemsContent);
+                  setSelectedItemsContent([]);
+                }}
+              >
+                불러오기
+              </Button>
+            </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>
