@@ -23,7 +23,7 @@ const EvalSelfPage = async ({ params }: Props) => {
   return (
     <>
       <PageTitle title="오늘의 😀는 어땠나요?" description="정성껏 하루를 되돌아보아요." />
-      {evalItems && <EvalSelfForm evalItems={evalItems} />}
+      {evalItems && <EvalSelfForm evalItems={evalItems} templateId={params.templateId} />}
     </>
   );
 };

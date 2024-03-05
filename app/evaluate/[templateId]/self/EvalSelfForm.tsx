@@ -20,13 +20,15 @@ import useSupabaseBrowser from "@/app/utils/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { getSubjectName } from "../../getSubjectName";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface Props {
   evalItems: Tables<"evaluation_items">[];
+  templateId: string;
 }
 
 // TODO: 자가, 동료 선택 가능하도록 수정
-const EvalSelfForm = ({ evalItems }: Props) => {
+const EvalSelfForm = ({ evalItems, templateId }: Props) => {
   const form = useForm<SubmitEvalData>({
     resolver: zodResolver(submitEvalSchema),
     defaultValues: {
@@ -34,6 +36,7 @@ const EvalSelfForm = ({ evalItems }: Props) => {
     },
   });
 
+  const router = useRouter();
   const { toast } = useToast();
   const supabase = useSupabaseBrowser();
   const onSubmit = async (values: SubmitEvalData) => {
@@ -41,28 +44,33 @@ const EvalSelfForm = ({ evalItems }: Props) => {
       data: { user },
     } = await supabase.auth.getUser();
 
+    const { data: session } = await supabase
+      .from("sessions")
+      .insert({
+        template_id: parseInt(templateId),
+        creator_id: user!.id,
+        start_time: new Date().toISOString(),
+      })
+      .select()
+      .single();
+
     const results = evalItems.map((item) => ({
       evaluator_id: user!.id,
       evaluatee_id: user!.id,
-      template_id: item.template_id!,
+      template_id: parseInt(templateId),
       item_id: item.id,
-      score: values.items.includes(item.id),
+      is_passed: values.items.includes(item.id),
+      session_id: session?.id,
     }));
 
-    const { error: submitError } = await supabase.from("evaluation_results").insert(results);
-
-    if (submitError) {
-      toast({
-        title: "평가 제출 실패",
-        description: "평가를 제출하지 못했습니다. 다시 시도해주세요.",
-      });
-      return;
-    }
+    const { error: resultsError } = await supabase.from("evaluation_results").insert(results);
 
     toast({
       title: "평가 제출 성공",
       description: "평가를 제출했습니다.",
     });
+
+    router.push(`/reviews/${evalItems[0].template_id}`);
   };
 
   return (
