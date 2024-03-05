@@ -43,13 +43,6 @@ export const formItems: SignUpFormItemType[] = [
     condition: "student",
     description: "학생의 경우 학번을 입력해주세요.",
   },
-  {
-    label: "고유번호",
-    name: "student_code",
-    type: "text",
-    placeholder: "고유번호",
-    condition: "student",
-  },
 ];
 
 const SignUpForm = () => {
@@ -81,7 +74,6 @@ const SignUpForm = () => {
         data: {
           name: value.name,
           role: value.role,
-          student_code: value.student_code,
           student_number: parseInt(value.student_number!),
         },
       },
