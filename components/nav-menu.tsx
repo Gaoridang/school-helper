@@ -14,11 +14,12 @@ import {
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import useSupabaseBrowser from "@/app/utils/supabase/client";
-import { User } from "@supabase/supabase-js";
 import { getRoleBadge } from "@/app/signup/utils/getRoleBadge";
 import { useToast } from "./ui/use-toast";
+import { useUser } from "@/app/hooks/useUser";
 
-const NavMenus = ({ user }: { user: User | null }) => {
+const NavMenus = () => {
+  const user = useUser();
   const router = useRouter();
   const supabase = useSupabaseBrowser();
   const { toast } = useToast();

@@ -1,40 +1,57 @@
+"use client";
+
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useEffect } from "react";
+import { useClass } from "../hooks/useClass";
 
 interface Props {
-  classes:
+  data:
     | {
-        id: string;
-        school: string;
-        grade: number;
-        class_number: number;
+        class_id: string;
+        is_primary: boolean | null;
+        classes: {
+          school: string;
+          grade: number;
+          class_number: number;
+          id: string;
+        } | null;
       }[]
-    | undefined
     | null;
-  handleSelectClass: (classId: string) => void;
-  selectedClassId: string;
 }
 
-const SelectSchool = ({ classes, handleSelectClass, selectedClassId }: Props) => {
+const SelectSchool = ({ data }: Props) => {
+  const { setSelectedClassId } = useClass();
+
+  const defaultValue = data?.find((item) => item.is_primary)?.class_id;
+
+  useEffect(() => {
+    if (defaultValue) setSelectedClassId(defaultValue);
+  }, [defaultValue, setSelectedClassId]);
+
   return (
-    <Select onValueChange={handleSelectClass} value={selectedClassId}>
-      <SelectTrigger>
-        <SelectValue placeholder="학급을 선택하세요." />
-      </SelectTrigger>
-      <SelectContent>
-        {classes?.map((c) => (
-          <SelectItem
-            key={c.id}
-            value={c.id}
-          >{`${c.school} ${c.grade}학년 ${c.class_number}반`}</SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <div className="mb-4">
+      <Select onValueChange={setSelectedClassId} defaultValue={defaultValue}>
+        <SelectTrigger className="w-auto text-xl px-0 py-4 border-none space-x-2 focus:ring-0">
+          <SelectValue placeholder="학급을 선택하세요" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            {data?.map((item) => (
+              <SelectItem key={item.class_id} value={item.class_id}>
+                {item.classes?.school} {item.classes?.grade}학년 {item.classes?.class_number}반
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </div>
   );
 };
 
