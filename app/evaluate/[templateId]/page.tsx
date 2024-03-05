@@ -1,21 +1,18 @@
-import useSupabaseServer from "@/app/utils/supabase/server";
-import { cookies } from "next/headers";
-import React from "react";
-import EvalItemList from "./_components/EvalItemList";
 import PageTitle from "@/app/components/PageTitle";
-import { getSubjectName } from "../getSubjectName";
+import useSupabaseServer from "@/app/utils/supabase/server";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import Link from "next/link";
+import { getSubjectName } from "../getSubjectName";
 import ActionButton from "./_components/AcionButton";
+import EvalItemList from "./_components/EvalItemList";
 
 interface Props {
   params: { templateId: string };
 }
 
 const EvalPage = async ({ params }: Props) => {
-  const cookieStore = cookies();
-  const supabase = useSupabaseServer(cookieStore);
+  const supabase = useSupabaseServer();
 
   const { data: evalItems, error } = await supabase
     .from("evaluation_items")
