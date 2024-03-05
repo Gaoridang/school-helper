@@ -22,15 +22,9 @@ interface Props {
 const ActionButton = ({ templateId, variant, children }: Props) => {
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
-  const classId = searchParams.get("class_id");
-
-  const hrefByType =
-    type === "self"
-      ? `/evaluate/${templateId}/self?class_id=${classId}`
-      : `/evaluate/${templateId}/peer?class_id=${classId}`;
 
   return (
-    <Link href={hrefByType}>
+    <Link href={`/evaluate/${templateId}?type=${type}`}>
       <Button variant={variant}>{children}</Button>
     </Link>
   );

@@ -11,6 +11,10 @@ import { useRouter } from "next/navigation";
 import { useClass } from "../(teacher)/hooks/useClass";
 import { format } from "date-fns";
 import { getSubjectName } from "../evaluate/getSubjectName";
+import { toWhom } from "../evaluate/toWhom";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { PlusCircle } from "lucide-react";
+import Link from "next/link";
 
 const CheckCalendar = () => {
   const { selectedClassId } = useClass();
@@ -31,20 +35,17 @@ const CheckCalendar = () => {
     <div className="grid gap-2 grid-cols-2 mt-4">
       {templates && templates.length > 0 ? (
         templates?.map((template) => (
-          <Button key={template.id} onClick={() => router.push(`/evaluate/${template.id}/self`)}>
-            {`${template.period} ${getSubjectName(template.subject_name)}`}
+          <Button
+            key={template.id}
+            onClick={() => router.push(`/evaluate/${template.id}?type=${template.type}`)}
+          >
+            <span>{`${template.period} ${getSubjectName(template.subject_name)}`}</span>
+            <span className="font-semibold text-xs">{toWhom(template.type)}</span>
           </Button>
         ))
       ) : (
         <p>자료가 없습니다.</p>
       )}
-      <Button
-        className="col-span-2"
-        variant="link"
-        onClick={() => router.push(`/evaluate/create/${selectedClassId}`)}
-      >
-        새로 만들기
-      </Button>
     </div>
   );
 
@@ -52,7 +53,21 @@ const CheckCalendar = () => {
     <div>
       <Card className="hover:hover:shadow-lg transition">
         <CardHeader>
-          <CardTitle>점검 시작하기</CardTitle>
+          <CardTitle className="flex items-center space-x-2">
+            <span>점검 시작하기</span>
+            <TooltipProvider delayDuration={0}>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Link href={`/evaluate/create/${selectedClassId}`}>
+                    <PlusCircle className="w-6 h-6 hover:rotate-90 transition text-purple-700" />
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <span>새로 만들기</span>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </CardTitle>
           <CardDescription>점검할 날짜를 선택하세요.</CardDescription>
         </CardHeader>
         <CardContent className="flex justify-center">

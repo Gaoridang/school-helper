@@ -59,7 +59,7 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // if user is not teacher, redirect to should-be-teacher page
-  if (request.nextUrl.pathname.startsWith("/classes")) {
+  if (request.nextUrl.pathname.startsWith("/classes/create")) {
     if (user?.user_metadata.role !== "teacher") {
       return NextResponse.redirect(new URL("/should-be-teacher", request.url));
     }

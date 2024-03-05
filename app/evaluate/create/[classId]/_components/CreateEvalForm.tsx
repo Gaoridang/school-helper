@@ -23,7 +23,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { ko } from "date-fns/locale";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import dynamic from "next/dynamic";
@@ -117,7 +116,7 @@ const CreateEvalForm = ({ classId, user }: Props) => {
     });
 
     router.push(
-      `/evaluate/${templateData.id}?class_id=${classId}&subject=${subject}&period=${period}&type=${evaluation_type}`,
+      `/evaluate/confirm/${templateData.id}?class_id=${classId}&subject=${subject}&period=${period}&type=${evaluation_type}`,
     );
   };
 
@@ -224,7 +223,7 @@ const CreateEvalForm = ({ classId, user }: Props) => {
                     <FormItem>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger disabled={user.user_metadata.role === "student"}>
                             <SelectValue placeholder="누구에게 보내나요?" />
                           </SelectTrigger>
                         </FormControl>
@@ -252,11 +251,11 @@ const CreateEvalForm = ({ classId, user }: Props) => {
               </Button>
             </div>
           ))}
-          <div className="flex gap-4">
+          <div className="flex gap-2">
+            <Button type="submit">만들기</Button>
             <Button variant="outline" type="button" onClick={() => append({ content: "" })}>
               항목 추가하기
             </Button>
-            <Button type="submit">만들기</Button>
           </div>
         </form>
       </Form>

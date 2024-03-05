@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
-import { Button } from "@/components/ui/button";
 import { Tables } from "@/app/types/schema";
-import { useForm } from "react-hook-form";
+import useSupabaseBrowser from "@/app/utils/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -13,14 +13,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Checkbox } from "@/components/ui/checkbox";
-import { SubmitEvalData, submitEvalSchema } from "../../types/types";
-import { zodResolver } from "@hookform/resolvers/zod";
-import useSupabaseBrowser from "@/app/utils/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
-import { getSubjectName } from "../../getSubjectName";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { getSubjectName } from "../../getSubjectName";
+import { SubmitEvalData, submitEvalSchema } from "../../types/types";
+import { useSelectedUser } from "../_hooks/useSelectedUser";
 
 interface Props {
   evalItems: Tables<"evaluation_items">[];
@@ -28,7 +28,7 @@ interface Props {
 }
 
 // TODO: 자가, 동료 선택 가능하도록 수정
-const EvalSelfForm = ({ evalItems, templateId }: Props) => {
+const EvalForm = ({ evalItems, templateId }: Props) => {
   const form = useForm<SubmitEvalData>({
     resolver: zodResolver(submitEvalSchema),
     defaultValues: {
@@ -36,9 +36,15 @@ const EvalSelfForm = ({ evalItems, templateId }: Props) => {
     },
   });
 
+  const searchParams = useSearchParams();
+  const { selectedUser } = useSelectedUser();
+  const isPeer = searchParams.get("type") === "peer";
   const router = useRouter();
   const { toast } = useToast();
   const supabase = useSupabaseBrowser();
+
+  console.log("selectedUser", selectedUser);
+
   const onSubmit = async (values: SubmitEvalData) => {
     const {
       data: { user },
@@ -56,21 +62,31 @@ const EvalSelfForm = ({ evalItems, templateId }: Props) => {
 
     const results = evalItems.map((item) => ({
       evaluator_id: user!.id,
-      evaluatee_id: user!.id,
+      evaluatee_id: isPeer ? selectedUser : user!.id,
       template_id: parseInt(templateId),
       item_id: item.id,
       is_passed: values.items.includes(item.id),
       session_id: session?.id,
     }));
 
+    console.log(results);
+
     const { error: resultsError } = await supabase.from("evaluation_results").insert(results);
+
+    if (resultsError) {
+      return toast({
+        title: "평가 제출 실패",
+        description: "평가를 제출하지 못했습니다.",
+      });
+    }
 
     toast({
       title: "평가 제출 성공",
       description: "평가를 제출했습니다.",
     });
 
-    router.push(`/reviews/${evalItems[0].template_id}`);
+    // FIXME: go to evaluation confirmation page
+    router.push(`/reviews/${session?.id}`);
   };
 
   return (
@@ -118,17 +134,17 @@ const EvalSelfForm = ({ evalItems, templateId }: Props) => {
             </FormItem>
           )}
         />
-        <Link href="/evaluate" className="mr-2">
-          <Button type="button" variant="secondary">
+        <Button type="submit" className="mr-2" disabled={form.formState.isSubmitting}>
+          제출하기
+        </Button>
+        <Link href="/evaluate">
+          <Button type="button" variant="outline">
             돌아가기
           </Button>
         </Link>
-        <Button type="submit" disabled={form.formState.isSubmitting}>
-          제출하기
-        </Button>
       </form>
     </Form>
   );
 };
 
-export default EvalSelfForm;
+export default EvalForm;
