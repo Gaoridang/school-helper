@@ -106,7 +106,6 @@ export type Database = {
           created_at: string | null
           creator_id: string
           date: string | null
-          evaluation_type: string
           id: number
           period: string
           subject_name: string
@@ -119,7 +118,6 @@ export type Database = {
           created_at?: string | null
           creator_id: string
           date?: string | null
-          evaluation_type: string
           id?: number
           period: string
           subject_name: string
@@ -132,7 +130,6 @@ export type Database = {
           created_at?: string | null
           creator_id?: string
           date?: string | null
-          evaluation_type?: string
           id?: number
           period?: string
           subject_name?: string
@@ -263,81 +260,6 @@ export type Database = {
           }
         ]
       }
-      evaluation_summary: {
-        Row: {
-          class_id: string
-          created_at: string | null
-          date: string
-          evaluatee_id: string
-          id: number
-          period: string
-          score: number | null
-          subject_name: string
-          template_id: number
-          updated_at: string | null
-        }
-        Insert: {
-          class_id: string
-          created_at?: string | null
-          date: string
-          evaluatee_id: string
-          id?: number
-          period: string
-          score?: number | null
-          subject_name: string
-          template_id: number
-          updated_at?: string | null
-        }
-        Update: {
-          class_id?: string
-          created_at?: string | null
-          date?: string
-          evaluatee_id?: string
-          id?: number
-          period?: string
-          score?: number | null
-          subject_name?: string
-          template_id?: number
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "evaluation_summary_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "classes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "evaluation_summary_evaluatee_id_fkey"
-            columns: ["evaluatee_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "evaluation_summary_template_id_fkey"
-            columns: ["template_id"]
-            isOneToOne: false
-            referencedRelation: "evaluation_summary_view"
-            referencedColumns: ["template_id"]
-          },
-          {
-            foreignKeyName: "evaluation_summary_template_id_fkey"
-            columns: ["template_id"]
-            isOneToOne: false
-            referencedRelation: "evaluation_templates"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "evaluation_summary_template_id_fkey"
-            columns: ["template_id"]
-            isOneToOne: false
-            referencedRelation: "session_evaluation_summary"
-            referencedColumns: ["template_id"]
-          }
-        ]
-      }
       evaluation_templates: {
         Row: {
           class_id: string
@@ -347,6 +269,7 @@ export type Database = {
           id: number
           period: string
           subject_name: string
+          type: string
           updated_at: string | null
         }
         Insert: {
@@ -357,6 +280,7 @@ export type Database = {
           id?: number
           period: string
           subject_name: string
+          type?: string
           updated_at?: string | null
         }
         Update: {
@@ -367,6 +291,7 @@ export type Database = {
           id?: number
           period?: string
           subject_name?: string
+          type?: string
           updated_at?: string | null
         }
         Relationships: [
@@ -411,44 +336,6 @@ export type Database = {
             columns: ["activity_id"]
             isOneToOne: false
             referencedRelation: "activities"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      schedules: {
-        Row: {
-          class_id: string
-          created_at: string | null
-          id: number
-          period: string
-          schedule_date: string | null
-          subject_id: string
-          updated_at: string | null
-        }
-        Insert: {
-          class_id: string
-          created_at?: string | null
-          id?: number
-          period: string
-          schedule_date?: string | null
-          subject_id: string
-          updated_at?: string | null
-        }
-        Update: {
-          class_id?: string
-          created_at?: string | null
-          id?: number
-          period?: string
-          schedule_date?: string | null
-          subject_id?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_class"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "classes"
             referencedColumns: ["id"]
           }
         ]
@@ -574,6 +461,22 @@ export type Database = {
       }
     }
     Views: {
+      evaluation_session_view: {
+        Row: {
+          content: string | null
+          is_passed: boolean | null
+          session_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_session_id"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       evaluation_summary_view: {
         Row: {
           contents: Json | null

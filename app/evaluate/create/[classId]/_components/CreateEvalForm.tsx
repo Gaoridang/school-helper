@@ -78,6 +78,7 @@ const CreateEvalForm = ({ classId, user }: Props) => {
         subject_name: subject,
         period: period,
         creator_id: user.id,
+        type: evaluation_type,
       })
       .select()
       .single();
@@ -96,7 +97,6 @@ const CreateEvalForm = ({ classId, user }: Props) => {
         subject_name: subject,
         period,
         content: content.content,
-        evaluation_type,
         creator_id: user.id,
         template_id: templateData.id,
       };
