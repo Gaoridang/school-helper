@@ -10,6 +10,8 @@ import { useClass } from "../(teacher)/hooks/useClass";
 import { useReviews } from "../queries/getReviewList";
 import { format } from "date-fns";
 import { useUser } from "../hooks/useUser";
+import { useRouter } from "next/navigation";
+import { getSubjectName } from "../evaluate/getSubjectName";
 
 const ReviewCalendar = () => {
   const user = useUser();
@@ -17,6 +19,7 @@ const ReviewCalendar = () => {
   const [selectedDay, setSelectedDay] = useState<Date>();
   const selectedDayFormatted = format(selectedDay ?? new Date(), "y-M-d", { locale: ko });
   const { data: reviews } = useReviews(selectedDayFormatted, selectedClassId, user?.id!);
+  const router = useRouter();
 
   const handleSelect = async (
     day: Date | undefined,
@@ -27,11 +30,15 @@ const ReviewCalendar = () => {
   };
 
   const footer = (
-    <div className="grid gap-2 mt-4">
+    <div className="grid grid-cols-2 gap-2 mt-4">
       {reviews && reviews.length > 0 ? (
         reviews?.map((review) => (
-          <Button key={review.session_id} onClick={() => console.log(review.session_id)}>
-            {`${review.period} ${review.subject_name}`}
+          <Button
+            variant="secondary"
+            key={review.session_id}
+            onClick={() => router.push(`/reviews/${review.session_id}`)}
+          >
+            {`${review.period} ${getSubjectName(review.subject_name)}`}
           </Button>
         ))
       ) : (
@@ -42,7 +49,7 @@ const ReviewCalendar = () => {
 
   return (
     <div>
-      <Card>
+      <Card className="hover:shadow-lg transition">
         <CardHeader>
           <CardTitle>내 결과 보기</CardTitle>
           <CardDescription>점검할 날짜를 선택하세요.</CardDescription>

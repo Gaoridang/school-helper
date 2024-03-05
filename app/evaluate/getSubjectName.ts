@@ -1,4 +1,4 @@
-export const getSubjectName = (en: string) => {
+export const getSubjectName = (en: string | null) => {
   switch (en) {
     case "korean":
       return "국어";
