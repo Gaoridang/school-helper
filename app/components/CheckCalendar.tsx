@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useClass } from "../(teacher)/hooks/useClass";
 import { format } from "date-fns";
+import { getSubjectName } from "../evaluate/getSubjectName";
 
 const CheckCalendar = () => {
   const { selectedClassId } = useClass();
@@ -31,7 +32,7 @@ const CheckCalendar = () => {
       {templates && templates.length > 0 ? (
         templates?.map((template) => (
           <Button key={template.id} onClick={() => router.push(`/evaluate/${template.id}/self`)}>
-            {`${template.period} ${template.subject_name}`}
+            {`${template.period} ${getSubjectName(template.subject_name)}`}
           </Button>
         ))
       ) : (
@@ -49,7 +50,7 @@ const CheckCalendar = () => {
 
   return (
     <div>
-      <Card>
+      <Card className="hover:hover:shadow-lg transition">
         <CardHeader>
           <CardTitle>점검 시작하기</CardTitle>
           <CardDescription>점검할 날짜를 선택하세요.</CardDescription>
