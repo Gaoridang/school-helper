@@ -1,20 +1,18 @@
 "use client";
 
-import { Calendar } from "@/components/ui/calendar";
-import React, { useState } from "react";
-import { ActiveModifiers } from "react-day-picker";
-import { useTemplates } from "../queries/getTemplates";
-import { ko } from "date-fns/locale";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { useClass } from "../(teacher)/hooks/useClass";
+import { Calendar } from "@/components/ui/calendar";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
+import { ko } from "date-fns/locale";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { ActiveModifiers } from "react-day-picker";
+import { useClass } from "../(teacher)/hooks/useClass";
 import { getSubjectName } from "../evaluate/getSubjectName";
 import { toWhom } from "../evaluate/toWhom";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { PlusCircle } from "lucide-react";
-import Link from "next/link";
+import { useTemplates } from "../queries/getTemplates";
+import CustomTooltip from "./Tooltip";
 
 const CheckCalendar = () => {
   const { selectedClassId } = useClass();
@@ -55,18 +53,9 @@ const CheckCalendar = () => {
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <span>점검 시작하기</span>
-            <TooltipProvider delayDuration={0}>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Link href={`/evaluate/create/${selectedClassId}`}>
-                    <PlusCircle className="w-6 h-6 hover:rotate-90 transition text-purple-700" />
-                  </Link>
-                </TooltipTrigger>
-                <TooltipContent side="right">
-                  <span>새로 만들기</span>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <CustomTooltip href={`/evaluate/create`}>
+              <span>새로 만들기</span>
+            </CustomTooltip>
           </CardTitle>
           <CardDescription>점검할 날짜를 선택하세요.</CardDescription>
         </CardHeader>
