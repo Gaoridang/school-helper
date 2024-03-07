@@ -51,7 +51,7 @@ const SelectStudent = () => {
       console.error(error);
     }
 
-    setStudents(data);
+    setStudents(data?.filter((data) => data.users) || []);
   };
 
   return (
@@ -75,10 +75,7 @@ const SelectStudent = () => {
                 <Button
                   variant="link"
                   className="flex items-center gap-1 mt-2 text-slate-900 py-0"
-                  onClick={() => {
-                    console.log("clicked", student.users?.id);
-                    setSelectedUser(student.users!.id);
-                  }}
+                  onClick={() => setSelectedUser(student.users!.id)}
                 >
                   <p>
                     {student.users?.student_number}번 {student.users?.name}
