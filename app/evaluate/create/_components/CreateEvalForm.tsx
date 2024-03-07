@@ -1,7 +1,7 @@
 "use client";
 
 import { useFieldArray, useForm } from "react-hook-form";
-import { CreateEvalData, createEvalSchema } from "../../../types/types";
+import { CreateEvalData, createEvalSchema } from "../../types/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { periods, subjects } from "../../../constants";
+import { periods, subjects } from "../../constants";
 import PageTitle from "@/app/components/PageTitle";
 import useSupabaseBrowser from "@/app/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
@@ -26,14 +26,15 @@ import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import dynamic from "next/dynamic";
+import { useClass } from "@/app/(teacher)/hooks/useClass";
 const PrevEvalItems = dynamic(() => import("./PrevEvalItems"), { ssr: false });
 
 interface Props {
-  classId: string;
   user: User;
 }
 
-const CreateEvalForm = ({ classId, user }: Props) => {
+const CreateEvalForm = ({ user }: Props) => {
+  const { selectedClassId } = useClass();
   const form = useForm<CreateEvalData>({
     resolver: zodResolver(createEvalSchema),
     defaultValues: {
@@ -72,7 +73,7 @@ const CreateEvalForm = ({ classId, user }: Props) => {
     const { data: templateData, error: templateError } = await supabase
       .from("evaluation_templates")
       .insert({
-        class_id: classId,
+        class_id: selectedClassId,
         date: dateToString,
         subject_name: subject,
         period: period,
@@ -92,7 +93,7 @@ const CreateEvalForm = ({ classId, user }: Props) => {
     const insertingData = contents.map((content) => {
       return {
         date: dateToString,
-        class_id: classId,
+        class_id: selectedClassId,
         subject_name: subject,
         period,
         content: content.content,
@@ -116,7 +117,7 @@ const CreateEvalForm = ({ classId, user }: Props) => {
     });
 
     router.push(
-      `/evaluate/confirm/${templateData.id}?class_id=${classId}&subject=${subject}&period=${period}&type=${evaluation_type}`,
+      `/evaluate/confirm/${templateData.id}?subject=${subject}&period=${period}&type=${evaluation_type}`,
     );
   };
 

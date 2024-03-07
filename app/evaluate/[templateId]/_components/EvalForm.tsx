@@ -43,8 +43,6 @@ const EvalForm = ({ evalItems, templateId }: Props) => {
   const { toast } = useToast();
   const supabase = useSupabaseBrowser();
 
-  console.log("selectedUser", selectedUser);
-
   const onSubmit = async (values: SubmitEvalData) => {
     const {
       data: { user },
@@ -69,8 +67,6 @@ const EvalForm = ({ evalItems, templateId }: Props) => {
       session_id: session?.id,
     }));
 
-    console.log(results);
-
     const { error: resultsError } = await supabase.from("evaluation_results").insert(results);
 
     if (resultsError) {
@@ -86,7 +82,7 @@ const EvalForm = ({ evalItems, templateId }: Props) => {
     });
 
     // FIXME: go to evaluation confirmation page
-    router.push(`/reviews/${session?.id}`);
+    router.push("/evaluate/confirm");
   };
 
   return (
@@ -116,8 +112,6 @@ const EvalForm = ({ evalItems, templateId }: Props) => {
                           <Checkbox
                             checked={field.value?.includes(item.id)}
                             onCheckedChange={(checked) => {
-                              console.log(field.value);
-
                               return checked
                                 ? field.onChange([...field.value, item.id])
                                 : field.onChange(field.value?.filter((value) => value !== item.id));
@@ -137,7 +131,7 @@ const EvalForm = ({ evalItems, templateId }: Props) => {
         <Button type="submit" className="mr-2" disabled={form.formState.isSubmitting}>
           제출하기
         </Button>
-        <Link href="/evaluate">
+        <Link href="/">
           <Button type="button" variant="outline">
             돌아가기
           </Button>
