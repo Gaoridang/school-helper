@@ -41,9 +41,7 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning>
           <body className={cn(pretendard.className, "min-h-screen grid grid-rows-[auto_1fr_auto]")}>
             <Navbar />
-            <main className="col-span-1 px-4 pt-10 md:px-20 max-w-[1200px] mx-auto">
-              {children}
-            </main>
+            <main className="col-span-1 px-4 pt-10 md:px-20 w-full">{children}</main>
             <Toaster />
           </body>
         </html>

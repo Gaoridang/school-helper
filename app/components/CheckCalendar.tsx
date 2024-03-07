@@ -50,7 +50,7 @@ const CheckCalendar = () => {
   return (
     <div>
       <Card className="hover:hover:shadow-lg transition">
-        <CardHeader>
+        <CardHeader className="flex flex-col justify-center items-center">
           <CardTitle className="flex items-center space-x-2">
             <span>점검 시작하기</span>
             <CustomTooltip href={`/evaluate/create`}>

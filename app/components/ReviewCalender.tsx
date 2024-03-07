@@ -7,7 +7,7 @@ import { ko } from "date-fns/locale";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useClass } from "../(teacher)/hooks/useClass";
-import { useReviews } from "../queries/getReviewList";
+import { useReviewSessions } from "../queries/getReviewList";
 import { format } from "date-fns";
 import { useUser } from "../hooks/useUser";
 import { useRouter } from "next/navigation";
@@ -19,7 +19,7 @@ const ReviewCalendar = () => {
   const { selectedClassId } = useClass();
   const [selectedDay, setSelectedDay] = useState<Date>();
   const selectedDayFormatted = format(selectedDay ?? new Date(), "y-M-d", { locale: ko });
-  const { data: reviews } = useReviews(selectedDayFormatted, selectedClassId, user?.id!);
+  const { data: reviews } = useReviewSessions(selectedDayFormatted, selectedClassId, user?.id!);
   const router = useRouter();
 
   const handleSelect = async (
@@ -51,7 +51,7 @@ const ReviewCalendar = () => {
   return (
     <div>
       <Card className="hover:shadow-lg transition">
-        <CardHeader>
+        <CardHeader className="flex flex-col justify-center items-center">
           <CardTitle className="flex items-center gap-2">
             내 결과 보기
             <CustomTooltip href="/reviews">

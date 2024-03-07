@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import useSupabaseBrowser from "../utils/supabase/client";
 
-export const useReviews = (date: string, classId: string, userId: string) => {
+export const useReviewSessions = (date: string, classId: string, userId: string) => {
   const supabase = useSupabaseBrowser();
 
   return useQuery({
@@ -19,5 +19,32 @@ export const useReviews = (date: string, classId: string, userId: string) => {
       return data;
     },
     enabled: !!date && !!classId && !!userId,
+  });
+};
+
+export const useReviewSessionsByDateRange = (
+  startDate: string,
+  endDate: string,
+  classId: string,
+  userId: string,
+) => {
+  const supabase = useSupabaseBrowser();
+
+  return useQuery({
+    queryKey: ["reviews", startDate, endDate],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("session_evaluation_summary")
+        .select("*")
+        .eq("evaluatee_id", userId)
+        .eq("class_id", classId)
+        .gte("date", startDate)
+        .lte("date", endDate);
+      if (error) {
+        throw error;
+      }
+      return data;
+    },
+    enabled: !!startDate && !!endDate && !!classId && !!userId,
   });
 };

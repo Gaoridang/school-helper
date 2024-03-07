@@ -52,7 +52,8 @@ const EvalForm = ({ evalItems, templateId }: Props) => {
       .from("sessions")
       .insert({
         template_id: parseInt(templateId),
-        creator_id: user!.id,
+        evaluator_id: user!.id,
+        evaluatee_id: isPeer ? selectedUser : user!.id,
         start_time: new Date().toISOString(),
       })
       .select()
