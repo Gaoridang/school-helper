@@ -17,7 +17,7 @@ const StudentMainPage = async ({ user }: { user: User }) => {
   }
 
   return (
-    <>
+    <section>
       <SelectClass data={data} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="col-span-1">
@@ -27,7 +27,7 @@ const StudentMainPage = async ({ user }: { user: User }) => {
           <ReviewCalendar />
         </div>
       </div>
-    </>
+    </section>
   );
 };
 

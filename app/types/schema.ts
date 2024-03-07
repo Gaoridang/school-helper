@@ -342,19 +342,22 @@ export type Database = {
       }
       sessions: {
         Row: {
-          creator_id: string
+          evaluatee_id: string | null
+          evaluator_id: string
           id: string
           start_time: string | null
           template_id: number
         }
         Insert: {
-          creator_id: string
+          evaluatee_id?: string | null
+          evaluator_id: string
           id?: string
           start_time?: string | null
           template_id: number
         }
         Update: {
-          creator_id?: string
+          evaluatee_id?: string | null
+          evaluator_id?: string
           id?: string
           start_time?: string | null
           template_id?: number
@@ -362,7 +365,7 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "evaluation_sessions_creator_id_fkey"
-            columns: ["creator_id"]
+            columns: ["evaluator_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
@@ -387,6 +390,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "session_evaluation_summary"
             referencedColumns: ["template_id"]
+          },
+          {
+            foreignKeyName: "public_sessions_evaluatee_id_fkey"
+            columns: ["evaluatee_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
           }
         ]
       }
@@ -433,7 +443,6 @@ export type Database = {
           id: string
           name: string
           role: string
-          student_code: string | null
           student_number: number | null
           updated_at: string | null
         }
@@ -443,7 +452,6 @@ export type Database = {
           id?: string
           name: string
           role: string
-          student_code?: string | null
           student_number?: number | null
           updated_at?: string | null
         }
@@ -453,7 +461,6 @@ export type Database = {
           id?: string
           name?: string
           role?: string
-          student_code?: string | null
           student_number?: number | null
           updated_at?: string | null
         }
@@ -499,10 +506,13 @@ export type Database = {
       session_evaluation_summary: {
         Row: {
           class_id: string | null
+          contents: Json | null
           date: string | null
           evaluatee_id: string | null
+          evaluator_id: string | null
           period: string | null
           session_id: string | null
+          start_time: string | null
           subject_name: string | null
           template_id: number | null
         }
@@ -517,6 +527,13 @@ export type Database = {
           {
             foreignKeyName: "fk_evaluatee"
             columns: ["evaluatee_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_evaluator"
+            columns: ["evaluator_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
