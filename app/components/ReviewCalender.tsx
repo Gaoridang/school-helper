@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import { useUser } from "../hooks/useUser";
 import { useRouter } from "next/navigation";
 import { getSubjectName } from "../evaluate/getSubjectName";
+import CustomTooltip from "./Tooltip";
 
 const ReviewCalendar = () => {
   const user = useUser();
@@ -51,7 +52,12 @@ const ReviewCalendar = () => {
     <div>
       <Card className="hover:shadow-lg transition">
         <CardHeader>
-          <CardTitle>내 결과 보기</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            내 결과 보기
+            <CustomTooltip href="/reviews">
+              <span>내 결과 요약 보기</span>
+            </CustomTooltip>
+          </CardTitle>
           <CardDescription>점검할 날짜를 선택하세요.</CardDescription>
         </CardHeader>
         <CardContent className="flex justify-center">
