@@ -3,11 +3,7 @@ import CreateEvalForm from "./_components/CreateEvalForm";
 import useSupabaseServer from "@/app/utils/supabase/server";
 import { redirect } from "next/navigation";
 
-interface Props {
-  params: { classId: string };
-}
-
-const CreateEvalPage = async ({ params }: Props) => {
+const CreateEvalPage = async () => {
   const supabase = useSupabaseServer();
 
   const {
@@ -18,7 +14,7 @@ const CreateEvalPage = async ({ params }: Props) => {
     redirect("/signin");
   }
 
-  return <CreateEvalForm classId={params.classId} user={user} />;
+  return <CreateEvalForm user={user} />;
 };
 
 export default CreateEvalPage;

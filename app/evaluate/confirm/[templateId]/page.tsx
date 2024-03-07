@@ -37,7 +37,7 @@ const EvalPage = async ({ params }: Props) => {
         )}
       </div>
       <div className="flex space-x-2 mt-5">
-        <Link href="/evaluate">
+        <Link href="/">
           <Button variant="secondary">목록으로 가기</Button>
         </Link>
         <ActionButton templateId={params.templateId}>평가하러 가기</ActionButton>
