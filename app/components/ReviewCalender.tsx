@@ -50,7 +50,7 @@ const ReviewCalendar = () => {
 
   return (
     <div>
-      <Card className="hover:shadow-lg transition">
+      <Card>
         <CardHeader className="flex flex-col justify-center items-center">
           <CardTitle className="flex items-center gap-2">
             내 결과 보기
