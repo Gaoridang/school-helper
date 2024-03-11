@@ -31,7 +31,7 @@ export const useReviewSessionsByDateRange = (
   const supabase = useSupabaseBrowser();
 
   return useQuery({
-    queryKey: ["reviews", startDate, endDate],
+    queryKey: ["reviews"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("session_evaluation_summary")

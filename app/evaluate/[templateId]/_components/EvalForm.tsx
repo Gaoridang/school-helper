@@ -21,6 +21,8 @@ import { useForm } from "react-hook-form";
 import { getSubjectName } from "../../getSubjectName";
 import { SubmitEvalData, submitEvalSchema } from "../../types/types";
 import { useSelectedUser } from "../_hooks/useSelectedUser";
+import { format } from "date-fns";
+import { ko } from "date-fns/locale";
 
 interface Props {
   evalItems: Tables<"evaluation_items">[];
@@ -54,7 +56,7 @@ const EvalForm = ({ evalItems, templateId }: Props) => {
         template_id: parseInt(templateId),
         evaluator_id: user!.id,
         evaluatee_id: isPeer ? selectedUser : user!.id,
-        start_time: new Date().toISOString(),
+        start_time: format(new Date(), "yyyy-MM-dd", { locale: ko }),
       })
       .select()
       .single();
