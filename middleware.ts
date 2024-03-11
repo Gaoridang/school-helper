@@ -65,6 +65,11 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // if user is not signed in, redirect to sign in page
+  if (!request.nextUrl.pathname.startsWith("/sign") && !user) {
+    return NextResponse.redirect(new URL("/signin", request.url));
+  }
+
   // if user is signed in, redirect to home page
   if (request.nextUrl.pathname.startsWith("/sign") && user) {
     return NextResponse.redirect(new URL("/", request.url));

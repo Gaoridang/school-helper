@@ -6,6 +6,8 @@ import { ReactQueryClientProvider } from "./QueryClientProvider";
 import { cn } from "@/lib/utils";
 import { Navbar } from "./Navbar";
 import { UserProvider } from "./hooks/useUser";
+import Sidebar from "./Sidebar";
+import FloatingMenus from "./FloatingMenus";
 
 const pretendard = localFont({
   src: [
@@ -41,7 +43,11 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning>
           <body className={cn(pretendard.className, "min-h-screen grid grid-rows-[auto_1fr_auto]")}>
             <Navbar />
-            <main className="col-span-1 px-4 pt-10 md:px-20 w-full bg-slate-100">{children}</main>
+            <div className="relative flex">
+              <Sidebar />
+              <FloatingMenus />
+              <main className="col-span-1 px-4 pt-10 md:px-20 w-full">{children}</main>
+            </div>
             <Toaster />
           </body>
         </html>
