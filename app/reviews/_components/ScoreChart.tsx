@@ -1,9 +1,12 @@
 "use client";
 
 import { useClass } from "@/app/(teacher)/hooks/useClass";
-import { useUser } from "@/app/hooks/useUser";
-import { useReviewSessionsByDateRange } from "@/app/queries/getReviewList";
+import useSupabaseBrowser from "@/app/utils/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { User } from "@supabase/supabase-js";
+import { addDays, format } from "date-fns";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
   CartesianGrid,
   Line,
@@ -13,6 +16,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { CalendarDateRangePicker } from "./CalendarDateRangePicker";
 
 // Override console.error
 // This is a hack to suppress the warning about missing defaultProps in recharts library as of version 2.12
@@ -36,72 +40,56 @@ interface ReviewData {
   start_time: string;
 }
 
-// six colors
-const colors = [
-  "#8884d8",
-  "#82ca9d",
-  "#ffc658",
-  "#ff7a45",
-  "#ff6f91",
-  "#0088FE",
-  "#00C49F",
-  "#FFBB28",
-  "#FF8042",
-  "#FF6F91",
-];
+interface Props {
+  user: User;
+}
 
-const ScoreChart = () => {
-  // 해당 날짜에 통과한 개수를 가져옵니다.
-  const user = useUser();
+const ScoreChart = ({ user }: Props) => {
   const { selectedClassId } = useClass();
-  const { data } = useReviewSessionsByDateRange(
-    "2024-03-01",
-    "2024-03-31",
-    selectedClassId,
-    user?.id!,
-  );
+  const [isLoading, setIsLoading] = useState(true);
+  const [reviews, setReviews] = useState<ReviewData[]>([]);
+  const searchParams = useSearchParams();
 
-  if (!data) return <div>loading...</div>;
+  const supabase = useSupabaseBrowser();
+  useEffect(() => {
+    if (!selectedClassId) return;
 
-  const ReviewData = data as ReviewData[];
-  const aggregatedData = ReviewData.reduce(
-    (
-      acc: {
-        [key: string]: {
-          date: string;
-          total: number;
-          subjects: { [subject_name: string]: number };
-        };
-      },
-      { start_time, subject_name, contents },
-    ) => {
-      const date = start_time?.split("T")[0];
-      const passedCounts = contents.reduce(
-        (acc: { [key: string]: number }, { is_passed }) => ({
-          ...acc,
-          [subject_name]: (acc[subject_name] || 0) + (is_passed ? 1 : 0),
-        }),
-        {},
-      );
+    const fetchReviewSessionsByDateRange = async () => {
+      const { data } = await supabase
+        .from("session_evaluation_summary")
+        .select("*")
+        .eq("evaluatee_id", user.id)
+        .eq("class_id", selectedClassId)
+        .eq("type", "self")
+        .gte("start_time", searchParams.get("from") || format(new Date(), "yyyy-MM-dd"))
+        .lte("start_time", searchParams.get("to") || format(addDays(new Date(), 4), "yyyy-MM-dd"))
+        .order("start_time", { ascending: true });
 
-      if (!acc[date]) acc[date] = { date, total: 0, subjects: {} };
+      setReviews(data as ReviewData[]);
+      setIsLoading(false);
+    };
 
-      Object.entries(passedCounts).forEach(([subject_name, count]) => {
-        acc[date].total += count;
-        acc[date].subjects[subject_name] = (acc[date].subjects[subject_name] || 0) + count;
-      });
+    fetchReviewSessionsByDateRange();
 
-      return acc;
-    },
-    {},
-  );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedClassId, searchParams.get("from"), searchParams.get("to")]);
 
-  const ChartData = Object.values(aggregatedData);
+  if (isLoading || !reviews.length)
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="px-4 text-xl opacity-70">나의 성장 점수</CardTitle>
+          <CalendarDateRangePicker />
+        </CardHeader>
+        <CardContent>
+          <CardDescription>해당 기간에 데이터가 없습니다.</CardDescription>
+        </CardContent>
+      </Card>
+    );
 
   const CustomizedDot = (props: any) => {
     const { cx, cy, stroke, payload, value } = props;
 
-    // filled, border 5 white width 15 height 15
     return (
       <svg
         key={value}
@@ -119,17 +107,31 @@ const ScoreChart = () => {
     );
   };
 
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white p-4 shadow-md">
+          <p>{label.split("T")[0]}</p>
+          <p>{payload[0].value}점</p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <Card className="border-none">
       <CardHeader>
         <CardTitle className="px-4 text-xl opacity-70">나의 성장 점수</CardTitle>
+        <CalendarDateRangePicker />
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={ChartData} margin={{ right: 30, top: 30 }}>
-            <CartesianGrid vertical={false} opacity={0.5} />
+          <LineChart data={reviews} margin={{ right: 30, top: 30 }}>
+            <CartesianGrid vertical={false} opacity={0.5} strokeDasharray={3} />
             <XAxis
-              dataKey="date"
+              dataKey="start_time"
               tickLine={false}
               axisLine={false}
               dy={30}
@@ -142,10 +144,10 @@ const ScoreChart = () => {
               axisLine={false}
               tick={{ fontSize: "14px", opacity: 0.7 }}
             />
-            <Tooltip />
+            <Tooltip content={<CustomTooltip />} />
             <Line
               type="monotone"
-              dataKey="total"
+              dataKey="total_passed"
               stroke="#8884d8"
               strokeWidth={2}
               dot={CustomizedDot}
