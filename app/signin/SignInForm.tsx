@@ -1,16 +1,16 @@
 "use client";
 
-import { Form, FormField, FormItem } from "@/components/ui/form";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { SignInDataType, SignInFormItemType, SignInSchema } from "./types/signInFormTypes";
-import { zodResolver } from "@hookform/resolvers/zod";
-import SignInTextInput from "./components/SignInTextInput";
 import { Button } from "@/components/ui/button";
-import Spinner from "../components/Spinner";
-import useSupabaseBrowser from "../utils/supabase/client";
+import { Form, FormField, FormItem } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import Spinner from "../components/Spinner";
+import SignInTextInput from "./components/SignInTextInput";
+import { SignInDataType, SignInFormItemType, SignInSchema } from "./types/signInFormTypes";
+import { supabase } from "../utils/supabase/client";
+import Link from "next/link";
 
 const formItems: SignInFormItemType[] = [
   { label: "이메일", name: "id", type: "text", placeholder: "아이디를 입력하세요." },
@@ -28,7 +28,6 @@ const SignInForm = () => {
 
   const router = useRouter();
   const { toast } = useToast();
-  const supabase = useSupabaseBrowser();
   const onSubmit = async (values: SignInDataType) => {
     const {
       data: { user },
@@ -75,6 +74,9 @@ const SignInForm = () => {
         <div>
           <Button type="submit" disabled={form.formState.isSubmitting} className="space-x-2">
             {form.formState.isSubmitting && <Spinner />} <span>로그인</span>
+          </Button>
+          <Button variant="link" className="ml-2">
+            <Link href="/signup">회원가입</Link>
           </Button>
         </div>
       </form>

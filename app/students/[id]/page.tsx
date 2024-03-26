@@ -1,11 +1,11 @@
-import useSupabaseServer from "@/app/utils/supabase/server";
+import { createClient } from "@/app/utils/supabase/server";
 
 interface Props {
   params: { id: string };
 }
 
 const StudentDetailPage = async ({ params }: Props) => {
-  const supabase = useSupabaseServer();
+  const supabase = createClient();
 
   const { data: student, error } = await supabase
     .from("users")

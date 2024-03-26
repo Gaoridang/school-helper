@@ -1,26 +1,29 @@
+import { Toaster } from "@/components/ui/toaster";
+import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
-import { ReactQueryClientProvider } from "./QueryClientProvider";
-import { cn } from "@/lib/utils";
-import { Navbar } from "./Navbar";
-import { UserProvider } from "./hooks/useUser";
-import Sidebar from "./Sidebar";
 import FloatingMenus from "./FloatingMenus";
+import "./globals.css";
+import { UserProvider } from "./hooks/useUser";
+import { ReactQueryClientProvider } from "./QueryClientProvider";
+import Sidebar from "./Sidebar";
 
 const pretendard = localFont({
   src: [
     {
-      path: "../public/fonts/Pretendard-Light.woff2",
+      path: "../public/fonts/SpoqaHanSansNeo-Light.ttf",
       weight: "300",
     },
     {
-      path: "../public/fonts/Pretendard-Regular.woff2",
+      path: "../public/fonts/SpoqaHanSansNeo-Regular.ttf",
       weight: "400",
     },
     {
-      path: "../public/fonts/Pretendard-Bold.woff2",
+      path: "../public/fonts/SpoqaHanSansNeo-Medium.ttf",
+      weight: "500",
+    },
+    {
+      path: "../public/fonts/SpoqaHanSansNeo-Bold.ttf",
       weight: "700",
     },
   ],
@@ -40,14 +43,11 @@ export default function RootLayout({
   return (
     <ReactQueryClientProvider>
       <UserProvider>
-        <html lang="en" suppressHydrationWarning>
-          <body className={cn(pretendard.className, "min-h-screen grid grid-rows-[auto_1fr_auto]")}>
-            <Navbar />
-            <div className="relative flex">
-              <Sidebar />
-              <FloatingMenus />
-              <main className="col-span-1 px-4 pt-10 md:px-20 w-full">{children}</main>
-            </div>
+        <html lang="en" suppressHydrationWarning className="h-full">
+          <body className={cn(pretendard.className, "relative flex h-full")}>
+            <Sidebar />
+            <FloatingMenus />
+            <main className="md:pl-[300px] flex-1 h-full">{children}</main>
             <Toaster />
           </body>
         </html>

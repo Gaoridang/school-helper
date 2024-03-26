@@ -6,7 +6,7 @@ import { FormControl, FormItem, FormLabel } from "@/components/ui/form";
 const data = [
   { label: "선생님", value: "teacher" },
   { label: "학생", value: "student" },
-  { label: "학부모", value: "parent" },
+  { label: "학부모", value: "parents" },
 ];
 
 // group-data-[state=open]:rotate-180

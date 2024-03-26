@@ -1,18 +1,19 @@
 import PageTitle from "@/app/components/PageTitle";
-import useSupabaseServer from "@/app/utils/supabase/server";
+import { createClient } from "@/app/utils/supabase/server";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { getSubjectName } from "../../getSubjectName";
 import EvalItemList from "./_components/EvalItemList";
 import ActionButton from "./_components/AcionButton";
+import RedirectButton from "./_components/RedirectButton";
 
 interface Props {
   params: { templateId: string };
 }
 
 const EvalPage = async ({ params }: Props) => {
-  const supabase = useSupabaseServer();
+  const supabase = createClient();
 
   const { data: evalItems, error } = await supabase
     .from("evaluation_items")
@@ -37,9 +38,7 @@ const EvalPage = async ({ params }: Props) => {
         )}
       </div>
       <div className="flex space-x-2 mt-5">
-        <Link href="/">
-          <Button variant="secondary">목록으로 가기</Button>
-        </Link>
+        <RedirectButton />
         <ActionButton templateId={params.templateId}>평가하러 가기</ActionButton>
       </div>
     </div>

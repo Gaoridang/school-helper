@@ -1,6 +1,11 @@
 "use client";
 
+import { useUser } from "@/app/hooks/useUser";
+import { getRoleBadge } from "@/app/signup/utils/getRoleBadge";
+import { supabase } from "@/app/utils/supabase/client";
 import { ChevronDown, LogOut, User as LucideUser, Settings } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -11,17 +16,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import useSupabaseBrowser from "@/app/utils/supabase/client";
-import { getRoleBadge } from "@/app/signup/utils/getRoleBadge";
 import { useToast } from "./ui/use-toast";
-import { useUser } from "@/app/hooks/useUser";
 
 const NavMenus = () => {
   const user = useUser();
   const router = useRouter();
-  const supabase = useSupabaseBrowser();
   const { toast } = useToast();
 
   const signOut = async () => {

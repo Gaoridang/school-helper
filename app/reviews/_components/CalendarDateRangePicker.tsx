@@ -1,23 +1,23 @@
 "use client";
 
-import { addDays, format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { PopoverClose } from "@radix-ui/react-popover";
+import { format, subBusinessDays } from "date-fns";
 import { ko } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 import { DateRange } from "react-day-picker";
-import { PopoverClose } from "@radix-ui/react-popover";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export function CalendarDateRangePicker({ className }: { className?: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(),
-    to: addDays(new Date(), 4),
+    from: subBusinessDays(new Date(), 5),
+    to: new Date(),
   });
 
   // update query params when date changes

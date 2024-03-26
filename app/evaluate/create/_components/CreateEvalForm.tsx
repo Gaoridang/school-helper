@@ -16,7 +16,7 @@ import {
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { periods, subjects } from "../../constants";
 import PageTitle from "@/app/components/PageTitle";
-import useSupabaseBrowser from "@/app/utils/supabase/client";
+import { supabase } from "@/app/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
@@ -30,10 +30,11 @@ import { useClass } from "@/app/(teacher)/hooks/useClass";
 const PrevEvalItems = dynamic(() => import("./PrevEvalItems"), { ssr: false });
 
 interface Props {
-  user: User;
+  user: User | null;
+  type: "self" | "peer";
 }
 
-const CreateEvalForm = ({ user }: Props) => {
+const CreateEvalForm = ({ user, type }: Props) => {
   const { selectedClassId } = useClass();
   const form = useForm<CreateEvalData>({
     resolver: zodResolver(createEvalSchema),
@@ -49,7 +50,7 @@ const CreateEvalForm = ({ user }: Props) => {
           content: "",
         },
       ],
-      evaluation_type: "self",
+      evaluation_type: type,
     },
   });
   const { fields, append, remove } = useFieldArray({
@@ -65,8 +66,9 @@ const CreateEvalForm = ({ user }: Props) => {
 
   const router = useRouter();
   const { toast } = useToast();
-  const supabase = useSupabaseBrowser();
   const onSubmit = async (values: CreateEvalData) => {
+    if (!user) return;
+
     const { date, subject, period, contents, evaluation_type } = values;
     const dateToString = format(date, "yyyy-MM-dd");
 
@@ -75,8 +77,8 @@ const CreateEvalForm = ({ user }: Props) => {
       .insert({
         class_id: selectedClassId,
         date: dateToString,
-        subject_name: subject,
-        period: period,
+        subject_name: subject || "자가점검",
+        period: period || "-",
         creator_id: user.id,
         type: evaluation_type,
       })
@@ -94,8 +96,8 @@ const CreateEvalForm = ({ user }: Props) => {
       return {
         date: dateToString,
         class_id: selectedClassId,
-        subject_name: subject,
-        period,
+        subject_name: subject || "자가점검",
+        period: period || "-",
         content: content.content,
         creator_id: user.id,
         template_id: templateData.id,
@@ -116,14 +118,13 @@ const CreateEvalForm = ({ user }: Props) => {
       description: "평가지를 만들었습니다.",
     });
 
-    router.push(
-      `/evaluate/confirm/${templateData.id}?subject=${subject}&period=${period}&type=${evaluation_type}`,
-    );
+    const redirectPath = type === "self" ? "/evaluate/me" : "/evaluate/friend";
+    router.push(`/evaluate/confirm/${templateData.id}?redirect=${redirectPath}`);
   };
 
   return (
-    <div>
-      <PageTitle title="평가지 만들기" description="평가지를 만들어보세요!" />
+    <div className="p-4 md:p-8">
+      <PageTitle title="평가지 만들기" />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="mt-5">
           <div className="grid md:flex gap-2">
@@ -165,79 +166,64 @@ const CreateEvalForm = ({ user }: Props) => {
               )}
             />
 
+            {/* 과목 */}
             <div className="flex space-x-2">
-              <FormField
-                control={form.control}
-                name="subject"
-                render={({ field }) => {
-                  return (
-                    <FormItem>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="무슨 과목인가요?" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {subjects.map((subject) => (
-                            <SelectItem key={subject.value} value={subject.value}>
-                              {subject.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
-              />
-              <FormField
-                control={form.control}
-                name="period"
-                render={({ field }) => {
-                  return (
-                    <FormItem>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="몇 교시 인가요?" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {periods.map((period) => (
-                            <SelectItem key={period.value} value={period.value}>
-                              {period.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
-              />
-              <FormField
-                control={form.control}
-                name="evaluation_type"
-                render={({ field }) => {
-                  return (
-                    <FormItem>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger disabled={user.user_metadata.role === "student"}>
-                            <SelectValue placeholder="누구에게 보내나요?" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="self">나에게</SelectItem>
-                          <SelectItem value="peer">친구에게</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
-              />
+              {type === "peer" && (
+                <FormField
+                  control={form.control}
+                  name="subject"
+                  render={({ field }) => {
+                    return (
+                      <FormItem>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="무슨 과목인가요?" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {subjects.map((subject) => (
+                              <SelectItem key={subject.value} value={subject.value}>
+                                {subject.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
+                />
+              )}
+
+              {/* 교시 */}
+              {type === "peer" && (
+                <FormField
+                  control={form.control}
+                  name="period"
+                  render={({ field }) => {
+                    return (
+                      <FormItem>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="몇 교시 인가요?" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {periods.map((period) => (
+                              <SelectItem key={period.value} value={period.value}>
+                                {period.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
+                />
+              )}
             </div>
           </div>
           <PrevEvalItems user={user} handleSelectedItems={handleSelectedItems} />

@@ -1,17 +1,17 @@
 "use client";
 
-import useSupabaseBrowser from "@/app/utils/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Form, FormField, FormItem } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import SearchInput from "@/app/(teacher)/classes/components/SearchInput";
 import PageTitle from "@/app/components/PageTitle";
+import { supabase } from "@/app/utils/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Form, FormField, FormItem } from "@/components/ui/form";
+import { useToast } from "@/components/ui/use-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import SelectClassNumber from "../components/SelectClassNumber";
 import SelectGrade from "../components/SelectGrade";
 import { CreateClassData, CreateClassFormItemType, createClassSchema } from "../types/classTypes";
 import { createRandomCode } from "../utils/getRandomCode";
-import { useToast } from "@/components/ui/use-toast";
 
 const formItems: CreateClassFormItemType[] = [
   { label: "학교", name: "school", type: "search", placeholder: "학교를 선택하세요." },
@@ -30,7 +30,6 @@ const CreateClassPage = () => {
   });
 
   const { toast } = useToast();
-  const supabase = useSupabaseBrowser();
   const onSubmit = async (values: CreateClassData) => {
     const {
       data: { user },

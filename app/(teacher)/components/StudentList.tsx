@@ -1,19 +1,18 @@
 "use client";
 
 import { Tables } from "@/app/types/schema";
-import useSupabaseBrowser from "@/app/utils/supabase/client";
 import { useEffect, useState } from "react";
 import { fetchResults, fetchStudents } from "../hooks/fetchStudents";
 import StudentListTable from "./StudentListTable";
 import { columns } from "./columns";
 import { Skeleton } from "@/components/ui/skeleton";
+import { supabase } from "@/app/utils/supabase/client";
 
 const StudentList = () => {
   const [students, setStudents] = useState<Tables<"users">[]>([]);
   const [results, setResults] = useState<Tables<"evaluation_results">[]>([]);
   const [studentWithDone, setStudentWithDone] = useState<{ user: string; done: boolean }[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const supabase = useSupabaseBrowser();
 
   useEffect(() => {
     setIsLoading(true);
@@ -45,7 +44,7 @@ const StudentList = () => {
     return () => {
       supabase.removeChannel(subscription);
     };
-  }, [supabase]);
+  }, []);
 
   // Update the studentWithDone state based on the latest results
   useEffect(() => {

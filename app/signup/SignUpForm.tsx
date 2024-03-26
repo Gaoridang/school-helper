@@ -9,7 +9,7 @@ import SignUpTextInput from "./TextInput";
 import { type SignUpFormItemType, SignUpData, SignUpSchema } from "./types/formTypes";
 import SelectRole from "./SelectRole";
 import { Button } from "@/components/ui/button";
-import useSupabaseBrowser from "../utils/supabase/client";
+import { supabase } from "../utils/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 
@@ -62,8 +62,16 @@ const SignUpForm = () => {
 
   const router = useRouter();
   const { toast } = useToast();
-  const supabase = useSupabaseBrowser();
   const onSubmit = async (value: SignUpData) => {
+    let studentCode = "";
+
+    if (value.role === "student") {
+      const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      for (let i = 0; i < 6; i++) {
+        studentCode += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+    }
+
     const {
       data: { user },
       error,
@@ -75,6 +83,7 @@ const SignUpForm = () => {
           name: value.name,
           role: value.role,
           student_number: parseInt(value.student_number!),
+          student_code: studentCode,
         },
       },
     });
@@ -92,7 +101,7 @@ const SignUpForm = () => {
 
     localStorage.setItem("user", JSON.stringify(user));
 
-    router.push("/");
+    router.push("/classes/register");
     router.refresh();
   };
 
