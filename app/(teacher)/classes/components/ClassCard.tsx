@@ -3,10 +3,9 @@ import React from "react";
 import ClassStudentsNumber from "./ClassStudents";
 import Link from "next/link";
 import CodeCopyButton from "./CodeCopyButton";
-import useSupabaseBrowser from "@/app/utils/supabase/client";
+import { supabase } from "@/app/utils/supabase/client";
 
 const ClassCard = async () => {
-  const supabase = useSupabaseBrowser();
   const { data: classes } = await supabase.from("classes").select("*");
 
   if (!classes || classes.length === 0) {

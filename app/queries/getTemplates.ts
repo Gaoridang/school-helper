@@ -1,9 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import useSupabaseBrowser from "../utils/supabase/client";
+import { supabase } from "../utils/supabase/client";
 
 export const useTemplates = (date: string, classId: string) => {
-  const supabase = useSupabaseBrowser();
-
   return useQuery({
     queryKey: ["templates", date],
     queryFn: async () => {

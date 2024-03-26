@@ -1,13 +1,14 @@
 "use client";
 
 import { useClass } from "@/app/(teacher)/hooks/useClass";
-import useSupabaseBrowser from "@/app/utils/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import React, { FormEvent, useState } from "react";
 import { useSelectedUser } from "../_hooks/useSelectedUser";
+import { useSearchParams } from "next/navigation";
+import { supabase } from "@/app/utils/supabase/client";
 
 interface StudentData {
   users: {
@@ -19,9 +20,9 @@ interface StudentData {
 }
 
 const SelectStudent = () => {
+  const searchParams = useSearchParams();
   const { selectedClassId } = useClass();
   const { setSelectedUser } = useSelectedUser();
-  const supabase = useSupabaseBrowser();
   const [value, setValue] = useState("");
   const [students, setStudents] = useState<StudentData[] | null>([]);
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,10 +55,12 @@ const SelectStudent = () => {
     setStudents(data?.filter((data) => data.users) || []);
   };
 
+  if (searchParams.get("type") === "self") return null;
+
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="secondary" className="flex items-center gap-2">
+        <Button variant="outline" className="flex items-center gap-2 bg-white">
           <Search className="w-4 h-4 opacity-50" />
           <span>친구 찾기</span>
         </Button>

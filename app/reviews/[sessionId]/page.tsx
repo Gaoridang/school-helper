@@ -1,5 +1,5 @@
 import PageTitle from "@/app/components/PageTitle";
-import useSupabaseServer from "@/app/utils/supabase/server";
+import { createClient } from "@/app/utils/supabase/server";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { LineChart } from "lucide-react";
@@ -10,7 +10,7 @@ interface Props {
 }
 
 const ReviewPages = async ({ params }: Props) => {
-  const supabase = useSupabaseServer();
+  const supabase = createClient();
 
   const { data } = await supabase
     .from("evaluation_session_view")

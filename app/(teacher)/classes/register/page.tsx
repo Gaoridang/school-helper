@@ -1,7 +1,7 @@
 "use client";
 
 import PageTitle from "@/app/components/PageTitle";
-import useSupabaseBrowser from "@/app/utils/supabase/client";
+import { supabase } from "@/app/utils/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,7 +24,6 @@ const ClassRegisterPage = () => {
   const user = useUser();
   const router = useRouter();
   const [foundClass, setFoundClass] = useState<ClassData>();
-  const supabase = useSupabaseBrowser();
   const { toast } = useToast();
   const onSubmit = async (code: string) => {
     const { data, error } = await supabase
@@ -50,7 +49,7 @@ const ClassRegisterPage = () => {
     const { error } = await supabase.from("user_classes").insert({
       user_id: user.id,
       class_id: foundClass.id,
-      role: "student",
+      role: user.user_metadata.role,
       is_primary: true,
     });
 

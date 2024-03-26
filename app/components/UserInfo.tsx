@@ -1,11 +1,19 @@
-import React from "react";
+"use client";
 
-const UserInfo = async () => {
+import React from "react";
+import { useUser } from "../hooks/useUser";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getRoleBadge } from "../signup/utils/getRoleBadge";
+
+const UserInfo = () => {
+  const user = useUser();
+
+  if (!user) return <Skeleton className="w-full h-10" />;
+
   return (
-    <div className="grid gap-2 md:flex md:items-center my-5">
-      <span className="text-2xl">😆</span>
-      <span className="text-xl font-semibold"></span>
-      <span className="text-xl">님 안녕하세요!</span>
+    <div className="border rounded-sm w-full p-2 flex gap-2 justify-center items-center shadow-sm">
+      <span className="text-sm">{user?.user_metadata.name}</span>
+      <span className="text-xs font-light">{getRoleBadge(user?.user_metadata.role)}</span>
     </div>
   );
 };

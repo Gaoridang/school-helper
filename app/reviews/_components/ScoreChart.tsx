@@ -1,21 +1,14 @@
 "use client";
 
 import { useClass } from "@/app/(teacher)/hooks/useClass";
-import useSupabaseBrowser from "@/app/utils/supabase/client";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { fetchLinkedStudent } from "@/app/utils/fetchLinkedStudent";
+import { ReviewData, fetchReviewsByDateRange } from "@/app/utils/fetchReviewsByDateRange";
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { User } from "@supabase/supabase-js";
-import { addDays, format } from "date-fns";
+import { format, subBusinessDays, subDays } from "date-fns";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { CalendarDateRangePicker } from "./CalendarDateRangePicker";
 
 // Override console.error
@@ -27,21 +20,8 @@ console.error = (...args: any) => {
   error(...args);
 };
 
-interface ReviewData {
-  class_id: string;
-  contents: { content: string; is_passed: boolean }[];
-  date: string;
-  evaluatee_id: string;
-  evaluator_id: string;
-  period: string;
-  session_id: string;
-  subject_name: string;
-  template_id: number;
-  start_time: string;
-}
-
 interface Props {
-  user: User;
+  user: User | null;
 }
 
 const ScoreChart = ({ user }: Props) => {
@@ -50,35 +30,45 @@ const ScoreChart = ({ user }: Props) => {
   const [reviews, setReviews] = useState<ReviewData[]>([]);
   const searchParams = useSearchParams();
 
-  const supabase = useSupabaseBrowser();
+  const startDate =
+    searchParams.get("from") || format(subBusinessDays(Date.now(), 5), "yyyy-MM-dd");
+  const endDate = searchParams.get("to") || format(Date.now(), "yyyy-MM-dd");
+
   useEffect(() => {
-    if (!selectedClassId) return;
+    if (!selectedClassId || !user) return;
 
-    const fetchReviewSessionsByDateRange = async () => {
-      const { data } = await supabase
-        .from("session_evaluation_summary")
-        .select("*")
-        .eq("evaluatee_id", user.id)
-        .eq("class_id", selectedClassId)
-        .eq("type", "self")
-        .gte("start_time", searchParams.get("from") || format(new Date(), "yyyy-MM-dd"))
-        .lte("start_time", searchParams.get("to") || format(addDays(new Date(), 4), "yyyy-MM-dd"))
-        .order("start_time", { ascending: true });
-
-      setReviews(data as ReviewData[]);
-      setIsLoading(false);
+    const getReviewsByDateRange = async () => {
+      if (user.user_metadata.role === "parents") {
+        const linkedStudent = await fetchLinkedStudent(user);
+        if (linkedStudent) {
+          const reviews = await fetchReviewsByDateRange(
+            selectedClassId,
+            linkedStudent.student_id,
+            startDate,
+            endDate,
+          );
+          setReviews(reviews);
+          setIsLoading(false);
+        }
+      } else {
+        console.log("no linked student");
+        const reviews = await fetchReviewsByDateRange(selectedClassId, user.id, startDate, endDate);
+        setReviews(reviews);
+        setIsLoading(false);
+      }
     };
+    getReviewsByDateRange();
+  }, [selectedClassId, startDate, endDate, user]);
 
-    fetchReviewSessionsByDateRange();
+  const formattedReviews = reviews.map((review) => ({
+    ...review,
+    formattedStartTime: format(review.start_time, "yyyy. MM. dd"),
+  }));
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedClassId, searchParams.get("from"), searchParams.get("to")]);
-
-  if (isLoading || !reviews.length)
+  if (isLoading || !formattedReviews.length)
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="px-4 text-xl opacity-70">나의 성장 점수</CardTitle>
           <CalendarDateRangePicker />
         </CardHeader>
         <CardContent>
@@ -87,70 +77,61 @@ const ScoreChart = ({ user }: Props) => {
       </Card>
     );
 
-  const CustomizedDot = (props: any) => {
-    const { cx, cy, stroke, payload, value } = props;
-
-    return (
-      <svg
-        key={value}
-        x={cx - 7.5}
-        y={cy - 7.5}
-        width={15}
-        height={15}
-        fill={stroke}
-        stroke="white"
-        strokeWidth={5}
-        className="text-indigo-500"
-      >
-        <circle cx={7.5} cy={7.5} r={7.5} />
-      </svg>
-    );
-  };
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-white p-4 shadow-md">
-          <p>{label.split("T")[0]}</p>
-          <p>{payload[0].value}점</p>
-        </div>
-      );
-    }
-
-    return null;
-  };
-
   return (
-    <Card className="border-none">
+    <Card>
       <CardHeader>
-        <CardTitle className="px-4 text-xl opacity-70">나의 성장 점수</CardTitle>
         <CalendarDateRangePicker />
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={reviews} margin={{ right: 30, top: 30 }}>
-            <CartesianGrid vertical={false} opacity={0.5} strokeDasharray={3} />
+        <ResponsiveContainer width="100%" height={200}>
+          <LineChart
+            data={formattedReviews}
+            margin={{
+              top: 10,
+              right: 15,
+              left: 15,
+              bottom: 0,
+            }}
+          >
             <XAxis
-              dataKey="start_time"
+              dataKey="formattedStartTime"
               tickLine={false}
               axisLine={false}
               dy={30}
               height={60}
               tick={{ fontSize: "14px", opacity: 0.7 }}
             />
-            <YAxis
-              tickLine={false}
-              tickSize={20}
-              axisLine={false}
-              tick={{ fontSize: "14px", opacity: 0.7 }}
+            <Tooltip
+              content={({ active, payload }) => {
+                if (active && payload && payload.length) {
+                  return (
+                    <div className="rounded-lg border bg-background p-2 shadow-sm">
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="flex flex-col">
+                          <span className="text-[0.70rem] uppercase text-muted-foreground">
+                            총점
+                          </span>
+                          <span className="font-bold text-muted-foreground">
+                            {payload[0].value}점
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+
+                return null;
+              }}
             />
-            <Tooltip content={<CustomTooltip />} />
             <Line
               type="monotone"
               dataKey="total_passed"
-              stroke="#8884d8"
+              stroke="#16A349"
               strokeWidth={2}
-              dot={CustomizedDot}
+              activeDot={{
+                r: 8,
+                style: { fill: "var(--theme-primary)" },
+              }}
             />
           </LineChart>
         </ResponsiveContainer>

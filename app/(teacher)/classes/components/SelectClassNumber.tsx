@@ -1,7 +1,6 @@
-import React from "react";
-import SelectInput from "./SelectInput";
-import { CommonInputTypes, SignUpData } from "../../../signup/types/formTypes";
+import { CommonInputTypes } from "../../../signup/types/formTypes";
 import { CreateClassData, CreateClassFormItemType } from "../types/classTypes";
+import SelectInput from "./SelectInput";
 
 const data = [
   { label: "1반", value: "1" },

@@ -11,11 +11,6 @@ export const menuItems = [
     href: "/",
   },
   {
-    icon: ScanSearch,
-    name: "내 결과 요약",
-    href: "/reviews",
-  },
-  {
     icon: AtSign,
     name: "문의하기",
     href: "/contact",

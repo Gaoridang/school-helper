@@ -1,24 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
-import useSupabaseBrowser from "../utils/supabase/client";
+import { supabase } from "../utils/supabase/client";
 
-export const useReviewSessions = (date: string, classId: string, userId: string) => {
-  const supabase = useSupabaseBrowser();
-
+export const useReviewSessions = (classId: string, userId: string) => {
   return useQuery({
-    queryKey: ["reviews", date],
+    queryKey: ["reviews"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("session_evaluation_summary")
         .select("*")
         .eq("evaluatee_id", userId)
-        .eq("class_id", classId)
-        .eq("date", date);
+        .eq("class_id", classId);
       if (error) {
         throw error;
       }
       return data;
     },
-    enabled: !!date && !!classId && !!userId,
+    enabled: !!classId && !!userId,
   });
 };
 
@@ -28,8 +25,6 @@ export const useReviewSessionsByDateRange = (
   classId: string,
   userId: string,
 ) => {
-  const supabase = useSupabaseBrowser();
-
   return useQuery({
     queryKey: ["reviews"],
     queryFn: async () => {

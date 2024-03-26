@@ -1,5 +1,5 @@
 import { Tables } from "@/app/types/schema";
-import useSupabaseBrowser from "@/app/utils/supabase/client";
+import { supabase } from "@/app/utils/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -18,7 +18,7 @@ import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 
 interface Props {
-  user: User;
+  user: User | null;
   handleSelectedItems: (selectedItems: string[]) => void;
 }
 
@@ -26,8 +26,10 @@ const PrevEvalItems = ({ user, handleSelectedItems }: Props) => {
   const [evalItems, setEvalItems] = useState<Tables<"evaluation_items">[]>([]);
   const [value, setValue] = useState("");
   const [selectedItemsContent, setSelectedItemsContent] = useState<string[]>([]);
-  const supabase = useSupabaseBrowser();
+
   useEffect(() => {
+    if (!user) return;
+
     const fetchEvalItems = async () => {
       const { data, error } = await supabase
         .from("evaluation_items")
@@ -39,7 +41,7 @@ const PrevEvalItems = ({ user, handleSelectedItems }: Props) => {
       }
     };
     fetchEvalItems();
-  }, [supabase, user.id]);
+  }, [user]);
 
   const filteredItems = evalItems.filter((item) => item.content.includes(value));
 
@@ -47,9 +49,7 @@ const PrevEvalItems = ({ user, handleSelectedItems }: Props) => {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="link" type="button" className="px-1 text-indigo-600">
-            이전 항목 가져오기
-          </Button>
+          <Button variant="link">이전 항목 가져오기</Button>
         </DialogTrigger>
         <DialogContent className="min-h-[400px] flex flex-col">
           <DialogHeader>
