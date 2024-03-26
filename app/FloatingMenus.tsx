@@ -3,6 +3,7 @@
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { AtSign, Home, Menu, ScanSearch } from "lucide-react";
 import { useRouter } from "next/navigation";
+import LogoutButton from "./components/LogoutButton";
 
 export const menuItems = [
   {
@@ -44,6 +45,11 @@ const FloatingMenus = () => {
               </li>
             ))}
           </ul>
+          <li>
+            <DrawerClose asChild>
+              <LogoutButton />
+            </DrawerClose>
+          </li>
         </DrawerContent>
       </Drawer>
     </div>
