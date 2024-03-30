@@ -6,10 +6,10 @@ import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import Spinner from "../components/Spinner";
+import Spinner from "../../components/Spinner";
 import SignInTextInput from "./components/SignInTextInput";
 import { SignInDataType, SignInFormItemType, SignInSchema } from "./types/signInFormTypes";
-import { supabase } from "../utils/supabase/client";
+import { supabase } from "../../utils/supabase/client";
 import Link from "next/link";
 
 const formItems: SignInFormItemType[] = [

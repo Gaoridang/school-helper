@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import React, { ChangeEvent, useState } from "react";
-import { CommonInputTypes } from "../../../signup/types/formTypes";
+import { CommonInputTypes } from "../../../(auth)/signup/types/formTypes";
 import { useSelectSchool } from "../hooks/useSelectSchool";
 import useSchools from "../../../queries/getSchools";
 import useDebounce from "../../../hooks/useDebounce";

@@ -9,7 +9,7 @@ import SignUpTextInput from "./TextInput";
 import { type SignUpFormItemType, SignUpData, SignUpSchema } from "./types/formTypes";
 import SelectRole from "./SelectRole";
 import { Button } from "@/components/ui/button";
-import { supabase } from "../utils/supabase/client";
+import { supabase } from "../../utils/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 

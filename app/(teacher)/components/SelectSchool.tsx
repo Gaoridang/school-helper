@@ -1,6 +1,7 @@
 "use client";
 
 import { UserClasses } from "@/app/Sidebar";
+import { supabase } from "@/app/utils/supabase/client";
 import {
   Select,
   SelectContent,
@@ -9,19 +10,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useClass } from "../hooks/useClass";
-import { useUser } from "@/app/hooks/useUser";
-import { Skeleton } from "@/components/ui/skeleton";
-import { supabase } from "@/app/utils/supabase/client";
-import { useRouter } from "next/navigation";
 
-const SelectClass = () => {
+interface Props {
+  user: User | null;
+}
+
+const SelectClass = ({ user }: Props) => {
   const { selectedClassId, setSelectedClassId } = useClass();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<UserClasses[]>([]);
   const router = useRouter();
-  const user = useUser();
 
   useEffect(() => {
     if (!user) return;
