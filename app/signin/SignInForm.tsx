@@ -51,7 +51,6 @@ const SignInForm = () => {
     // store user data to local storage
     localStorage.setItem("user", JSON.stringify(user));
 
-    // FIXME: 로그인 로딩이 끝나고 일정 시간 이후 홈 페이지로 이동함
     router.push("/");
     router.refresh();
   };

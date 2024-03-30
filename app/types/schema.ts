@@ -104,6 +104,7 @@ export type Database = {
           comment: string | null
           created_at: string
           id: number
+          parent_comment_id: number | null
           session_id: string | null
           updated_at: string | null
           user_id: string | null
@@ -112,6 +113,7 @@ export type Database = {
           comment?: string | null
           created_at?: string
           id?: number
+          parent_comment_id?: number | null
           session_id?: string | null
           updated_at?: string | null
           user_id?: string | null
@@ -120,11 +122,19 @@ export type Database = {
           comment?: string | null
           created_at?: string
           id?: number
+          parent_comment_id?: number | null
           session_id?: string | null
           updated_at?: string | null
           user_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "public_comments_parent_comment_id_fkey"
+            columns: ["parent_comment_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "public_comments_session_id_fkey"
             columns: ["session_id"]
@@ -147,7 +157,6 @@ export type Database = {
           content: string
           created_at: string | null
           creator_id: string
-          date: string | null
           id: number
           period: string
           subject_name: string
@@ -159,7 +168,6 @@ export type Database = {
           content: string
           created_at?: string | null
           creator_id: string
-          date?: string | null
           id?: number
           period: string
           subject_name: string
@@ -171,7 +179,6 @@ export type Database = {
           content?: string
           created_at?: string | null
           creator_id?: string
-          date?: string | null
           id?: number
           period?: string
           subject_name?: string
@@ -307,9 +314,10 @@ export type Database = {
           class_id: string
           created_at: string | null
           creator_id: string
-          date: string
+          end_date: string
           id: number
           period: string
+          start_date: string
           subject_name: string
           type: string
           updated_at: string | null
@@ -318,9 +326,10 @@ export type Database = {
           class_id: string
           created_at?: string | null
           creator_id: string
-          date: string
+          end_date?: string
           id?: number
           period: string
+          start_date: string
           subject_name: string
           type?: string
           updated_at?: string | null
@@ -329,9 +338,10 @@ export type Database = {
           class_id?: string
           created_at?: string | null
           creator_id?: string
-          date?: string
+          end_date?: string
           id?: number
           period?: string
+          start_date?: string
           subject_name?: string
           type?: string
           updated_at?: string | null
@@ -444,24 +454,34 @@ export type Database = {
       }
       students_parents: {
         Row: {
+          class_id: string | null
           id: number
           parent_id: string
           student_code: string
           student_id: string
         }
         Insert: {
+          class_id?: string | null
           id?: number
           parent_id: string
           student_code: string
           student_id: string
         }
         Update: {
+          class_id?: string | null
           id?: number
           parent_id?: string
           student_code?: string
           student_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "public_students_parents_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "public_students_parents_student_id_fkey"
             columns: ["student_id"]

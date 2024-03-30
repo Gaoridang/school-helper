@@ -22,9 +22,10 @@ interface StudentData {
 const SelectStudent = () => {
   const searchParams = useSearchParams();
   const { selectedClassId } = useClass();
-  const { setSelectedUser } = useSelectedUser();
+  const { setSelectedUser, selectedUser } = useSelectedUser();
   const [value, setValue] = useState("");
   const [students, setStudents] = useState<StudentData[] | null>([]);
+
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   };
@@ -62,7 +63,7 @@ const SelectStudent = () => {
       <DialogTrigger asChild>
         <Button variant="outline" className="flex items-center gap-2 bg-white">
           <Search className="w-4 h-4 opacity-50" />
-          <span>친구 찾기</span>
+          <span>{selectedUser.name ? selectedUser.name : "친구 찾기"}</span>
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -78,7 +79,10 @@ const SelectStudent = () => {
                 <Button
                   variant="link"
                   className="flex items-center gap-1 mt-2 text-slate-900 py-0"
-                  onClick={() => setSelectedUser(student.users!.id)}
+                  onClick={() => {
+                    if (student.users)
+                      setSelectedUser({ id: student.users.id, name: student.users.name });
+                  }}
                 >
                   <p>
                     {student.users?.student_number}번 {student.users?.name}

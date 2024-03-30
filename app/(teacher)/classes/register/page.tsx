@@ -66,7 +66,7 @@ const ClassRegisterPage = () => {
   };
 
   return (
-    <div>
+    <div className="w-full h-full flex flex-col items-center">
       <PageTitle title="학급 참여하기 🎉" description="선생님이 주신 학급 코드를 입력하세요!" />
       {!foundClass ? (
         <CodeInput onSubmit={onSubmit} />

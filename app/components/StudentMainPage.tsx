@@ -1,13 +1,25 @@
-import { BarChart, MessageCircle, SquareGantt } from "lucide-react";
+import { BarChart, FileText, MessageCircle, SquareGantt } from "lucide-react";
 import Link from "next/link";
 import ScoreChart from "../reviews/_components/ScoreChart";
 import { createClient } from "../utils/supabase/server";
+import MainLink from "./main/MainLink";
 
 const StudentMainPage = async () => {
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  const { data } = await supabase.from("user_classes").select("class_id").eq("user_id", user?.id!);
+
+  if (!data || !data.length) {
+    return (
+      <div>
+        <p>아무 학급에도 속해있지 않습니다.</p>
+        <Link href="/classes/register">학급 가입하기</Link>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 md:p-8">
@@ -18,35 +30,27 @@ const StudentMainPage = async () => {
         </h2>
         <h3 className="text-lg font-semibold text-slate-800 mb-2">점검하기</h3>
         <div className="grid grid-cols-12 gap-[20px]">
-          <Link
+          <MainLink
             href="/evaluate/me"
-            className="col-span-12 md:col-span-4 h-[100px] min-h-[100px] flex flex-col justify-center items-center border rounded-xl bg-white text-lg text-green-600 border-green-600/20 hover:bg-green-50 transition-colors"
-          >
-            <div className="flex items-center">
-              <BarChart className="mr-2 opacity-60" /> <span>나에게</span>
-            </div>
-            <p className="text-sm text-slate-800 opacity-50 mt-2">오늘의 나는 어땠나요?</p>
-          </Link>
-          <Link
+            classNames="bg-[#ffefd9]"
+            title="나에게"
+            description="오늘의 나는 어땠나요?"
+            slice={6}
+          />
+          <MainLink
             href="/evaluate/friend"
-            className="col-span-12 md:col-span-4 h-[100px] min-h-[100px] flex flex-col justify-center items-center border rounded-xl bg-white text-lg text-purple-500 border-purple-500/20 hover:bg-purple-50 transition-colors"
-          >
-            <div className="flex items-center">
-              <MessageCircle className="mr-2 opacity-60" /> <span>친구에게</span>
-            </div>
-            <p className="text-sm text-slate-800 opacity-50 mt-2">
-              내 친구에 대한 생각을 말해봐요.
-            </p>
-          </Link>
-          <Link
-            href=""
-            className="col-span-12 md:col-span-4 h-[100px] min-h-[100px] flex flex-col justify-center items-center border rounded-xl bg-white text-lg text-amber-900 border-amber-900/20 hover:bg-amber-50 transition-colors"
-          >
-            <div className="flex items-center">
-              <SquareGantt className="mr-2 opacity-60" /> <span>전체 보기</span>
-            </div>
-            <p className="text-sm text-slate-800 opacity-50 mt-2">나에게 온 편지를 확인하세요!</p>
-          </Link>
+            classNames="bg-[#e3f3da]"
+            title="친구에게"
+            description="친구에 대한 생각을 말해봐요."
+            slice={6}
+          />
+          <MainLink
+            href={`/evaluate/reviews/${user?.id}`}
+            classNames="bg-[#f4edf8]"
+            title="전체보기"
+            description="나에게 온 편지를 확인하세요!"
+            slice={9}
+          />
           <div className="col-span-12">
             <h3 className="text-lg font-semibold text-slate-800 mb-2">점수보기</h3>
             <ScoreChart user={user} />
