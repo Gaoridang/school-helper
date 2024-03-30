@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@/app/hooks/useUser";
-import { getRoleBadge } from "@/app/signup/utils/getRoleBadge";
+import { getRoleBadge } from "@/app/(auth)/signup/utils/getRoleBadge";
 import { supabase } from "@/app/utils/supabase/client";
 import { ChevronDown, LogOut, User as LucideUser, Settings } from "lucide-react";
 import Link from "next/link";

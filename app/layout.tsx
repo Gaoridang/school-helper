@@ -2,11 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import FloatingMenus from "./FloatingMenus";
 import "./globals.css";
-import { UserProvider } from "./hooks/useUser";
 import { ReactQueryClientProvider } from "./QueryClientProvider";
-import Sidebar from "./Sidebar";
 
 const pretendard = localFont({
   src: [
@@ -42,16 +39,12 @@ export default function RootLayout({
 }>) {
   return (
     <ReactQueryClientProvider>
-      <UserProvider>
-        <html lang="en" suppressHydrationWarning className="h-full">
-          <body className={cn(pretendard.className, "relative flex h-full")}>
-            <Sidebar />
-            <FloatingMenus />
-            <main className="md:pl-[300px] flex-1 h-full">{children}</main>
-            <Toaster />
-          </body>
-        </html>
-      </UserProvider>
+      <html lang="en" suppressHydrationWarning className="h-full">
+        <body className={cn(pretendard.className, "relative flex h-full")}>
+          <main className="w-full">{children}</main>
+          <Toaster />
+        </body>
+      </html>
     </ReactQueryClientProvider>
   );
 }

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { School } from "../signup/types/formTypes";
+import { School } from "../(auth)/signup/types/formTypes";
 
 export const fetchSchools = async (name: string) => {
   const { data } = await axios.get("https://open.neis.go.kr/hub/schoolInfo", {

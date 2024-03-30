@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import PageTitle from "../components/PageTitle";
+import PageTitle from "../../components/PageTitle";
 
 const SignUpPageLayout = ({ children }: PropsWithChildren) => {
   return (

@@ -31,7 +31,7 @@ const Sidebar = async () => {
           <Image src={CheckMateIcon} alt="CheckMate Logo" priority />
         </Link>
         <div className="mb-4 w-full">
-          <UserInfo />
+          <UserInfo user={user} />
           {user?.user_metadata.role === "teacher" && (
             <Link href="/classes/create" className="text-sm text-primary underline">
               새로운 학급 개설
@@ -42,7 +42,7 @@ const Sidebar = async () => {
               새로운 학급 가입
             </Link>
           )}
-          <SelectClass />
+          <SelectClass user={user} />
         </div>
         <MenuItems />
       </div>

@@ -2,16 +2,15 @@
 
 import PageTitle from "@/app/components/PageTitle";
 import { supabase } from "@/app/utils/supabase/client";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { School } from "lucide-react";
-import { useState } from "react";
-import CodeInput from "./CodeInput";
-import { useUser } from "@/app/hooks/useUser";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import RegisterButton from "./_components/RegisterButton";
+import CodeInput from "./CodeInput";
 
 interface ClassData {
   id: string;
@@ -21,10 +20,10 @@ interface ClassData {
 }
 
 const ClassRegisterPage = () => {
-  const user = useUser();
   const router = useRouter();
   const [foundClass, setFoundClass] = useState<ClassData>();
   const { toast } = useToast();
+
   const onSubmit = async (code: string) => {
     const { data, error } = await supabase
       .from("classes")
@@ -44,6 +43,10 @@ const ClassRegisterPage = () => {
   };
 
   const handleRegister = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
     if (!foundClass || !user) return;
 
     const { error } = await supabase.from("user_classes").insert({
@@ -86,12 +89,10 @@ const ClassRegisterPage = () => {
               </p>
             </div>
           </Label>
-          <Button className="mr-2" onClick={handleRegister}>
-            가입하기
-          </Button>
-          <Button variant="outline" onClick={() => setFoundClass(undefined)}>
-            다른 학급 찾기
-          </Button>
+          <div className="flex gap-2">
+            <RegisterButton onClick={handleRegister} title="가입하기" />
+            <RegisterButton onClick={() => setFoundClass(undefined)} title="다시 입력하기" />
+          </div>
         </div>
       )}
     </div>

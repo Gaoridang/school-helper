@@ -1,13 +1,14 @@
 "use client";
 
-import React from "react";
-import { useUser } from "../hooks/useUser";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getRoleBadge } from "../signup/utils/getRoleBadge";
+import { User } from "@supabase/supabase-js";
+import { getRoleBadge } from "../(auth)/signup/utils/getRoleBadge";
 
-const UserInfo = () => {
-  const user = useUser();
+interface Props {
+  user: User | null;
+}
 
+const UserInfo = ({ user }: Props) => {
   if (!user) return <Skeleton className="w-full h-10" />;
 
   return (

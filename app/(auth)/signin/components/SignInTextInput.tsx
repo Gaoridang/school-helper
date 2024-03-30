@@ -3,7 +3,7 @@
 import { FormControl, FormDescription, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SignInDataType, SignInFormItemType } from "../types/signInFormTypes";
-import { CommonInputTypes } from "@/app/signup/types/formTypes";
+import { CommonInputTypes } from "@/app/(auth)/signup/types/formTypes";
 
 const SignInTextInput = ({
   field,
