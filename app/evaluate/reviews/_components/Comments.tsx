@@ -13,6 +13,7 @@ interface Props {
 
 const Comments = ({ session_id, user }: Props) => {
   const [replyCommentId, setReplyCommentId] = useState<number>();
+  const [updateCommentId, setUpdateCommentId] = useState<number>();
   const [comments, setComments] = useState<Tables<"comments">[]>();
 
   const deleteComment = async (id: number) => {
@@ -63,10 +64,19 @@ const Comments = ({ session_id, user }: Props) => {
         return (
           <div key={comment.id} className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <p>{comment.comment}</p>
+              {updateCommentId === comment.id ? (
+                <CommentInput session_id={session_id} comment_id={comment.id} type="update" />
+              ) : (
+                <p>{comment.comment}</p>
+              )}
               {comment.user_id === user?.id && (
                 <>
-                  <button className="text-xs text-gray-500">수정</button>
+                  <button
+                    className="text-xs text-gray-500"
+                    onClick={() => setUpdateCommentId(comment.id)}
+                  >
+                    수정
+                  </button>
                   <button
                     className="text-xs text-gray-500"
                     onClick={() => deleteComment(comment.id)}
@@ -85,7 +95,7 @@ const Comments = ({ session_id, user }: Props) => {
               )}
             </div>
             {replyCommentId === comment.id && (
-              <CommentInput parentCommentId={comment.id} session_id={session_id} />
+              <CommentInput parent_comment_id={comment.id} session_id={session_id} />
             )}
           </div>
         );

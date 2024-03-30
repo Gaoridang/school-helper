@@ -1,9 +1,9 @@
-import { BarChart, MessageCircle } from "lucide-react";
 import Link from "next/link";
+import ChildInfo from "../(parents)/_components/ChildInfo";
 import LinkChild from "../(parents)/_components/LinkChild";
 import ScoreChart from "../reviews/_components/ScoreChart";
 import { createClient } from "../utils/supabase/server";
-import ChildInfo from "../(parents)/_components/ChildInfo";
+import MainLink from "./main/MainLink";
 
 const ParentsMainPage = async () => {
   const supabase = createClient();
@@ -30,32 +30,20 @@ const ParentsMainPage = async () => {
           >
             <ChildInfo user={user} />
           </Link>
-          <Link
+          <MainLink
             href="/evaluate/reviews/me"
-            className="col-span-12 md:col-span-4 h-[100px] min-h-[100px] flex flex-col justify-center items-center rounded-xl bg-[#F1EEE9] text-lg text-slate-900"
-          >
-            <div className="flex items-center">
-              <BarChart className="mr-2 opacity-60" /> <span>자기평가</span>
-            </div>
-            <p className="text-sm text-center text-slate-800 opacity-50 mt-2">
-              매일 하는 자기평가
-              <br />
-              결과를 확인하세요.
-            </p>
-          </Link>
-          <Link
+            classNames="bg-[#ffefd9]"
+            title="자기평가"
+            description="매일 하는 자기평가 결과를 확인하세요."
+            slice={10}
+          />
+          <MainLink
             href="/evaluate/reviews/friend"
-            className="col-span-12 md:col-span-4 h-[100px] min-h-[100px] flex flex-col justify-center items-center rounded-xl bg-[#E6F5FA] text-lg text-slate-900"
-          >
-            <div className="flex items-center">
-              <MessageCircle className="mr-2 opacity-60" /> <span>동료평가</span>
-            </div>
-            <p className="text-sm text-center text-slate-800 opacity-50 mt-2">
-              친구가 보낸 평가를
-              <br />
-              확인하세요.
-            </p>
-          </Link>
+            classNames="bg-[#eafae0]"
+            title="동료평가"
+            description="친구들이 보낸 평가를 확인하세요."
+            slice={10}
+          />
           <div className="col-span-12">
             <h3 className="text-lg font-semibold text-slate-800 mb-2">점수보기</h3>
             <ScoreChart user={user} />

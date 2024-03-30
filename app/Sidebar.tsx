@@ -1,14 +1,11 @@
-"use client";
-
-import { cn } from "@/lib/utils";
 import CheckMateIcon from "@/public/checkmate-logo.png";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import SelectClass from "./(teacher)/components/SelectSchool";
-import { menuItems } from "./FloatingMenus";
 import LogoutButton from "./components/LogoutButton";
 import UserInfo from "./components/UserInfo";
+import MenuItems from "./components/sidebar/MenuItems";
+import { createClient } from "./utils/supabase/server";
 
 export interface UserClasses {
   class_id: string;
@@ -21,10 +18,11 @@ export interface UserClasses {
   } | null;
 }
 
-const Sidebar = () => {
-  const pathname = usePathname();
-
-  if (pathname === "/signin" || pathname === "/signup") return null;
+const Sidebar = async () => {
+  const supbase = createClient();
+  const {
+    data: { user },
+  } = await supbase.auth.getUser();
 
   return (
     <aside className="fixed min-h-screen p-4 pb-8 flex-col items-start justify-between md:flex hidden gap-1 border-r bg-white w-[300px]">
@@ -34,23 +32,19 @@ const Sidebar = () => {
         </Link>
         <div className="mb-4 w-full">
           <UserInfo />
+          {user?.user_metadata.role === "teacher" && (
+            <Link href="/classes/create" className="text-sm text-primary underline">
+              새로운 학급 개설
+            </Link>
+          )}
+          {user?.user_metadata.role === "student" && (
+            <Link href="/classes/register" className="text-sm text-primary underline">
+              새로운 학급 가입
+            </Link>
+          )}
           <SelectClass />
         </div>
-        {menuItems.map((item) => (
-          <Link
-            key={item.name}
-            href={item.href}
-            className={cn(
-              pathname === item.href ? "bg-primary font-medium text-white" : "bg-white font-light",
-              "flex items-center gap-3 p-3 rounded-lg w-full hover:bg-primary hover:text-white transition-colors text-sm mb-2",
-            )}
-          >
-            <item.icon
-              className={cn(pathname === item.href ? "opacity-100" : "opacity-50", "h-5 w-5")}
-            />
-            <span className="whitespace-nowrap">{item.name}</span>
-          </Link>
-        ))}
+        <MenuItems />
       </div>
       <LogoutButton />
     </aside>

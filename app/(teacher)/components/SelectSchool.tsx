@@ -34,8 +34,6 @@ const SelectClass = () => {
 
       if (error) {
         throw error;
-      } else if (data.length === 0) {
-        router.push("/classes/register");
       } else {
         setData(data);
         setSelectedClassId(data.find((item) => item.is_primary)?.class_id || "");

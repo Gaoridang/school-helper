@@ -9,7 +9,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -23,7 +22,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { getSubjectName } from "../../getSubjectName";
 import { SubmitEvalData, submitEvalSchema } from "../../types/types";
 import { useSelectedUser } from "../_hooks/useSelectedUser";
 
@@ -61,7 +59,7 @@ const EvalForm = () => {
       .insert({
         template_id: templateId,
         evaluator_id: user!.id,
-        evaluatee_id: type === "peer" ? selectedUser : user!.id,
+        evaluatee_id: type === "peer" ? selectedUser.id : user!.id,
         start_time: format(new Date(), "yyyy-MM-dd", { locale: ko }),
       })
       .select()
@@ -69,7 +67,7 @@ const EvalForm = () => {
 
     const results = evalItems.map((item) => ({
       evaluator_id: user!.id,
-      evaluatee_id: type === "peer" ? selectedUser : user!.id,
+      evaluatee_id: type === "peer" ? selectedUser.id : user!.id,
       template_id: templateId,
       item_id: item.id,
       is_passed: values.items.includes(item.id),
@@ -105,10 +103,6 @@ const EvalForm = () => {
           name="items"
           render={() => (
             <FormItem>
-              <div className="mb-4">
-                <FormLabel className="text-base">{`${getSubjectName(evalItems[0].subject_name)} ${evalItems[0].period}`}</FormLabel>
-                <FormDescription>{evalItems[0].date}</FormDescription>
-              </div>
               {evalItems.map((item) => (
                 <FormField
                   key={item.id}

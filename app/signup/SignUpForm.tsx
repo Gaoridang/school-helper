@@ -101,8 +101,15 @@ const SignUpForm = () => {
 
     localStorage.setItem("user", JSON.stringify(user));
 
-    router.push("/classes/register");
-    router.refresh();
+    // if user is student or parents, redirect to register class page
+    // if user is teacher, redirect to create class page
+    if (value.role === "student" || value.role === "parents") {
+      router.push("/classes/register");
+      router.refresh();
+    } else if (value.role === "teacher") {
+      router.push("/classes/create");
+      router.refresh();
+    }
   };
 
   return (

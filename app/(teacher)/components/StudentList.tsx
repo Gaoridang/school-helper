@@ -11,7 +11,9 @@ import { supabase } from "@/app/utils/supabase/client";
 const StudentList = () => {
   const [students, setStudents] = useState<Tables<"users">[]>([]);
   const [results, setResults] = useState<Tables<"evaluation_results">[]>([]);
-  const [studentWithDone, setStudentWithDone] = useState<{ user: string; done: boolean }[]>([]);
+  const [studentWithDone, setStudentWithDone] = useState<
+    { id: string; user: string; done: boolean; sessionId: string | undefined | null }[]
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -52,7 +54,12 @@ const StudentList = () => {
 
     const updatedStudentWithDone = students.map((student) => {
       const done = results.some((result) => result.evaluatee_id === student.id);
-      return { user: student.name, done };
+      return {
+        id: student.id,
+        user: student.name,
+        done,
+        sessionId: results.find((result) => result.evaluatee_id === student.id)?.session_id,
+      };
     });
 
     setStudentWithDone(updatedStudentWithDone);

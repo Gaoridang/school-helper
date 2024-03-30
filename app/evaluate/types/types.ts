@@ -1,7 +1,10 @@
 import { z } from "zod";
 
 export const createEvalSchema = z.object({
-  date: z.date(),
+  date: z.object({
+    from: z.date(),
+    to: z.date(),
+  }),
   subject: z.string().optional(),
   period: z.string().optional(),
   contents: z.array(

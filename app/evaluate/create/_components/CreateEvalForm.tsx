@@ -39,7 +39,10 @@ const CreateEvalForm = ({ user, type }: Props) => {
   const form = useForm<CreateEvalData>({
     resolver: zodResolver(createEvalSchema),
     defaultValues: {
-      date: new Date(),
+      date: {
+        from: new Date(),
+        to: new Date(),
+      },
       subject: "",
       period: "",
       contents: [
@@ -70,13 +73,15 @@ const CreateEvalForm = ({ user, type }: Props) => {
     if (!user) return;
 
     const { date, subject, period, contents, evaluation_type } = values;
-    const dateToString = format(date, "yyyy-MM-dd");
+    const startDate = format(date.from, "yyyy-MM-dd");
+    const endDate = format(date.to, "yyyy-MM-dd");
 
     const { data: templateData, error: templateError } = await supabase
       .from("evaluation_templates")
       .insert({
         class_id: selectedClassId,
-        date: dateToString,
+        start_date: startDate,
+        end_date: endDate,
         subject_name: subject || "자가점검",
         period: period || "-",
         creator_id: user.id,
@@ -92,9 +97,9 @@ const CreateEvalForm = ({ user, type }: Props) => {
       });
     }
 
+    // FIXME: 평가 항목에 날짜, 과목, 교시 정보가 왜 들어가는지 모르겠음
     const insertingData = contents.map((content) => {
       return {
-        date: dateToString,
         class_id: selectedClassId,
         subject_name: subject || "자가점검",
         period: period || "-",
@@ -143,8 +148,15 @@ const CreateEvalForm = ({ user, type }: Props) => {
                             !field.value && "text-muted-foreground",
                           )}
                         >
-                          {field.value ? (
-                            format(field.value, "y. M. d(E)", { locale: ko })
+                          {field.value.from ? (
+                            field.value.to ? (
+                              <>
+                                {format(field.value.from, "y. MM. dd")} -{" "}
+                                {format(field.value.to, "y. MM. dd")}
+                              </>
+                            ) : (
+                              format(field.value.from, "y. MM. dd")
+                            )
                           ) : (
                             <span>날짜를 선택하세요.</span>
                           )}
@@ -155,8 +167,11 @@ const CreateEvalForm = ({ user, type }: Props) => {
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         locale={ko}
-                        mode="single"
-                        selected={field.value}
+                        mode="range"
+                        selected={{
+                          from: field.value.from,
+                          to: field.value.to,
+                        }}
                         onSelect={field.onChange}
                       />
                     </PopoverContent>

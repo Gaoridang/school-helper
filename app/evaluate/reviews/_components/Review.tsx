@@ -34,7 +34,7 @@ const Review = ({ sessionId }: Props) => {
   return (
     <>
       <div className="flex items-center gap-2 mb-8">
-        <p className="font-semibold text-xl">{format(result.date!, "y년 M월 d일")}</p>
+        <p className="font-semibold text-xl">{format(result.start_time!, "y년 M월 d일")}</p>
       </div>
       <div className="grid gap-4 max-w-md mb-4">
         {(result?.contents as any[]).map((content) => (

@@ -17,11 +17,13 @@ import { useForm } from "react-hook-form";
 import { CommentSchema, CommentType } from "../_types/schema";
 
 interface Props {
-  parentCommentId?: number;
+  parent_comment_id?: number;
+  comment_id?: number;
   session_id: string;
+  type?: "reply" | "update";
 }
 
-const CommentInput = ({ parentCommentId, session_id }: Props) => {
+const CommentInput = ({ parent_comment_id, comment_id, session_id, type }: Props) => {
   const form = useForm<CommentType>({
     resolver: zodResolver(CommentSchema),
     defaultValues: {
@@ -30,12 +32,21 @@ const CommentInput = ({ parentCommentId, session_id }: Props) => {
   });
 
   const onSubmit = async (data: CommentType) => {
-    const { error } = await supabase.from("comments").insert({
-      comment: data.comment,
-      parent_comment_id: parentCommentId,
-      session_id: session_id,
-      user_id: JSON.parse(localStorage.getItem("user")!).id,
-    });
+    if (type === "update" && comment_id) {
+      console.log("수정", data.comment, comment_id);
+      const { error } = await supabase
+        .from("comments")
+        .update({ comment: data.comment })
+        .eq("id", comment_id)
+        .select();
+    } else {
+      const { error } = await supabase.from("comments").insert({
+        comment: data.comment,
+        parent_comment_id: parent_comment_id,
+        session_id: session_id,
+        user_id: JSON.parse(localStorage.getItem("user")!).id,
+      });
+    }
   };
 
   return (

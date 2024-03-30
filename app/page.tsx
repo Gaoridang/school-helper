@@ -11,11 +11,11 @@ export default async function Home() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  if (!user) redirect("/signin");
+
   const isTeacher = user?.user_metadata?.role === "teacher";
   const isStudent = user?.user_metadata?.role === "student";
   const isParents = user?.user_metadata?.role === "parents";
-
-  if (!user) redirect("/signin");
 
   return (
     <>

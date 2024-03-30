@@ -1,7 +1,5 @@
-import { format } from "date-fns";
-import Comments from "../../_components/Comments";
-import Review from "../../_components/Review";
 import { createClient } from "@/app/utils/supabase/server";
+import Review from "../../_components/Review";
 
 interface Props {
   params: {
@@ -18,7 +16,7 @@ const ReviewDetailPage = async ({ params }: Props) => {
   return (
     <div className="p-8 bg-white rounded-md">
       <Review sessionId={params.sessionId} />
-      <Comments session_id={params.sessionId} user={user} />
+      {/* <Comments session_id={params.sessionId} user={user} /> */}
     </div>
   );
 };

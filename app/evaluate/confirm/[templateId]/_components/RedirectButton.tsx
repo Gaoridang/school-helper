@@ -9,7 +9,11 @@ const RedirectButton = () => {
   const path = searchParams.get("redirect");
   const router = useRouter();
 
-  return <Button onClick={() => router.push(path!)}>목록으로 가기</Button>;
+  return (
+    <Button variant="secondary" onClick={() => router.push(path!)}>
+      목록으로 가기
+    </Button>
+  );
 };
 
 export default RedirectButton;
