@@ -83,7 +83,7 @@ const StudentListTable = <TData, TValue>({ columns, data }: StudentTableProps<TD
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                등록된 학생이 없습니다.
               </TableCell>
             </TableRow>
           )}
