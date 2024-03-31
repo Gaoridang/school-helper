@@ -18,15 +18,18 @@ import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { SubmitEvalData, submitEvalSchema } from "../../types/types";
 import { useSelectedUser } from "../_hooks/useSelectedUser";
+import { User } from "@supabase/supabase-js";
 
-// TODO: 자가, 동료 선택 가능하도록 수정
-const EvalForm = () => {
+interface Props {
+  user?: User | null;
+}
+
+const EvalForm = ({ user }: Props) => {
   const [evalItems, setEvalItems] = useState<Tables<"evaluation_items">[]>([]);
   const form = useForm<SubmitEvalData>({
     resolver: zodResolver(submitEvalSchema),
@@ -135,14 +138,14 @@ const EvalForm = () => {
           )}
         />
         <div className="flex justify-end">
-          <Button type="submit" className="mr-2" disabled={form.formState.isSubmitting}>
-            제출하기
-          </Button>
-          <Link href="/">
-            <Button type="button" variant="outline">
-              돌아가기
+          {user?.user_metadata.role === "student" && (
+            <Button type="submit" className="mr-2" disabled={form.formState.isSubmitting}>
+              제출하기
             </Button>
-          </Link>
+          )}
+          <Button type="button" variant="outline" onClick={() => router.back()}>
+            돌아가기
+          </Button>
         </div>
       </form>
     </Form>

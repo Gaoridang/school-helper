@@ -124,7 +124,9 @@ const CreateEvalForm = ({ user, type }: Props) => {
     });
 
     const redirectPath = type === "self" ? "/evaluate/me" : "/evaluate/friend";
-    router.push(`/evaluate/confirm/${templateData.id}?redirect=${redirectPath}`);
+    router.push(
+      `/evaluate/confirm/${templateData.id}?redirect=${redirectPath}&type=${type}&role=${user.user_metadata.role}`,
+    );
   };
 
   return (
