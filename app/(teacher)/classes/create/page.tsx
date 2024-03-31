@@ -12,6 +12,7 @@ import SelectClassNumber from "../components/SelectClassNumber";
 import SelectGrade from "../components/SelectGrade";
 import { CreateClassData, CreateClassFormItemType, createClassSchema } from "../types/classTypes";
 import { createRandomCode } from "../utils/getRandomCode";
+import { useRouter } from "next/navigation";
 
 const formItems: CreateClassFormItemType[] = [
   { label: "학교", name: "school", type: "search", placeholder: "학교를 선택하세요." },
@@ -29,6 +30,7 @@ const CreateClassPage = () => {
     },
   });
 
+  const router = useRouter();
   const { toast } = useToast();
   const onSubmit = async (values: CreateClassData) => {
     const {
@@ -53,6 +55,8 @@ const CreateClassPage = () => {
     toast({
       title: "학급이 개설되었습니다.",
     });
+
+    router.push("/");
   };
 
   return (
