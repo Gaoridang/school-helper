@@ -19,7 +19,7 @@ export const columns: ColumnDef<{
   },
   {
     accessorKey: "done",
-    header: "자가 평가",
+    header: "자기 평가 결과",
     cell: ({ row }) => {
       if (row.original.done) {
         return (

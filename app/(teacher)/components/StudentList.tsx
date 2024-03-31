@@ -7,6 +7,7 @@ import StudentListTable from "./StudentListTable";
 import { columns } from "./columns";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/app/utils/supabase/client";
+import { useClass } from "../hooks/useClass";
 
 const StudentList = () => {
   const [students, setStudents] = useState<Tables<"users">[]>([]);
@@ -15,11 +16,12 @@ const StudentList = () => {
     { id: string; user: string; done: boolean; sessionId: string | undefined | null }[]
   >([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { selectedClassId } = useClass();
 
   useEffect(() => {
     setIsLoading(true);
     (async () => {
-      const studentsData = await fetchStudents(supabase);
+      const studentsData = await fetchStudents(supabase, selectedClassId);
       setStudents(studentsData);
 
       const resultsData = await fetchResults(supabase);
@@ -46,7 +48,7 @@ const StudentList = () => {
     return () => {
       supabase.removeChannel(subscription);
     };
-  }, []);
+  }, [selectedClassId]);
 
   // Update the studentWithDone state based on the latest results
   useEffect(() => {

@@ -1,19 +1,33 @@
 import { TypedSupabaseClient } from "@/app/utils/types";
 import { format, subHours } from "date-fns";
 
-export const fetchStudents = async (supabase: TypedSupabaseClient) => {
-  const { data, error } = await supabase
-    .from("users")
-    .select("*")
-    .eq("role", "student")
-    .order("student_number");
+export const fetchStudents = async (supabase: TypedSupabaseClient, classId: string) => {
+  if (!classId) return [];
 
-  if (error) {
-    console.error(error);
+  const { data: students, error: studentsError } = await supabase
+    .from("user_classes")
+    .select("user_id")
+    .eq("class_id", classId)
+    .eq("role", "student");
+
+  if (studentsError) {
+    console.error(studentsError);
     return [];
   }
 
-  return data;
+  // fetch users from user_id
+  const userIds = students.map((student) => student.user_id);
+  const { data: users, error: usersError } = await supabase
+    .from("users")
+    .select("*")
+    .in("id", userIds);
+
+  if (usersError) {
+    console.error(usersError);
+    return [];
+  }
+
+  return users;
 };
 
 export const fetchResults = async (supabase: TypedSupabaseClient) => {
