@@ -8,24 +8,18 @@ import { ReactNode } from "react";
 interface Props {
   templateId: string;
   children?: ReactNode;
-  variant?:
-    | "default"
-    | "destructive"
-    | "outline"
-    | "secondary"
-    | "ghost"
-    | "link"
-    | null
-    | undefined;
 }
 
-const ActionButton = ({ templateId, variant, children }: Props) => {
+const ActionButton = ({ templateId, children }: Props) => {
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
+  const role = searchParams.get("role");
+
+  if (role === "teacher") return;
 
   return (
     <Link href={`/evaluate/${templateId}?type=${type}`}>
-      <Button variant={variant}>{children}</Button>
+      <Button>{children}</Button>
     </Link>
   );
 };
