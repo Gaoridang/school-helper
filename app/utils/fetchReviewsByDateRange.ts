@@ -3,7 +3,6 @@ import { supabase } from "./supabase/client";
 export interface ReviewData {
   class_id: string;
   contents: any[];
-  date: string;
   evaluatee_id: string;
   evaluator_id: string;
   period: string;

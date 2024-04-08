@@ -599,9 +599,10 @@ export type Database = {
         Row: {
           class_id: string | null
           contents: Json | null
-          date: string | null
           evaluatee_id: string | null
           evaluator_id: string | null
+          evaluator_name: string | null
+          first_comment: string | null
           period: string | null
           session_id: string | null
           start_time: string | null
