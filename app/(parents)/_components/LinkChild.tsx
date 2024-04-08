@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 import { User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface ClassData {
@@ -33,6 +34,7 @@ const LinkChild = ({ user }: { user: User | null }) => {
   const [foundClass, setFoundClass] = useState<ClassData>();
   const [foundStudent, setFoundStudent] = useState<StudentData>();
   const { toast } = useToast();
+  const router = useRouter();
   // 자녀 코드 입력 시 해당 코드에 맞는 자녀를 찿고
   // 자녀가 있으면 해당 자녀를 연결
   const onSubmit = async (code: string) => {
@@ -109,6 +111,8 @@ const LinkChild = ({ user }: { user: User | null }) => {
       title: "자녀 연결에 성공했습니다.",
       description: "자녀와 함께 CheckMate를 이용해보세요!",
     });
+
+    router.push("/");
   };
 
   return (
