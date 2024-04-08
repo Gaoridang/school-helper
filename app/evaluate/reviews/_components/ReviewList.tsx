@@ -4,6 +4,14 @@ import { useClass } from "@/app/(teacher)/hooks/useClass";
 import { Tables } from "@/app/types/schema";
 import { fetchLinkedStudent } from "@/app/utils/fetchLinkedStudent";
 import { fetchReviews } from "@/app/utils/fetchReviews";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -23,7 +31,7 @@ const ReviewList = ({ user, type, studentId }: Props) => {
 
     const getReviewData = async () => {
       if (user.user_metadata.role === "parents") {
-        const linkedStudent = await fetchLinkedStudent(user);
+        const linkedStudent = await fetchLinkedStudent(user, selectedClassId);
         if (linkedStudent) {
           const reviews = await fetchReviews(selectedClassId, linkedStudent.student_id, type);
           setSessions(reviews);
@@ -57,33 +65,38 @@ const ReviewList = ({ user, type, studentId }: Props) => {
 
   return (
     <div>
-      {Object.entries(groupedReviews)
-        .map(([month, monthReviews]) => (
-          <div key={month} className="relative">
-            <h3 className="w-12 h-12 rounded-full bg-pastel-green-100 flex justify-center items-center p-2 text-sm">
-              {month}
-            </h3>
-            <div className="ml-6 border-l flex flex-col gap-4 relative">
-              {monthReviews.map((review) => (
-                <Link
-                  href={`/evaluate/reviews/${review.type === "self" ? "me" : "friend"}/${review.session_id}`}
-                  key={review.session_id}
-                  className="relative shadow-none border-none"
-                >
-                  <div className="pl-4 relative flex items-center gap-4 before:absolute before:left-0 before:top-1/4 before:content-['_'] before:w-[6px] before:h-1/2 before:rounded-r-2xl before:bg-[#C8DD9D]">
-                    <h4 className="text-muted-foreground text-xl font-semibold after:content-['일'] after:text-sm after:font-light after:ml-1">
-                      {review.start_time?.split("-")[2].split("T")[0]}
-                    </h4>
-                    <div className="text-slate-900 p-3 border rounded-lg">
-                      {review.total_passed}점
-                    </div>
-                  </div>
-                </Link>
+      {Object.entries(groupedReviews).map(([month, monthReviews]) => (
+        <div key={month} className="relative p-4">
+          <h3 className="px-4 py-2 bg-gray-100 text-sm font-semibold">{month}</h3>
+          <Table>
+            <TableHeader className="bg-gray-100">
+              <TableRow>
+                <TableHead>날짜</TableHead>
+                <TableHead>점수</TableHead>
+                <TableHead>한 줄 평</TableHead>
+                <TableHead>결과 보기</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {monthReviews.map((review, index) => (
+                <TableRow key={index}>
+                  <TableCell>{review.start_time?.split("-")[2].split("T")[0]}일</TableCell>
+                  <TableCell>{review.total_passed}점</TableCell>
+                  <TableCell>{review.first_comment}</TableCell>
+                  <TableCell>
+                    <Link
+                      href={`/evaluate/reviews/${review.type === "self" ? "me" : "friend"}/${review.session_id}`}
+                      className="text-primary underline"
+                    >
+                      결과 보기
+                    </Link>
+                  </TableCell>
+                </TableRow>
               ))}
-            </div>
-          </div>
-        ))
-        .reverse()}
+            </TableBody>
+          </Table>
+        </div>
+      ))}
     </div>
   );
 };

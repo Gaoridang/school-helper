@@ -1,9 +1,11 @@
+import { Button } from "@/components/ui/button";
 import CheckMateIcon from "@/public/checkmate-logo.png";
 import Image from "next/image";
 import Link from "next/link";
 import SelectClass from "./(teacher)/components/SelectSchool";
 import LogoutButton from "./components/LogoutButton";
 import UserInfo from "./components/UserInfo";
+import ClassInfo from "./components/sidebar/ClassInfo";
 import MenuItems from "./components/sidebar/MenuItems";
 import { createClient } from "./utils/supabase/server";
 
@@ -32,17 +34,25 @@ const Sidebar = async () => {
         </Link>
         <div className="mb-4 w-full">
           <UserInfo user={user} />
-          {user?.user_metadata.role === "teacher" && (
-            <Link href="/classes/create" className="text-sm text-primary underline">
-              새로운 학급 개설
-            </Link>
-          )}
-          {user?.user_metadata.role === "student" && (
-            <Link href="/classes/register" className="text-sm text-primary underline">
-              새로운 학급 가입
-            </Link>
-          )}
           <SelectClass user={user} />
+          <div className="grid grid-cols-2 gap-2">
+            {user?.user_metadata.role === "teacher" && (
+              <Button>
+                <Link href="/classes/create">새로운 학급 개설</Link>
+              </Button>
+            )}
+            {user?.user_metadata.role === "student" && (
+              <Button>
+                <Link href="/classes/register">새로운 학급 가입</Link>
+              </Button>
+            )}
+            {user?.user_metadata.role === "parents" && (
+              <Button>
+                <Link href="/students/register">학생 추가하기</Link>
+              </Button>
+            )}
+            <ClassInfo user={user} />
+          </div>
         </div>
         <MenuItems />
       </div>

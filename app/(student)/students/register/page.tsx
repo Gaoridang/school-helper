@@ -1,18 +1,16 @@
 "use client";
 
+import RegisterButton from "@/app/(teacher)/classes/register/_components/RegisterButton";
 import CodeInput from "@/app/(teacher)/classes/register/CodeInput";
+import PageTitle from "@/app/components/PageTitle";
 import { supabase } from "@/app/utils/supabase/client";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-import { User } from "@supabase/supabase-js";
+import { cn } from "@/lib/utils";
+import { School } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface ClassData {
@@ -28,13 +26,13 @@ interface StudentData {
   student_code: string | null;
 }
 
-const LinkChild = ({ user }: { user: User | null }) => {
+const StudentRegisterPage = () => {
   const [isLoading, setIsloading] = useState(false);
   const [foundClass, setFoundClass] = useState<ClassData>();
   const [foundStudent, setFoundStudent] = useState<StudentData>();
+  const router = useRouter();
   const { toast } = useToast();
-  // 자녀 코드 입력 시 해당 코드에 맞는 자녀를 찿고
-  // 자녀가 있으면 해당 자녀를 연결
+
   const onSubmit = async (code: string) => {
     setIsloading(true);
     const { data: studentData, error: studentError } = await supabase
@@ -87,7 +85,40 @@ const LinkChild = ({ user }: { user: User | null }) => {
     setIsloading(false);
   };
 
+  const handleRegister = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!foundClass || !user) return;
+
+    const { error } = await supabase.from("user_classes").insert({
+      user_id: user.id,
+      class_id: foundClass.id,
+      role: user.user_metadata.role,
+      is_primary: true,
+    });
+
+    if (error) {
+      return toast({
+        title: "학급 가입에 실패했습니다.",
+        description: "다시 시도해주세요.",
+        variant: "destructive",
+      });
+    }
+
+    if (user.user_metadata.role === "student") {
+      router.push("/");
+    } else if (user.user_metadata.role === "parents") {
+      router.push("/students/register");
+    }
+  };
+
   const handleLink = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
     if (!foundClass || !foundStudent || !user) return;
 
     const { error } = await supabase.from("students_parents").insert({
@@ -112,36 +143,38 @@ const LinkChild = ({ user }: { user: User | null }) => {
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">자녀 연결하기</Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>자녀 코드를 입력하세요.</DialogTitle>
-          <DialogDescription>자녀 아이디 로그인 후 코드 확인</DialogDescription>
-        </DialogHeader>
+    <div className="w-full h-full flex flex-col items-center">
+      <PageTitle title="학생 등록하기 🎉" description="학생 고유 코드를 입력하세요!" />
+      <p className="border p-4 rounded-lg text-sm text-slate-700 mb-4">
+        학생 로그인 시 <br /> 고유 코드를 볼 수 있습니다.
+      </p>
+      {!foundStudent || !foundClass ? (
         <CodeInput onSubmit={onSubmit} />
-        {isLoading ? (
-          <p>로딩중...</p>
-        ) : (
-          <div className="border-t-4 border-b-4 py-3 flex items-center justify-center">
-            {foundStudent && foundClass && (
-              <div className="flex items-center gap-4">
-                <div>
-                  <p className="font-semibold text-sm text-slate-500">
-                    {foundClass.school} {foundClass.grade}학년 {foundClass.class_number}반
-                  </p>
-                  <p className="text-xl">{foundStudent.name} 학생</p>
-                </div>
-                <Button onClick={handleLink}>연결하기</Button>
-              </div>
+      ) : (
+        <div>
+          <Label
+            className={cn(
+              "mb-5 max-w-[300px] rounded-lg flex flex-row-reverse justify-between items-center p-4 ring-2 has-[:checked]:bg-indigo-100 has-[:checked]:ring-2 has-[:checked]:ring-indigo-500 hover:bg-indigo-50 transition cursor-pointer",
             )}
+          >
+            <Input type="radio" className="w-4 h-4" />
+            <div className="text-lg flex items-center gap-2 font-light">
+              <School className="w-5 h-5 opacity-50" />
+              <p>{foundClass.school}</p>
+              <p>
+                {foundClass.grade}학년 {foundClass.class_number}반
+              </p>
+              <p className="text-xl">{foundStudent.name} 학생</p>
+            </div>
+          </Label>
+          <div className="flex gap-2">
+            <Button onClick={handleLink}>연결하기</Button>
+            <RegisterButton onClick={() => setFoundClass(undefined)} title="다시 입력하기" />
           </div>
-        )}
-      </DialogContent>
-    </Dialog>
+        </div>
+      )}
+    </div>
   );
 };
 
-export default LinkChild;
+export default StudentRegisterPage;
