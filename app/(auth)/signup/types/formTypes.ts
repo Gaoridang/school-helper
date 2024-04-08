@@ -10,6 +10,7 @@ export const SignUpSchema = z
     role: z.enum(["teacher", "student", "parents"]),
     student_code: z.string().optional(),
     student_number: z.string().optional(),
+    detail_role: z.enum(["부", "모"]).optional(),
   })
   .refine((data) => data.password === data.passwordConfirmation, {
     message: "비밀번호가 일치하지 않습니다",
@@ -24,6 +25,7 @@ export type SignUpFormItemType = {
   description?: string;
   placeholder?: string;
   condition?: "student" | "teacher" | "parents";
+  selectDataType?: "role" | "detailRole";
 };
 
 export interface CommonInputTypes<T extends FieldValues, VItem> {
