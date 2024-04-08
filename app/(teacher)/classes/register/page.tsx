@@ -64,13 +64,19 @@ const ClassRegisterPage = () => {
       });
     }
 
-    router.push("/");
-    router.refresh();
+    if (user.user_metadata.role === "student") {
+      router.push("/");
+    } else if (user.user_metadata.role === "parents") {
+      router.push("/students/register");
+    }
   };
 
   return (
     <div className="w-full h-full flex flex-col items-center">
       <PageTitle title="학급 참여하기 🎉" description="선생님이 주신 학급 코드를 입력하세요!" />
+      <p className="border p-4 rounded-lg text-sm text-slate-700 mb-4">
+        새로운 학생을 등록하는 경우에도 <br /> 먼저 학급을 등록해야 합니다.
+      </p>
       {!foundClass ? (
         <CodeInput onSubmit={onSubmit} />
       ) : (

@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { User } from "@supabase/supabase-js";
 import { useClass } from "@/app/(teacher)/hooks/useClass";
 import LinkChild from "./LinkChild";
+import { useRouter } from "next/navigation";
 
 interface Props {
   user: User | null;
@@ -22,6 +23,7 @@ const ChildInfo = ({ user }: Props) => {
   const [error, setError] = useState<string | null>(null);
   const { selectedClassId } = useClass();
   const { toast } = useToast();
+  const router = useRouter();
   useEffect(() => {
     if (!user || !selectedClassId) return;
 
@@ -32,12 +34,15 @@ const ChildInfo = ({ user }: Props) => {
         .eq("parent_id", user?.id!)
         .eq("class_id", selectedClassId)
         .single();
+
       if (error) {
-        return toast({
+        toast({
           title: "자녀를 찾을 수 없습니다.",
           description: "자녀 코드를 다시 확인해주세요.",
           variant: "destructive",
         });
+        setIsLoading(false);
+        // router.push('')
       } else {
         setStudentCode(child.student_code);
       }
