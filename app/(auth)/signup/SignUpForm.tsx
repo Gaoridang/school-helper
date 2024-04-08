@@ -16,6 +16,13 @@ import { useRouter } from "next/navigation";
 export const formItems: SignUpFormItemType[] = [
   { label: "역할", name: "role", type: "select", placeholder: "" },
   {
+    label: "부모선택",
+    name: "detail_role",
+    type: "select",
+    placeholder: "",
+    condition: "parents",
+  },
+  {
     label: "이름",
     name: "name",
     type: "text",
@@ -56,6 +63,7 @@ const SignUpForm = () => {
       role: "teacher",
       student_code: "",
       student_number: "",
+      detail_role: "부",
     },
   });
   const role = form.watch("role");
@@ -84,6 +92,7 @@ const SignUpForm = () => {
           role: value.role,
           student_number: parseInt(value.student_number!),
           student_code: studentCode,
+          detail_role: value.detail_role,
         },
       },
     });
@@ -124,6 +133,7 @@ const SignUpForm = () => {
       <form className="grid gap-2 w-full" onSubmit={form.handleSubmit(onSubmit)}>
         {formItems.map((item) => {
           if (item.condition === "student" && role !== "student") return null;
+          if (item.condition === "parents" && role !== "parents") return null;
           const Component = item.type === "select" ? SelectRole : SignUpTextInput;
 
           return (
@@ -133,7 +143,7 @@ const SignUpForm = () => {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <Component field={field} formField={item} />
+                  <Component field={field} formField={item} selectDataType={field.name} />
                 </FormItem>
               )}
             />
