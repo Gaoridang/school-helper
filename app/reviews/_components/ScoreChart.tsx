@@ -5,7 +5,7 @@ import { fetchLinkedStudent } from "@/app/utils/fetchLinkedStudent";
 import { ReviewData, fetchReviewsByDateRange } from "@/app/utils/fetchReviewsByDateRange";
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { User } from "@supabase/supabase-js";
-import { format, subBusinessDays, subDays } from "date-fns";
+import { format, subBusinessDays } from "date-fns";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
@@ -39,7 +39,7 @@ const ScoreChart = ({ user }: Props) => {
 
     const getReviewsByDateRange = async () => {
       if (user.user_metadata.role === "parents") {
-        const linkedStudent = await fetchLinkedStudent(user);
+        const linkedStudent = await fetchLinkedStudent(user, selectedClassId);
         if (linkedStudent) {
           const reviews = await fetchReviewsByDateRange(
             selectedClassId,
