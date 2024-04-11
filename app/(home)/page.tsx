@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
-import ParentsMainPage from "./components/ParentsMainPage";
-import StudentMainPage from "./components/StudentMainPage";
-import TeacherMainPage from "./components/TeacherMainPage";
-import { createClient } from "./utils/supabase/server";
-import Sidebar from "./Sidebar";
-import FloatingMenus from "./FloatingMenus";
+import ParentsMainPage from "../components/ParentsMainPage";
+import StudentMainPage from "../components/StudentMainPage";
+import TeacherMainPage from "../components/TeacherMainPage";
+import { createClient } from "../utils/supabase/server";
+import Sidebar from "../Sidebar";
+import FloatingMenus from "../FloatingMenus";
 
 export default async function Home() {
   const supabase = createClient();
@@ -20,10 +20,9 @@ export default async function Home() {
   const isParents = user?.user_metadata?.role === "parents";
 
   return (
-    <div>
-      <Sidebar />
+    <div className="flex">
       <FloatingMenus />
-      <div className="md:pl-[300px] flex-1 h-full">
+      <div className="flex-1 h-full">
         {isTeacher && <TeacherMainPage user={user} />}
         {isStudent && <StudentMainPage />}
         {isParents && <ParentsMainPage />}
