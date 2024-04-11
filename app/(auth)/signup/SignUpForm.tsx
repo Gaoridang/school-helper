@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "../../utils/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export const formItems: SignUpFormItemType[] = [
   { label: "역할", name: "role", type: "select", placeholder: "" },
@@ -149,9 +150,14 @@ const SignUpForm = () => {
             />
           );
         })}
-        <Button type="submit" className="mt-2">
-          회원가입
-        </Button>
+        <div>
+          <Button type="submit" className="mt-2">
+            회원가입
+          </Button>
+          <Button variant="link" className="ml-2">
+            <Link href="/signin">로그인</Link>
+          </Button>
+        </div>
       </form>
     </Form>
   );
