@@ -1,13 +1,9 @@
-import { Button } from "@/components/ui/button";
-import CheckMateIcon from "@/public/checkmate-logo.png";
 import Image from "next/image";
-import Link from "next/link";
-import SelectClass from "./(teacher)/components/SelectSchool";
-import LogoutButton from "./components/LogoutButton";
-import UserInfo from "./components/UserInfo";
-import ClassInfo from "./components/sidebar/ClassInfo";
-import MenuItems from "./components/sidebar/MenuItems";
+import { ReactNode } from "react";
 import { createClient } from "./utils/supabase/server";
+import logo from "@/public/logo.webp";
+import Link from "next/link";
+import UserInfo from "./components/sidebar/UserInfo";
 
 export interface UserClasses {
   class_id: string;
@@ -20,43 +16,29 @@ export interface UserClasses {
   } | null;
 }
 
-const Sidebar = async () => {
+interface Props {
+  children: ReactNode;
+}
+
+const Sidebar = async ({ children }: Props) => {
   const supbase = createClient();
   const {
     data: { user },
   } = await supbase.auth.getUser();
 
   return (
-    <aside className="fixed min-h-screen p-4 pb-8 flex-col items-start justify-between md:flex hidden gap-1 border-r bg-white w-[300px]">
-      <div>
-        <Link href="/" className="flex items-center gap-2 font-bold">
-          <Image src={CheckMateIcon} alt="CheckMate Logo" priority />
-        </Link>
-        <div className="mb-4 w-full">
-          <UserInfo user={user} />
-          <SelectClass user={user} />
-          <div className="grid grid-cols-2 gap-2">
-            {user?.user_metadata.role === "teacher" && (
-              <Button>
-                <Link href="/classes/create">새로운 학급 개설</Link>
-              </Button>
-            )}
-            {user?.user_metadata.role === "student" && (
-              <Button>
-                <Link href="/classes/register">새로운 학급 가입</Link>
-              </Button>
-            )}
-            {user?.user_metadata.role === "parents" && (
-              <Button>
-                <Link href="/students/register">학생 추가하기</Link>
-              </Button>
-            )}
-            <ClassInfo user={user} />
-          </div>
+    <aside className="h-screen">
+      <nav className="h-full flex flex-col border-r bg-[#f9f9f9] shadow-sm">
+        <div className="w-0 md:w-32 p-4 pb-2 mb-4 md:flex justify-between items-center transition-all">
+          <Link href="/">
+            <Image src={logo} alt="CheckMate" className="w-32" />
+          </Link>
         </div>
-        <MenuItems />
-      </div>
-      <LogoutButton />
+
+        <ul className="flex-1">{children}</ul>
+
+        <UserInfo user={user} />
+      </nav>
     </aside>
   );
 };
