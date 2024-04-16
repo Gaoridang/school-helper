@@ -1,8 +1,8 @@
-import EvalForm from "@/app/evaluate/[templateId]/_components/EvalForm";
+import CreateAssessmentForm from "@/app/(home)/assessment/[templateId]/_components/CreateAssessmentForm";
 import React from "react";
 
 const EvaluationItems = () => {
-  return <EvalForm />;
+  return <CreateAssessmentForm />;
 };
 
 export default EvaluationItems;

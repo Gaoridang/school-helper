@@ -48,16 +48,20 @@ export default function RootLayout({
             <SidebarItem
               icon={<LayoutDashboard size={22} strokeWidth={2.5} />}
               text="대시보드"
-              active
+              href="/"
             />
-            <SidebarItem icon={<Settings size={22} strokeWidth={2.5} />} text="프로필 설정" />
+            <SidebarItem
+              icon={<Settings size={22} strokeWidth={2.5} />}
+              text="프로필 설정"
+              href="/settings"
+            />
             <SidebarItem
               icon={<MessageCircle size={22} strokeWidth={2.5} />}
               text="문의하기"
-              alert
+              href="/contact"
             />
           </Sidebar>
-          <main className="w-full">{children}</main>
+          <main className="w-full h-screen overflow-auto">{children}</main>
           <Toaster />
         </body>
       </html>

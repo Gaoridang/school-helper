@@ -1,0 +1,48 @@
+import PageTitle from "@/app/components/PageTitle";
+import { createClient } from "@/app/utils/supabase/server";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import Link from "next/link";
+
+interface Props {
+  params: { sessionId: string };
+}
+
+const ReviewPages = async ({ params }: Props) => {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("review_results_view")
+    .select("*")
+    .eq("session_id", params.sessionId);
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  return (
+    <div>
+      <PageTitle
+        title="오늘의 내 점수"
+        description="하루를 되돌아보며\n더 나은 내일을 만들어 봅시다."
+      />
+      <div className="flex flex-col space-y-1 mb-4">
+        {data.map((item, index) => (
+          <div key={index} className="flex items-center gap-2 border-b pb-2 mb-2">
+            <span className="font-light">{index + 1}.</span>
+            <span>{item.content}</span>
+            <Checkbox checked={item.is_passed!} className="pointer-events-none" />
+          </div>
+        ))}
+      </div>
+      <div>
+        <Link href="/">
+          <Button variant="outline">돌아가기</Button>
+        </Link>
+      </div>
+    </div>
+  );
+};
+
+export default ReviewPages;

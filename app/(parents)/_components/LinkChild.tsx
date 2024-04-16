@@ -1,6 +1,6 @@
 "use client";
 
-import CodeInput from "@/app/(teacher)/classes/register/CodeInput";
+import CodeInput from "@/app/(home)/classes/register/CodeInput";
 import { supabase } from "@/app/utils/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
