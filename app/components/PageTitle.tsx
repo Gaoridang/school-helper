@@ -6,10 +6,16 @@ interface Props {
 }
 
 const PageTitle = ({ title, description }: Props) => {
+  const descriptionLines = description?.split("\\n") || [];
+
   return (
-    <div className="mb-5">
-      <h1 className="text-2xl font-semibold pt-5 mb-2">{title}</h1>
-      <p className="text-slate-600">{description}</p>
+    <div>
+      <h1 className="text-3xl font-semibold mb-2">{title}</h1>
+      {descriptionLines.map((line, index) => (
+        <p key={index} className="font-light text-sm">
+          {line}
+        </p>
+      ))}
     </div>
   );
 };

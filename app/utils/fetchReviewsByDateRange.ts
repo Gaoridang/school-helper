@@ -19,18 +19,17 @@ export const fetchReviewsByDateRange = async (
   endDate: string,
 ) => {
   const { data, error } = await supabase
-    .from("session_evaluation_summary")
+    .from("session_results")
     .select("*")
     .eq("evaluatee_id", userId)
     .eq("class_id", classId)
-    .eq("type", "self")
-    .gte("start_time", startDate)
-    .lte("start_time", endDate)
-    .order("start_time", { ascending: true });
+    .gte("session_date", startDate)
+    .lte("session_date", endDate)
+    .order("session_date");
 
   if (error) {
-    console.log(error);
+    return [];
   }
 
-  return data as ReviewData[];
+  return data;
 };

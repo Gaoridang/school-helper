@@ -1,8 +1,9 @@
-import { BarChart, FileText, MessageCircle, SquareGantt } from "lucide-react";
 import Link from "next/link";
-import ScoreChart from "../reviews/_components/ScoreChart";
+import MainTitle from "../(home)/_components/MainTitle";
+import PeerReviewBox from "../(home)/_components/PeerReviewBox";
+import SelfReviewBox from "../(home)/_components/SelfReviewBox";
+import ScoreChart from "../(home)/reviews/_components/ScoreChart";
 import { createClient } from "../utils/supabase/server";
-import MainLink from "./main/MainLink";
 
 const StudentMainPage = async () => {
   const supabase = createClient();
@@ -24,35 +25,16 @@ const StudentMainPage = async () => {
   return (
     <div className="p-4 md:p-8">
       <section>
-        <h2 className="text-2xl font-semibold mb-10">
-          <p className="font-light mb-2">Nice to meet</p>
-          <p className="text-3xl">You 👋</p>
-        </h2>
-        <h3 className="text-lg font-semibold text-slate-800 mb-2">점검하기</h3>
-        <div className="grid grid-cols-12 gap-[20px]">
-          <MainLink
-            href="/evaluate/me"
-            classNames="bg-[#ffefd9]"
-            title="나에게"
-            description="오늘의 나는 어땠나요?"
-            slice={6}
-          />
-          <MainLink
-            href="/evaluate/friend"
-            classNames="bg-[#e3f3da]"
-            title="친구에게"
-            description="친구에 대한 생각을 말해봐요."
-            slice={6}
-          />
-          <MainLink
-            href={`/evaluate/reviews/${user?.id}`}
-            classNames="bg-[#f4edf8]"
-            title="전체보기"
-            description="나에게 온 편지를 확인하세요!"
-            slice={9}
-          />
-          <div className="col-span-12">
-            <h3 className="text-lg font-semibold text-slate-800 mb-2">점수보기</h3>
+        <div className="grid gap-8">
+          <div className="grid md:grid-cols-2 gap-8">
+            <SelfReviewBox />
+            <PeerReviewBox />
+          </div>
+          <div className="grid gap-4">
+            <MainTitle
+              title="성취 그래프"
+              description="선택한 기간의 자기평가 점수를\n그래프로 확인하세요."
+            />
             <ScoreChart user={user} />
           </div>
         </div>

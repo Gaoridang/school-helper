@@ -34,27 +34,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      activities: {
-        Row: {
-          created_at: string
-          description: string | null
-          id: number
-          name: string
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          id?: number
-          name: string
-        }
-        Update: {
-          created_at?: string
-          description?: string | null
-          id?: number
-          name?: string
-        }
-        Relationships: []
-      }
       classes: {
         Row: {
           class_code: string
@@ -90,6 +69,20 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "public_classes_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "public_classes_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "session_results"
+            referencedColumns: ["evaluator_id"]
+          },
           {
             foreignKeyName: "public_classes_teacher_id_fkey"
             columns: ["teacher_id"]
@@ -139,8 +132,36 @@ export type Database = {
             foreignKeyName: "public_comments_session_id_fkey"
             columns: ["session_id"]
             isOneToOne: false
+            referencedRelation: "review_results_view"
+            referencedColumns: ["session_id"]
+          },
+          {
+            foreignKeyName: "public_comments_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "session_results"
+            referencedColumns: ["session_id"]
+          },
+          {
+            foreignKeyName: "public_comments_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
             referencedRelation: "sessions"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_comments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "public_comments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "session_results"
+            referencedColumns: ["evaluator_id"]
           },
           {
             foreignKeyName: "public_comments_user_id_fkey"
@@ -151,41 +172,36 @@ export type Database = {
           },
         ]
       }
-      evaluation_items: {
+      items: {
         Row: {
           class_id: string
           content: string
-          created_at: string | null
-          creator_id: string
+          creator_id: string | null
           id: number
-          period: string
-          subject_name: string
           template_id: number | null
-          updated_at: string | null
         }
         Insert: {
           class_id: string
           content: string
-          created_at?: string | null
-          creator_id: string
+          creator_id?: string | null
           id?: number
-          period: string
-          subject_name: string
           template_id?: number | null
-          updated_at?: string | null
         }
         Update: {
           class_id?: string
           content?: string
-          created_at?: string | null
-          creator_id?: string
+          creator_id?: string | null
           id?: number
-          period?: string
-          subject_name?: string
           template_id?: number | null
-          updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_class"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["class_id"]
+          },
           {
             foreignKeyName: "fk_class"
             columns: ["class_id"]
@@ -197,87 +213,93 @@ export type Database = {
             foreignKeyName: "fk_creator"
             columns: ["creator_id"]
             isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "fk_creator"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "session_results"
+            referencedColumns: ["evaluator_id"]
+          },
+          {
+            foreignKeyName: "fk_creator"
+            columns: ["creator_id"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "fk_template"
+            foreignKeyName: "public_items_template_id_fkey"
             columns: ["template_id"]
             isOneToOne: false
-            referencedRelation: "evaluation_summary_view"
+            referencedRelation: "assessment_view"
             referencedColumns: ["template_id"]
           },
           {
-            foreignKeyName: "fk_template"
+            foreignKeyName: "public_items_template_id_fkey"
             columns: ["template_id"]
             isOneToOne: false
-            referencedRelation: "evaluation_templates"
+            referencedRelation: "templates"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "fk_template"
+            foreignKeyName: "public_items_template_id_fkey"
             columns: ["template_id"]
             isOneToOne: false
-            referencedRelation: "session_evaluation_summary"
+            referencedRelation: "templates_view"
             referencedColumns: ["template_id"]
           },
         ]
       }
-      evaluation_results: {
+      results: {
         Row: {
-          created_at: string | null
-          evaluatee_id: string
-          evaluator_id: string
           id: number
-          is_passed: boolean | null
+          is_passed: boolean
           item_id: number
-          session_id: string | null
-          template_id: number
-          updated_at: string | null
+          session_id: string
         }
         Insert: {
-          created_at?: string | null
-          evaluatee_id: string
-          evaluator_id: string
           id?: number
-          is_passed?: boolean | null
+          is_passed: boolean
           item_id: number
-          session_id?: string | null
-          template_id: number
-          updated_at?: string | null
+          session_id: string
         }
         Update: {
-          created_at?: string | null
-          evaluatee_id?: string
-          evaluator_id?: string
           id?: number
-          is_passed?: boolean | null
+          is_passed?: boolean
           item_id?: number
-          session_id?: string | null
-          template_id?: number
-          updated_at?: string | null
+          session_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "fk_evaluatee"
-            columns: ["evaluatee_id"]
+            foreignKeyName: "fk_item"
+            columns: ["item_id"]
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_evaluator"
-            columns: ["evaluator_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: "assessment_view"
+            referencedColumns: ["item_id"]
           },
           {
             foreignKeyName: "fk_item"
             columns: ["item_id"]
             isOneToOne: false
-            referencedRelation: "evaluation_items"
+            referencedRelation: "items"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_session_id"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "review_results_view"
+            referencedColumns: ["session_id"]
+          },
+          {
+            foreignKeyName: "fk_session_id"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "session_results"
+            referencedColumns: ["session_id"]
           },
           {
             foreignKeyName: "fk_session_id"
@@ -286,135 +308,48 @@ export type Database = {
             referencedRelation: "sessions"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "fk_template"
-            columns: ["template_id"]
-            isOneToOne: false
-            referencedRelation: "evaluation_summary_view"
-            referencedColumns: ["template_id"]
-          },
-          {
-            foreignKeyName: "fk_template"
-            columns: ["template_id"]
-            isOneToOne: false
-            referencedRelation: "evaluation_templates"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_template"
-            columns: ["template_id"]
-            isOneToOne: false
-            referencedRelation: "session_evaluation_summary"
-            referencedColumns: ["template_id"]
-          },
-        ]
-      }
-      evaluation_templates: {
-        Row: {
-          class_id: string
-          created_at: string | null
-          creator_id: string
-          end_date: string
-          id: number
-          period: string
-          start_date: string
-          subject_name: string
-          type: string
-          updated_at: string | null
-        }
-        Insert: {
-          class_id: string
-          created_at?: string | null
-          creator_id: string
-          end_date?: string
-          id?: number
-          period: string
-          start_date: string
-          subject_name: string
-          type?: string
-          updated_at?: string | null
-        }
-        Update: {
-          class_id?: string
-          created_at?: string | null
-          creator_id?: string
-          end_date?: string
-          id?: number
-          period?: string
-          start_date?: string
-          subject_name?: string
-          type?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "fk_class"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "classes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_creator"
-            columns: ["creator_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      questions: {
-        Row: {
-          activity_id: number | null
-          content: string
-          created_at: string
-          id: number
-        }
-        Insert: {
-          activity_id?: number | null
-          content: string
-          created_at?: string
-          id?: number
-        }
-        Update: {
-          activity_id?: number | null
-          content?: string
-          created_at?: string
-          id?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "public_questions_activity_id_fkey"
-            columns: ["activity_id"]
-            isOneToOne: false
-            referencedRelation: "activities"
-            referencedColumns: ["id"]
-          },
         ]
       }
       sessions: {
         Row: {
+          class_id: string | null
+          date: string | null
           evaluatee_id: string | null
-          evaluator_id: string
+          evaluator_id: string | null
           id: string
-          start_time: string | null
           template_id: number
         }
         Insert: {
+          class_id?: string | null
+          date?: string | null
           evaluatee_id?: string | null
-          evaluator_id: string
+          evaluator_id?: string | null
           id?: string
-          start_time?: string | null
           template_id: number
         }
         Update: {
+          class_id?: string | null
+          date?: string | null
           evaluatee_id?: string | null
-          evaluator_id?: string
+          evaluator_id?: string | null
           id?: string
-          start_time?: string | null
           template_id?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "evaluation_sessions_creator_id_fkey"
+            columns: ["evaluator_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "evaluation_sessions_creator_id_fkey"
+            columns: ["evaluator_id"]
+            isOneToOne: false
+            referencedRelation: "session_results"
+            referencedColumns: ["evaluator_id"]
+          },
           {
             foreignKeyName: "evaluation_sessions_creator_id_fkey"
             columns: ["evaluator_id"]
@@ -426,22 +361,50 @@ export type Database = {
             foreignKeyName: "evaluation_sessions_template_id_fkey"
             columns: ["template_id"]
             isOneToOne: false
-            referencedRelation: "evaluation_summary_view"
+            referencedRelation: "assessment_view"
             referencedColumns: ["template_id"]
           },
           {
             foreignKeyName: "evaluation_sessions_template_id_fkey"
             columns: ["template_id"]
             isOneToOne: false
-            referencedRelation: "evaluation_templates"
+            referencedRelation: "templates"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "evaluation_sessions_template_id_fkey"
             columns: ["template_id"]
             isOneToOne: false
-            referencedRelation: "session_evaluation_summary"
+            referencedRelation: "templates_view"
             referencedColumns: ["template_id"]
+          },
+          {
+            foreignKeyName: "public_sessions_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "public_sessions_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_sessions_evaluatee_id_fkey"
+            columns: ["evaluatee_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "public_sessions_evaluatee_id_fkey"
+            columns: ["evaluatee_id"]
+            isOneToOne: false
+            referencedRelation: "session_results"
+            referencedColumns: ["evaluator_id"]
           },
           {
             foreignKeyName: "public_sessions_evaluatee_id_fkey"
@@ -479,6 +442,13 @@ export type Database = {
             foreignKeyName: "public_students_parents_class_id_fkey"
             columns: ["class_id"]
             isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "public_students_parents_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
             referencedRelation: "classes"
             referencedColumns: ["id"]
           },
@@ -486,8 +456,36 @@ export type Database = {
             foreignKeyName: "public_students_parents_student_id_fkey"
             columns: ["student_id"]
             isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "public_students_parents_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "session_results"
+            referencedColumns: ["evaluator_id"]
+          },
+          {
+            foreignKeyName: "public_students_parents_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "students_parents_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "students_parents_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "session_results"
+            referencedColumns: ["evaluator_id"]
           },
           {
             foreignKeyName: "students_parents_parent_id_fkey"
@@ -502,6 +500,81 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["student_code"]
+          },
+        ]
+      }
+      templates: {
+        Row: {
+          class_id: string | null
+          created_at: string | null
+          creator_id: string | null
+          end_date: string | null
+          id: number
+          period: string | null
+          start_date: string | null
+          subject: string | null
+          type: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          class_id?: string | null
+          created_at?: string | null
+          creator_id?: string | null
+          end_date?: string | null
+          id?: number
+          period?: string | null
+          start_date?: string | null
+          subject?: string | null
+          type?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          class_id?: string | null
+          created_at?: string | null
+          creator_id?: string | null
+          end_date?: string | null
+          id?: number
+          period?: string | null
+          start_date?: string | null
+          subject?: string | null
+          type?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_creator"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "fk_creator"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "session_results"
+            referencedColumns: ["evaluator_id"]
+          },
+          {
+            foreignKeyName: "fk_creator"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_templates_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "public_templates_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -529,8 +602,29 @@ export type Database = {
             foreignKeyName: "user_classes_class_id_fkey"
             columns: ["class_id"]
             isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "user_classes_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
             referencedRelation: "classes"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_classes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "user_classes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "session_results"
+            referencedColumns: ["evaluator_id"]
           },
           {
             foreignKeyName: "user_classes_user_id_fkey"
@@ -544,6 +638,7 @@ export type Database = {
       users: {
         Row: {
           created_at: string
+          detail_role: string | null
           email: string
           id: string
           name: string
@@ -554,6 +649,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          detail_role?: string | null
           email: string
           id?: string
           name: string
@@ -564,6 +660,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          detail_role?: string | null
           email?: string
           id?: string
           name?: string
@@ -576,69 +673,259 @@ export type Database = {
       }
     }
     Views: {
-      evaluation_summary_view: {
+      assessment_view: {
         Row: {
-          contents: Json | null
-          date: string | null
-          evaluatee_id: string | null
+          content: string | null
+          item_id: number | null
           period: string | null
-          subject_name: string | null
+          subject: string | null
+          template_created_at: string | null
           template_id: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "fk_evaluatee"
-            columns: ["evaluatee_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
-      session_evaluation_summary: {
+      class_students_view: {
         Row: {
           class_id: string | null
-          contents: Json | null
-          evaluatee_id: string | null
-          evaluator_id: string | null
+          name: string | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
+      review_results_view: {
+        Row: {
+          class_id: string | null
+          content: string | null
+          evaluatee_name: string | null
           evaluator_name: string | null
-          first_comment: string | null
+          is_passed: boolean | null
+          item_id: number | null
           period: string | null
+          session_date: string | null
           session_id: string | null
-          start_time: string | null
-          subject_name: string | null
-          template_id: number | null
-          total_passed: number | null
-          type: string | null
+          subject: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "fk_class"
+            foreignKeyName: "fk_item"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_item"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "assessment_view"
+            referencedColumns: ["item_id"]
+          },
+          {
+            foreignKeyName: "public_sessions_class_id_fkey"
             columns: ["class_id"]
             isOneToOne: false
             referencedRelation: "classes"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "fk_evaluatee"
+            foreignKeyName: "public_sessions_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["class_id"]
+          },
+        ]
+      }
+      session_results: {
+        Row: {
+          class_id: string | null
+          evaluatee_id: string | null
+          evaluatee_name: string | null
+          evaluator_id: string | null
+          evaluator_name: string | null
+          first_comment: string | null
+          period: string | null
+          session_date: string | null
+          session_id: string | null
+          subject: string | null
+          total_passed: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_sessions_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_sessions_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "public_sessions_evaluatee_id_fkey"
             columns: ["evaluatee_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "fk_evaluator"
-            columns: ["evaluator_id"]
+            foreignKeyName: "public_sessions_evaluatee_id_fkey"
+            columns: ["evaluatee_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "public_sessions_evaluatee_id_fkey"
+            columns: ["evaluatee_id"]
+            isOneToOne: false
+            referencedRelation: "session_results"
+            referencedColumns: ["evaluator_id"]
+          },
+        ]
+      }
+      student_with_class_parents: {
+        Row: {
+          class_id: string | null
+          name: string | null
+          parent_id: string | null
+          student_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_students_parents_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_students_parents_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "public_students_parents_student_id_fkey"
+            columns: ["student_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "fk_session_id"
-            columns: ["session_id"]
+            foreignKeyName: "public_students_parents_student_id_fkey"
+            columns: ["student_id"]
             isOneToOne: false
-            referencedRelation: "sessions"
+            referencedRelation: "class_students_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "public_students_parents_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "session_results"
+            referencedColumns: ["evaluator_id"]
+          },
+          {
+            foreignKeyName: "students_parents_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "students_parents_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "students_parents_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "session_results"
+            referencedColumns: ["evaluator_id"]
+          },
+        ]
+      }
+      templates_view: {
+        Row: {
+          class_id: string | null
+          created_at: string | null
+          end_date: string | null
+          period: string | null
+          start_date: string | null
+          subject: string | null
+          template_id: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_sessions_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_sessions_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["class_id"]
+          },
+        ]
+      }
+      user_class_details: {
+        Row: {
+          class_code: string | null
+          class_id: string | null
+          class_number: number | null
+          grade: number | null
+          is_primary: boolean | null
+          school: string | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_classes_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_classes_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "user_classes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_classes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "user_classes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "session_results"
+            referencedColumns: ["evaluator_id"]
           },
         ]
       }
@@ -765,6 +1052,101 @@ export type Database = {
           },
         ]
       }
+      s3_multipart_uploads: {
+        Row: {
+          bucket_id: string
+          created_at: string
+          id: string
+          in_progress_size: number
+          key: string
+          owner_id: string | null
+          upload_signature: string
+          version: string
+        }
+        Insert: {
+          bucket_id: string
+          created_at?: string
+          id: string
+          in_progress_size?: number
+          key: string
+          owner_id?: string | null
+          upload_signature: string
+          version: string
+        }
+        Update: {
+          bucket_id?: string
+          created_at?: string
+          id?: string
+          in_progress_size?: number
+          key?: string
+          owner_id?: string | null
+          upload_signature?: string
+          version?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "s3_multipart_uploads_bucket_id_fkey"
+            columns: ["bucket_id"]
+            isOneToOne: false
+            referencedRelation: "buckets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      s3_multipart_uploads_parts: {
+        Row: {
+          bucket_id: string
+          created_at: string
+          etag: string
+          id: string
+          key: string
+          owner_id: string | null
+          part_number: number
+          size: number
+          upload_id: string
+          version: string
+        }
+        Insert: {
+          bucket_id: string
+          created_at?: string
+          etag: string
+          id?: string
+          key: string
+          owner_id?: string | null
+          part_number: number
+          size?: number
+          upload_id: string
+          version: string
+        }
+        Update: {
+          bucket_id?: string
+          created_at?: string
+          etag?: string
+          id?: string
+          key?: string
+          owner_id?: string | null
+          part_number?: number
+          size?: number
+          upload_id?: string
+          version?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "s3_multipart_uploads_parts_bucket_id_fkey"
+            columns: ["bucket_id"]
+            isOneToOne: false
+            referencedRelation: "buckets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "s3_multipart_uploads_parts_upload_id_fkey"
+            columns: ["upload_id"]
+            isOneToOne: false
+            referencedRelation: "s3_multipart_uploads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -802,6 +1184,37 @@ export type Database = {
         Returns: {
           size: number
           bucket_id: string
+        }[]
+      }
+      list_multipart_uploads_with_delimiter: {
+        Args: {
+          bucket_id: string
+          prefix_param: string
+          delimiter_param: string
+          max_keys?: number
+          next_key_token?: string
+          next_upload_token?: string
+        }
+        Returns: {
+          key: string
+          id: string
+          created_at: string
+        }[]
+      }
+      list_objects_with_delimiter: {
+        Args: {
+          bucket_id: string
+          prefix_param: string
+          delimiter_param: string
+          max_keys?: number
+          start_after?: string
+          next_token?: string
+        }
+        Returns: {
+          name: string
+          id: string
+          metadata: Json
+          updated_at: string
         }[]
       }
       search: {
