@@ -22,7 +22,7 @@ const TeacherMainPage = async () => {
         <div className="grid gap-8">
           <div className="grid md:grid-cols-2 gap-8">
             <CreateTemplateBox />
-            {/* <StudentList /> */}
+            <StudentList />
           </div>
         </div>
       </section>
