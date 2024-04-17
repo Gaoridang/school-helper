@@ -4,11 +4,12 @@ import { Tables } from "@/app/types/schema";
 import { supabase } from "@/app/utils/supabase/client";
 import { useEffect, useState } from "react";
 import useClassStore from "../store/classStore";
-import { format } from "date-fns";
 import MainBox from "./MainBox";
 import MainTitle from "./MainTitle";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
+import { format } from "date-fns";
+import { ko } from "date-fns/locale";
 
 const StudentList = () => {
   const [isLoading, setLoading] = useState(true);
@@ -16,8 +17,10 @@ const StudentList = () => {
   const [sessions, setSessions] = useState<
     Pick<Tables<"session_results">, "session_id" | "evaluatee_id">[]
   >([]);
+  const [todayKorea] = useState(() => {
+    return format(new Date(), "yyyy-MM-dd", { locale: ko });
+  });
   const classId = useClassStore((state) => state.classId);
-  const todayKorea = format(new Date().toLocaleDateString("ko-KR"), "yyyy-MM-dd");
 
   useEffect(() => {
     if (!classId) return;
