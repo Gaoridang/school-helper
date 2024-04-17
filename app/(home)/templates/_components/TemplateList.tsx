@@ -12,7 +12,8 @@ const TemplateList = () => {
   useEffect(() => {
     const getTemplates = async () => {
       const data = await fetchTemplates(classId);
-      setTemplates(data);
+      const peerReviewTemplates = data.filter((template) => !template.subject);
+      setTemplates(peerReviewTemplates);
     };
     getTemplates();
   }, [classId]);

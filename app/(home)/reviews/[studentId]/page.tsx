@@ -1,4 +1,4 @@
-import ReviewList from "@/app/(home)/evaluate/reviews/_components/ReviewList";
+import ReviewList from "@/app/(home)/reviews/_components/ReviewList";
 import PageTitle from "@/app/components/PageTitle";
 import { createClient } from "@/app/utils/supabase/server";
 

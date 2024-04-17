@@ -1,7 +1,6 @@
 "use client";
 
 import { useFieldArray, useForm } from "react-hook-form";
-import { CreateEvalData, createEvalSchema } from "../../evaluate/types/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,10 +13,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { periods, subjects } from "../../evaluate/constants";
 import PageTitle from "@/app/components/PageTitle";
 import { supabase } from "@/app/utils/supabase/client";
-import { User } from "@supabase/supabase-js";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { ko } from "date-fns/locale";
@@ -26,6 +23,8 @@ import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import useClassStore from "@/app/(home)/store/classStore";
+import { CreateEvalData, createEvalSchema } from "../_types/types";
+import { periods, subjects } from "../_types/constants";
 
 const CreateTemplateForm = () => {
   const selectedClassId = useClassStore((state) => state.classId);
