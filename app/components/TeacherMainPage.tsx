@@ -1,7 +1,7 @@
-import { createClient } from "../utils/supabase/server";
-import NoClass from "./NoClass";
 import CreateTemplateBox from "../(home)/_components/CreateTemplateBox";
 import StudentList from "../(home)/_components/StudentList";
+import { createClient } from "../utils/supabase/server";
+import NoClass from "./NoClass";
 
 const TeacherMainPage = async () => {
   const supabase = createClient();
