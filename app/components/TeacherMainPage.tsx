@@ -1,10 +1,7 @@
-import CreateTemplateBox from "../(home)/_components/CreateTemplateBox";
 import { createClient } from "../utils/supabase/server";
 import NoClass from "./NoClass";
-import dynamic from "next/dynamic";
-const StudentList = dynamic(() => import("../(home)/_components/StudentList"), {
-  ssr: false,
-});
+import CreateTemplateBox from "../(home)/_components/CreateTemplateBox";
+import StudentList from "../(home)/_components/StudentList";
 
 const TeacherMainPage = async () => {
   const supabase = createClient();
