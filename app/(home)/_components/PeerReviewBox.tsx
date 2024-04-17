@@ -3,6 +3,7 @@ import LinkCard from "./LinkCard";
 import MainTitle from "./MainTitle";
 import Link from "next/link";
 import { createClient } from "@/app/utils/supabase/server";
+import MainBox from "./MainBox";
 
 const PeerReviewBox = async () => {
   const supabase = createClient();
@@ -65,7 +66,7 @@ const PeerReviewBox = async () => {
     reviews.length === 0 ? "/" : `/reviews/${user?.id}/${reviews[0].session_id}`;
 
   return (
-    <div className="flex flex-col gap-4 max-w-lg">
+    <MainBox>
       <div className="flex flex-col md:flex md:flex-row md:justify-between md:items-end">
         <MainTitle title="동료평가" description="모둠 활동 후 동료가 한 평가예요." />
         {isStudent && (
@@ -87,7 +88,7 @@ const PeerReviewBox = async () => {
         title="모든 평가 보기"
         description={`총 ${reviews.length}개`}
       />
-    </div>
+    </MainBox>
   );
 };
 
