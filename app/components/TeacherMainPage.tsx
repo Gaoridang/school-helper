@@ -4,18 +4,15 @@ import NoClass from "./NoClass";
 import CreateTemplateBox from "../(home)/_components/CreateTemplateBox";
 import StudentList from "../(home)/_components/StudentList";
 
-interface Props {
-  user: User;
-}
-
-const TeacherMainPage = async ({ user }: Props) => {
+const TeacherMainPage = async () => {
   const supabase = createClient();
-  const { data } = await supabase
-    .from("user_classes")
-    .select("class_id, is_primary, classes(school, grade, class_number, id)")
-    .eq("user_id", user.id);
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (data?.length === 0) {
+  const { data } = await supabase.from("user_classes").select("class_id").eq("user_id", user?.id!);
+
+  if (!data || !data.length) {
     return <NoClass href="/classes/create" description="아래 버튼을 눌러 학급을 개설해보세요!" />;
   }
 
