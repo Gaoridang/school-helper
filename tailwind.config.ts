@@ -18,6 +18,9 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        spoqa: ["Spoqa Han Sans Neo", "sans-serif"],
+      },
       backgroundImage: {
         "gradient-primary": "linear-gradient(to right, #FFED46 0%, #FF72C7 100%)",
       },
