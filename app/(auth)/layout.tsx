@@ -5,7 +5,7 @@ import localFont from "next/font/local";
 import { ReactQueryClientProvider } from "../QueryClientProvider";
 import "../globals.css";
 
-const pretendard = localFont({
+const spoqahansans = localFont({
   src: [
     {
       path: "../../public/fonts/SpoqaHanSansNeo-Light.ttf",
@@ -40,7 +40,7 @@ export default function RootLayout({
   return (
     <ReactQueryClientProvider>
       <html lang="en" suppressHydrationWarning className="h-full">
-        <body className={cn(pretendard.className, "relative flex h-full")}>
+        <body className={cn(spoqahansans.className, "relative flex h-full")}>
           <main className="w-full">{children}</main>
           <Toaster />
         </body>
