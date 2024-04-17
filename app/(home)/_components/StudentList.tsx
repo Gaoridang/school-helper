@@ -8,8 +8,10 @@ import { format } from "date-fns";
 import MainBox from "./MainBox";
 import MainTitle from "./MainTitle";
 import Link from "next/link";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const StudentList = () => {
+  const [isLoading, setLoading] = useState(true);
   const [students, setStudents] = useState<Tables<"class_students_view">[]>([]);
   const [sessions, setSessions] = useState<
     Pick<Tables<"session_results">, "session_id" | "evaluatee_id">[]
@@ -20,33 +22,37 @@ const StudentList = () => {
   useEffect(() => {
     if (!classId) return;
 
-    const fetchStudents = async () => {
-      const { data, error } = await supabase
-        .from("class_students_view")
-        .select("*")
-        .eq("class_id", classId);
+    const fetchData = async () => {
+      const fetchStudents = async () => {
+        const { data, error } = await supabase
+          .from("class_students_view")
+          .select("*")
+          .eq("class_id", classId);
 
-      if (error) return [];
+        if (error) return [];
 
-      setStudents(data);
-      return data;
+        setStudents(data);
+        return data;
+      };
+
+      const fetchSessions = async () => {
+        const { data, error } = await supabase
+          .from("session_results")
+          .select("session_id, evaluatee_id")
+          .eq("subject", "")
+          .eq("class_id", classId)
+          .eq("session_date", todayKorea);
+
+        if (error) return [];
+
+        setSessions(data);
+        return data;
+      };
+
+      await Promise.all([fetchStudents(), fetchSessions()]);
+      setLoading(false);
     };
-
-    const fetchSessions = async () => {
-      const { data, error } = await supabase
-        .from("session_results")
-        .select("session_id, evaluatee_id")
-        .eq("subject", "")
-        .eq("class_id", classId)
-        .eq("session_date", todayKorea);
-
-      if (error) return [];
-
-      setSessions(data);
-      return data;
-    };
-    fetchStudents();
-    fetchSessions();
+    fetchData();
   }, [classId, todayKorea]);
 
   useEffect(() => {
@@ -69,6 +75,22 @@ const StudentList = () => {
       supabase.removeChannel(subscription);
     };
   }, []);
+
+  if (isLoading)
+    return (
+      <MainBox>
+        <MainTitle title="학생목록" description="학급에 속한 학생과\n평가 결과를 확인하세요." />
+        {Array.from({ length: 5 }).map((_, index) => (
+          <div
+            key={index}
+            className="border-b border-[#e9e9e9] py-2 flex justify-between items-center"
+          >
+            <Skeleton className="w-20 h-5" />
+            <Skeleton className="w-12 h-5" />
+          </div>
+        ))}
+      </MainBox>
+    );
 
   return (
     <MainBox>
