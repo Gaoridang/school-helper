@@ -20,7 +20,7 @@ export default async function Home() {
   return (
     <div className="flex">
       <div className="flex-1 h-full">
-        {isTeacher && <TeacherMainPage user={user} />}
+        {isTeacher && <TeacherMainPage />}
         {isStudent && <StudentMainPage />}
         {isParents && <ParentsMainPage />}
       </div>
