@@ -3,6 +3,7 @@ import { createClient } from "@/app/utils/supabase/server";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
+import Comments from "../../_components/Comments";
 
 interface Props {
   params: { sessionId: string };
@@ -11,13 +12,13 @@ interface Props {
 const ReviewPages = async ({ params }: Props) => {
   const supabase = createClient();
 
-  const { data, error } = await supabase
+  const { data, error: resultError } = await supabase
     .from("review_results_view")
     .select("*")
     .eq("session_id", params.sessionId);
 
-  if (error) {
-    console.error(error);
+  if (resultError) {
+    console.error(resultError);
     return;
   }
 
@@ -36,11 +37,7 @@ const ReviewPages = async ({ params }: Props) => {
           </div>
         ))}
       </div>
-      <div>
-        <Link href="/">
-          <Button variant="outline">돌아가기</Button>
-        </Link>
-      </div>
+      <Comments sessionId={params.sessionId} />
     </div>
   );
 };
