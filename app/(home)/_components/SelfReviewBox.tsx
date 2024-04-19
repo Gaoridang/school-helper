@@ -65,12 +65,20 @@ const SelfReviewBox = async () => {
       <div className="flex flex-col md:flex md:flex-row md:justify-between md:items-end">
         <MainTitle title="자기평가" description="매일 스스로 한 평가예요." />
         {isStudent && (
-          <Link
-            href={`/assessment/${mostRecentTemplate?.id}` || "/templates/new"}
-            className="underline underline-offset-4 text-[#57BD9E] text-sm"
-          >
-            자기평가 시작하기
-          </Link>
+          <div className="flex flex-col gap-2">
+            <Link
+              href={`/templates/new`}
+              className="underline underline-offset-4 text-[#57BD9E] text-sm"
+            >
+              새로 만들기
+            </Link>
+            <Link
+              href={`/assessment/${mostRecentTemplate?.id}` || "/templates/new"}
+              className="underline underline-offset-4 text-[#57BD9E] text-sm"
+            >
+              자기평가 시작하기
+            </Link>
+          </div>
         )}
       </div>
       <LinkCard

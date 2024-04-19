@@ -25,8 +25,13 @@ import { useToast } from "@/components/ui/use-toast";
 import useClassStore from "@/app/(home)/store/classStore";
 import { CreateEvalData, createEvalSchema } from "../_types/types";
 import { periods, subjects } from "../_types/constants";
+import { User } from "@supabase/supabase-js";
 
-const CreateTemplateForm = () => {
+interface Props {
+  user: User | null;
+}
+
+const CreateTemplateForm = ({ user }: Props) => {
   const selectedClassId = useClassStore((state) => state.classId);
   const form = useForm<CreateEvalData>({
     resolver: zodResolver(createEvalSchema),
@@ -105,6 +110,8 @@ const CreateTemplateForm = () => {
       title: "평가지 만들기 성공",
       description: "평가지를 만들었습니다.",
     });
+
+    router.push(`/assessment/${templateData.id}`);
   };
 
   return (
@@ -164,58 +171,62 @@ const CreateTemplateForm = () => {
               />
 
               {/* 과목 */}
-              <FormField
-                control={form.control}
-                name="subject"
-                render={({ field }) => {
-                  return (
-                    <FormItem>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="무슨 과목인가요?" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {subjects.map((subject) => (
-                            <SelectItem key={subject.value} value={subject.value}>
-                              {subject.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
-              />
+              {user?.user_metadata.role === "teacher" && (
+                <FormField
+                  control={form.control}
+                  name="subject"
+                  render={({ field }) => {
+                    return (
+                      <FormItem>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="무슨 과목인가요?" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {subjects.map((subject) => (
+                              <SelectItem key={subject.value} value={subject.value}>
+                                {subject.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
+                />
+              )}
 
               {/* 교시 */}
-              <FormField
-                control={form.control}
-                name="period"
-                render={({ field }) => {
-                  return (
-                    <FormItem>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="몇 교시 인가요?" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {periods.map((period) => (
-                            <SelectItem key={period.value} value={period.value}>
-                              {period.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
-              />
+              {user?.user_metadata.role === "teacher" && (
+                <FormField
+                  control={form.control}
+                  name="period"
+                  render={({ field }) => {
+                    return (
+                      <FormItem>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="몇 교시 인가요?" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {periods.map((period) => (
+                              <SelectItem key={period.value} value={period.value}>
+                                {period.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
+                />
+              )}
             </div>
 
             <div className="flex-1 flex flex-col gap-4">
