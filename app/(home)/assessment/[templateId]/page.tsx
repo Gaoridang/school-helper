@@ -1,5 +1,5 @@
 import { createClient } from "@/app/utils/supabase/server";
-import CreateNewAssessmentForm from "./_components/CreateNewAssessmentForm";
+import CreateNewAssessmentForm from "../_components/CreateNewAssessmentForm";
 
 interface Props {
   params: { templateId: string };
