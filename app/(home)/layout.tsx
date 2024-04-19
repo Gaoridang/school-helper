@@ -38,7 +38,7 @@ export default function RootLayout({
               href="/contact"
             />
           </Sidebar>
-          <main className="w-full h-screen overflow-auto">{children}</main>
+          <main className="relative w-full h-screen overflow-auto">{children}</main>
           <Toaster />
         </body>
       </html>

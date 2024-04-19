@@ -6,11 +6,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { CreateAssessmentFormSchema, CreateAssessmentFormType } from "../_types";
+import { CreateAssessmentFormSchema, CreateAssessmentFormType } from "../[templateId]/_types";
 import { supabase } from "@/app/utils/supabase/client";
 import useClassStore from "@/app/(home)/store/classStore";
 import { Button } from "@/components/ui/button";
 import SelectStudentPopover from "./SelectStudentPopover";
+import { useRouter } from "next/navigation";
 
 interface Props {
   data: Tables<"assessment_view">[];
@@ -35,6 +36,7 @@ const CreateNewAssessmentForm = ({ data, templateId }: Props) => {
     content: item.content,
   }));
 
+  const router = useRouter();
   const classId = useClassStore((state) => state.classId);
   const onSubmit = async (data: CreateAssessmentFormType) => {
     const { data: session, error: sessionError } = await supabase
@@ -66,6 +68,8 @@ const CreateNewAssessmentForm = ({ data, templateId }: Props) => {
       console.error(insertAssessmentError);
       return;
     }
+
+    router.push(`/assessment/confirm?to=${session.id}`);
   };
 
   return (

@@ -14,7 +14,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { CheckIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ControllerRenderProps } from "react-hook-form";
-import { CreateAssessmentFormType } from "../_types";
+import { CreateAssessmentFormType } from "../[templateId]/_types";
 import { cn } from "@/lib/utils";
 
 interface Props {
