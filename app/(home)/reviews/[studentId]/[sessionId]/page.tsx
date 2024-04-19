@@ -22,12 +22,12 @@ const ReviewPages = async ({ params }: Props) => {
   }
 
   return (
-    <div>
+    <div className="pt-14 px-4 md:pt-20 md:px-12">
       <PageTitle
         title="오늘의 내 점수"
         description="하루를 되돌아보며\n더 나은 내일을 만들어 봅시다."
       />
-      <div className="flex flex-col space-y-1 mb-4">
+      <div className="flex flex-col space-y-1 my-4">
         {data.map((item, index) => (
           <div key={index} className="flex items-center gap-2 border-b pb-2 mb-2">
             <span className="font-light">{index + 1}.</span>

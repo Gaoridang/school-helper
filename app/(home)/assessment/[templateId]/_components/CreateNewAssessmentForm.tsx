@@ -70,8 +70,8 @@ const CreateNewAssessmentForm = ({ data, templateId }: Props) => {
 
   return (
     <div>
-      <PageTitle title={subject ? subject : "자기평가"} description={period || ""} />
-      <p className="font-light text-sm">성취한 목표에 체크하세요!</p>
+      <PageTitle title={subject ? subject : "자기평가"} description="성취한 목표에 체크하세요!" />
+      <p className="font-light text-sm">{period || ""}</p>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           {subject.length > 0 && (
@@ -97,7 +97,7 @@ const CreateNewAssessmentForm = ({ data, templateId }: Props) => {
                     control={form.control}
                     render={({ field }) => {
                       return (
-                        <FormItem key={content.id}>
+                        <FormItem key={content.id} className="flex items-center gap-2 mb-2">
                           <FormControl>
                             <Checkbox
                               checked={
@@ -114,7 +114,7 @@ const CreateNewAssessmentForm = ({ data, templateId }: Props) => {
                               }}
                             />
                           </FormControl>
-                          <FormLabel>{content.content}</FormLabel>
+                          <FormLabel className="text-base">{content.content}</FormLabel>
                         </FormItem>
                       );
                     }}

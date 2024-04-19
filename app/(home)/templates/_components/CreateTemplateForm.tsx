@@ -112,57 +112,58 @@ const CreateTemplateForm = () => {
       <PageTitle title="평가지 만들기" />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="mt-5">
-          <div className="grid md:flex gap-2">
-            <FormField
-              control={form.control}
-              name="date"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl className="gap-1">
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground",
-                          )}
-                        >
-                          {field.value.from ? (
-                            field.value.to ? (
-                              <>
-                                {format(field.value.from, "y. MM. dd")} -{" "}
-                                {format(field.value.to, "y. MM. dd")}
-                              </>
+          <div className="flex flex-col md:flex-row gap-8">
+            <div className="flex flex-col gap-4">
+              <p className="text-sm">날짜 및 시간</p>
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl className="gap-1">
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground",
+                            )}
+                          >
+                            {field.value.from ? (
+                              field.value.to ? (
+                                <>
+                                  {format(field.value.from, "y. MM. dd")} -{" "}
+                                  {format(field.value.to, "y. MM. dd")}
+                                </>
+                              ) : (
+                                format(field.value.from, "y. MM. dd")
+                              )
                             ) : (
-                              format(field.value.from, "y. MM. dd")
-                            )
-                          ) : (
-                            <span>날짜를 선택하세요.</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        locale={ko}
-                        mode="range"
-                        selected={{
-                          from: field.value.from,
-                          to: field.value.to,
-                        }}
-                        onSelect={field.onChange}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                              <span>날짜를 선택하세요.</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          locale={ko}
+                          mode="range"
+                          selected={{
+                            from: field.value.from,
+                            to: field.value.to,
+                          }}
+                          onSelect={field.onChange}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            {/* 과목 */}
-            <div className="flex space-x-2">
+              {/* 과목 */}
               <FormField
                 control={form.control}
                 name="subject"
@@ -216,24 +217,35 @@ const CreateTemplateForm = () => {
                 }}
               />
             </div>
-          </div>
 
-          {fields.map((field, index) => (
-            <div key={field.id} className="flex gap-2 mb-2">
-              <Input
-                {...form.register(`contents.${index}.content` as const)}
-                placeholder="내용을 입력하세요."
-              />
-              <Button variant="ghost" type="button" onClick={() => remove(index)}>
-                <X className="w-4 h-4" />
-              </Button>
+            <div className="flex-1 flex flex-col gap-4">
+              <div className="flex items-center justify-between">
+                <p className="text-sm">평가 항목</p>
+                <button
+                  className="text-sm font-semibold text-[#57BD9E] pr-4"
+                  onClick={() => append({ content: "" })}
+                >
+                  + 항목 추가
+                </button>
+              </div>
+              {fields.map((field, index) => (
+                <div key={field.id} className="flex gap-2">
+                  <Input
+                    {...form.register(`contents.${index}.content` as const)}
+                    placeholder="내용을 입력하세요."
+                  />
+                  <Button variant="ghost" type="button" onClick={() => remove(index)}>
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              ))}
+              <div className="flex gap-2">
+                <Button type="submit">만들기</Button>
+                <Button type="button" variant="outline">
+                  취소
+                </Button>
+              </div>
             </div>
-          ))}
-          <div className="flex gap-2">
-            <Button type="submit">만들기</Button>
-            <Button variant="outline" type="button" onClick={() => append({ content: "" })}>
-              항목 추가하기
-            </Button>
           </div>
         </form>
       </Form>
