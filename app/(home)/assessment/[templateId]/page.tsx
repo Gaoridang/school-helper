@@ -17,7 +17,7 @@ const CreateAssessmentPage = async ({ params }: Props) => {
   }
 
   return (
-    <div>
+    <div className="pt-14 px-4 md:pt-20 md:px-12">
       <CreateNewAssessmentForm data={data} templateId={params.templateId} />
     </div>
   );
