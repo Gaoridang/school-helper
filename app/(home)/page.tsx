@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import ParentsMainPage from "../components/ParentsMainPage";
-import StudentMainPage from "../components/StudentMainPage";
+import StudentMainPage from "./_components/StudentMainPage";
 import TeacherMainPage from "../components/TeacherMainPage";
 import { createClient } from "../utils/supabase/server";
 

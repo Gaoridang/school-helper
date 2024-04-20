@@ -40,7 +40,7 @@ const SelfReviewBox = async () => {
     .eq("class_id", mainClass?.class_id!)
     .order("start_date", { ascending: false })
     .limit(1)
-    .single();
+    .maybeSingle();
 
   const studentId = isStudent ? user?.id : linkedStudent?.student_id;
 

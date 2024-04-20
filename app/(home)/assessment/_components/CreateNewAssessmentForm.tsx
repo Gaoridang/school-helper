@@ -44,7 +44,7 @@ const CreateNewAssessmentForm = ({ data, templateId }: Props) => {
       .insert({
         template_id: parseInt(templateId),
         class_id: classId,
-        ...(data.evaluatee && { evaluatee: data.evaluatee }),
+        ...(data.evaluatee && { evaluatee_id: data.evaluatee }),
       })
       .select("id")
       .single();

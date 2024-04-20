@@ -40,7 +40,7 @@ const PeerReviewBox = async () => {
     .eq("class_id", mainClass?.class_id!)
     .order("start_date", { ascending: false })
     .limit(1)
-    .single();
+    .maybeSingle();
 
   if (templateError) {
     console.error("templateError", templateError);
