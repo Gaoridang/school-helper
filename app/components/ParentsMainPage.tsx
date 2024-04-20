@@ -1,8 +1,9 @@
 import MainTitle from "../(home)/_components/MainTitle";
 import PeerReviewBox from "../(home)/_components/PeerReviewBox";
 import SelfReviewBox from "../(home)/_components/SelfReviewBox";
-import ScoreChart from "../(home)/_components/ScoreChart";
 import { createClient } from "../utils/supabase/server";
+import dynamic from "next/dynamic";
+const ScoreChart = dynamic(() => import("../(home)/_components/ScoreChart"));
 
 const ParentsMainPage = async () => {
   const supabase = createClient();
