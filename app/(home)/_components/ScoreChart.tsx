@@ -27,7 +27,6 @@ interface Props {
 
 const ScoreChart = ({ user }: Props) => {
   const selectedClassId = useClassStore((state) => state.classId);
-  const [isLoading, setIsLoading] = useState(true);
   const [reviews, setReviews] = useState<Tables<"session_results">[]>([]);
   const searchParams = useSearchParams();
 
@@ -49,28 +48,14 @@ const ScoreChart = ({ user }: Props) => {
             endDate,
           );
           setReviews(reviews);
-          setIsLoading(false);
         }
       } else {
         const reviews = await fetchReviewsByDateRange(selectedClassId, user.id, startDate, endDate);
         setReviews(reviews);
-        setIsLoading(false);
       }
     };
     getReviewsByDateRange();
   }, [selectedClassId, user, searchParams]);
-
-  if (isLoading || !reviews.length)
-    return (
-      <Card>
-        <CardHeader>
-          <CalendarDateRangePicker />
-        </CardHeader>
-        <CardContent>
-          <CardDescription>해당 기간에 데이터가 없습니다.</CardDescription>
-        </CardContent>
-      </Card>
-    );
 
   return (
     <Card>

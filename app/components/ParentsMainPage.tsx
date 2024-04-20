@@ -1,9 +1,13 @@
 import MainTitle from "../(home)/_components/MainTitle";
 import PeerReviewBox from "../(home)/_components/PeerReviewBox";
+import ScoreChartLoadingSkeleton from "../(home)/_components/ScoreChartLoadingSkeleton";
 import SelfReviewBox from "../(home)/_components/SelfReviewBox";
 import { createClient } from "../utils/supabase/server";
 import dynamic from "next/dynamic";
-const ScoreChart = dynamic(() => import("../(home)/_components/ScoreChart"));
+const ScoreChart = dynamic(() => import("../(home)/_components/ScoreChart"), {
+  ssr: false,
+  loading: () => <ScoreChartLoadingSkeleton />,
+});
 
 const ParentsMainPage = async () => {
   const supabase = createClient();
