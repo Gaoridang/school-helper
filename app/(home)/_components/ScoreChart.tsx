@@ -31,11 +31,11 @@ const ScoreChart = ({ user }: Props) => {
   const [reviews, setReviews] = useState<Tables<"session_results">[]>([]);
   const searchParams = useSearchParams();
 
-  const startDate =
-    searchParams.get("from") || format(subBusinessDays(Date.now(), 5), "yyyy-MM-dd");
-  const endDate = searchParams.get("to") || format(Date.now(), "yyyy-MM-dd");
-
   useEffect(() => {
+    const startDate =
+      searchParams.get("from") || format(subBusinessDays(Date.now(), 5), "yyyy-MM-dd");
+    const endDate = searchParams.get("to") || format(Date.now(), "yyyy-MM-dd");
+
     if (!selectedClassId || !user) return;
 
     const getReviewsByDateRange = async () => {
@@ -58,7 +58,7 @@ const ScoreChart = ({ user }: Props) => {
       }
     };
     getReviewsByDateRange();
-  }, [selectedClassId, startDate, endDate, user]);
+  }, [selectedClassId, user, searchParams]);
 
   if (isLoading || !reviews.length)
     return (
