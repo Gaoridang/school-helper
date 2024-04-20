@@ -4,9 +4,10 @@ import PeerReviewBox from "./PeerReviewBox";
 import SelfReviewBox from "./SelfReviewBox";
 import { createClient } from "../../utils/supabase/server";
 import dynamic from "next/dynamic";
+import ScoreChartLoadingSkeleton from "./ScoreChartLoadingSkeleton";
 const ScoreChart = dynamic(() => import("./ScoreChart"), {
   ssr: false,
-  loading: () => <p>Loading...</p>,
+  loading: () => <ScoreChartLoadingSkeleton />,
 });
 
 const StudentMainPage = async () => {
