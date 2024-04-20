@@ -22,7 +22,7 @@ console.error = (...args: any) => {
 };
 
 interface Props {
-  user: User | null;
+  user: User;
 }
 
 const ScoreChart = ({ user }: Props) => {

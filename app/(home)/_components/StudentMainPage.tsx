@@ -12,6 +12,8 @@ const StudentMainPage = async () => {
     data: { user },
   } = await supabase.auth.getUser();
 
+  if (!user) return null;
+
   const { data } = await supabase.from("user_classes").select("class_id").eq("user_id", user?.id!);
 
   if (!data || !data.length) {
