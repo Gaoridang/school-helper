@@ -11,6 +11,8 @@ const ParentsMainPage = async () => {
     data: { user },
   } = await supabase.auth.getUser();
 
+  if (!user) return null;
+
   return (
     <div className="p-4 md:p-8">
       <section>
@@ -24,7 +26,7 @@ const ParentsMainPage = async () => {
               title="성취 그래프"
               description="선택한 기간의 자기평가 점수를\n그래프로 확인하세요."
             />
-            {/* <ScoreChart user={user} /> */}
+            <ScoreChart user={user} />
           </div>
         </div>
       </section>
