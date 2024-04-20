@@ -37,7 +37,7 @@ const Sidebar = async ({ children }: Props) => {
       <nav className="h-full flex flex-col bg-[#f9f9f9] shadow-sm">
         <div className="w-0 md:w-32 p-4 pb-2 mb-4 md:flex justify-between items-center transition-all">
           <Link href="/">
-            <Image src={logo} alt="CheckMate" className="w-32" />
+            <Image src={logo} alt="CheckMate" className="w-32" priority />
           </Link>
         </div>
 
