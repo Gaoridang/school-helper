@@ -1,7 +1,7 @@
 import MainTitle from "../(home)/_components/MainTitle";
 import PeerReviewBox from "../(home)/_components/PeerReviewBox";
 import SelfReviewBox from "../(home)/_components/SelfReviewBox";
-import ScoreChart from "../(home)/reviews/_components/ScoreChart";
+import ScoreChart from "../(home)/_components/ScoreChart";
 import { createClient } from "../utils/supabase/server";
 
 const ParentsMainPage = async () => {

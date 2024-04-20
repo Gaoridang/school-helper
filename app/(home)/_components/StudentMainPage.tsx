@@ -1,9 +1,10 @@
 import Link from "next/link";
-import MainTitle from "../(home)/_components/MainTitle";
-import PeerReviewBox from "../(home)/_components/PeerReviewBox";
-import SelfReviewBox from "../(home)/_components/SelfReviewBox";
-import ScoreChart from "../(home)/reviews/_components/ScoreChart";
-import { createClient } from "../utils/supabase/server";
+import MainTitle from "./MainTitle";
+import PeerReviewBox from "./PeerReviewBox";
+import SelfReviewBox from "./SelfReviewBox";
+import { createClient } from "../../utils/supabase/server";
+import dynamic from "next/dynamic";
+const ScoreChart = dynamic(() => import("./ScoreChart"));
 
 const StudentMainPage = async () => {
   const supabase = createClient();

@@ -8,7 +8,7 @@ import { format, subBusinessDays } from "date-fns";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
-import { CalendarDateRangePicker } from "./CalendarDateRangePicker";
+import { CalendarDateRangePicker } from "../reviews/_components/CalendarDateRangePicker";
 import { Tables } from "@/app/types/schema";
 import useClassStore from "@/app/(home)/store/classStore";
 
@@ -80,7 +80,7 @@ const ScoreChart = ({ user }: Props) => {
       <CardContent>
         <ResponsiveContainer width="100%" height={200}>
           <LineChart
-            data={reviews}
+            data={reviews.filter((review) => !review.subject)}
             margin={{
               top: 10,
               right: 15,
@@ -89,7 +89,7 @@ const ScoreChart = ({ user }: Props) => {
             }}
           >
             <XAxis
-              dataKey="formattedStartTime"
+              dataKey="session_date"
               tickLine={false}
               axisLine={false}
               dy={30}
@@ -119,7 +119,7 @@ const ScoreChart = ({ user }: Props) => {
               }}
             />
             <Line
-              type="monotone"
+              type="linear"
               dataKey="total_passed"
               stroke="#16A349"
               strokeWidth={2}
