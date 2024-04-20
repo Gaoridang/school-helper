@@ -89,7 +89,7 @@ const ScoreChart = ({ user }: Props) => {
             }}
           >
             <XAxis
-              dataKey="session_date"
+              dataKey=""
               tickLine={false}
               axisLine={false}
               dy={30}
