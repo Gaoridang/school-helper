@@ -1,4 +1,3 @@
-import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import "../globals.css";
@@ -6,6 +5,7 @@ import { ReactQueryClientProvider } from "../QueryClientProvider";
 import Sidebar from "../Sidebar";
 import SidebarItem from "../components/sidebar/SidebarItem";
 import { LayoutDashboard, MessageCircle, Settings } from "lucide-react";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "CheckMate",

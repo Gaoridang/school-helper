@@ -2,20 +2,19 @@
 
 import { createClient } from "@/app/utils/supabase/server";
 import { redirect } from "next/navigation";
+import { SignInDataType } from "./types/signInFormTypes";
 
-interface FormData {
-  email: string;
-  password: string;
-}
-
-export async function signInWithEmailPassword({ email, password }: FormData) {
+export async function signInWithEmailPassword({ id, password }: SignInDataType) {
   const supabase = createClient();
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
+  const {
+    data: { session },
+    error,
+  } = await supabase.auth.signInWithPassword({
+    email: `${id}@togethers.com`,
     password,
   });
+
   if (!error) {
-    redirect(`/check?role=${data.user.user_metadata.role}`);
+    redirect(`/check/${session?.access_token}`);
   }
-  return data;
 }
