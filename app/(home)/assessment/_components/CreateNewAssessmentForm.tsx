@@ -12,6 +12,8 @@ import useClassStore from "@/app/(home)/store/classStore";
 import { Button } from "@/components/ui/button";
 import SelectStudentPopover from "./SelectStudentPopover";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { createAssessment } from "../../utils/assessment";
 
 interface Props {
   data: Tables<"assessment_view">[];
@@ -50,8 +52,9 @@ const CreateNewAssessmentForm = ({ data, templateId }: Props) => {
       .single();
 
     if (sessionError) {
-      console.error(sessionError);
-      return;
+      return toast("평가 제출 실패", {
+        description: "평가를 제출하지 못했습니다. 다시 시도해주세요.",
+      });
     }
 
     const assessmentResults = data.items.map((item) => ({
@@ -60,14 +63,11 @@ const CreateNewAssessmentForm = ({ data, templateId }: Props) => {
       is_passed: item.is_passed,
     }));
 
-    const { error: insertAssessmentError } = await supabase
-      .from("results")
-      .insert(assessmentResults);
-
-    if (insertAssessmentError) {
-      console.error(insertAssessmentError);
-      return;
-    }
+    toast.promise(() => createAssessment(assessmentResults), {
+      loading: "평가 제출 중",
+      success: "평가를 성공적으로 제출했습니다.",
+      error: "평가를 제출하지 못했습니다. 다시 시도해주세요.",
+    });
 
     router.push(`/assessment/confirm?to=${session.id}`);
   };
