@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { createComment } from "../../utils/assessment";
 
 interface FormValues {
   comment: string;
@@ -31,15 +33,11 @@ const CommentForm = () => {
       return;
     }
 
-    const { error: commentError } = await supabase.from("comments").insert({
-      comment: data.comment,
-      session_id: sessionId,
+    toast.promise(() => createComment({ comment: data.comment, session_id: sessionId! }), {
+      loading: "한 줄 평 등록 중",
+      success: "한 줄 평이 등록되었습니다.",
+      error: "한 줄 평 등록에 실패했습니다. 다시 시도해주세요.",
     });
-
-    if (commentError) {
-      console.error(commentError);
-      return;
-    }
 
     router.push(`/reviews/${user?.id}/${sessionId}`);
   };

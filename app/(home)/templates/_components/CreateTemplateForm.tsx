@@ -21,11 +21,12 @@ import { ko } from "date-fns/locale";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import useClassStore from "@/app/(home)/store/classStore";
 import { CreateEvalData, createEvalSchema } from "../_types/types";
 import { periods, subjects } from "../_types/constants";
 import { User } from "@supabase/supabase-js";
+import { createItems, createTemplate } from "./createTemplate";
 
 interface Props {
   user: User | null;
@@ -57,14 +58,7 @@ const CreateTemplateForm = ({ user }: Props) => {
     name: "contents",
   });
 
-  const handleSelectedItems = (selectedItems: string[]) => {
-    const newContents = selectedItems.map((content) => ({ content }));
-
-    form.setValue("contents", newContents);
-  };
-
   const router = useRouter();
-  const { toast } = useToast();
   const onSubmit = async (values: CreateEvalData) => {
     const { date, subject, period, contents } = values;
     const startDate = format(date.from, "yyyy-MM-dd");
@@ -83,8 +77,7 @@ const CreateTemplateForm = ({ user }: Props) => {
       .single();
 
     if (templateError) {
-      return toast({
-        title: "평가지 만들기 실패",
+      return toast("평가지 생성 실패", {
         description: "평가지를 만들지 못했습니다. 다시 시도해주세요.",
       });
     }
@@ -97,18 +90,10 @@ const CreateTemplateForm = ({ user }: Props) => {
       };
     });
 
-    const { error: itemsError } = await supabase.from("items").insert(insertingData);
-
-    if (itemsError) {
-      return toast({
-        title: "평가 항목 생성 실패",
-        description: "평가 항목을 만들지 못했습니다. 다시 시도해주세요.",
-      });
-    }
-
-    toast({
-      title: "평가지 만들기 성공",
-      description: "평가지를 만들었습니다.",
+    toast.promise(() => createItems(insertingData), {
+      loading: "평가 항목을 평가지에 쓰는 중",
+      success: "평가지 만들기 완료",
+      error: "평가지 만들기 실패",
     });
 
     router.push(`/assessment/${templateData.id}`);

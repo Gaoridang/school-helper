@@ -39,7 +39,7 @@ export default function RootLayout({
             />
           </Sidebar>
           <main className="relative w-full h-screen overflow-auto">{children}</main>
-          <Toaster />
+          <Toaster position="top-center" />
         </body>
       </html>
     </ReactQueryClientProvider>
