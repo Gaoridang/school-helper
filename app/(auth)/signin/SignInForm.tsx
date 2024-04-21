@@ -2,15 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import { Form, FormField, FormItem } from "@/components/ui/form";
-import { useToast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import Spinner from "../../components/Spinner";
+import { signInWithEmailPassword } from "./actions";
 import SignInTextInput from "./components/SignInTextInput";
 import { SignInDataType, SignInFormItemType, SignInSchema } from "./types/signInFormTypes";
-import { supabase } from "../../utils/supabase/client";
-import Link from "next/link";
+import { toast } from "sonner";
 
 const formItems: SignInFormItemType[] = [
   { label: "이메일", name: "id", type: "text", placeholder: "아이디를 입력하세요." },
@@ -26,38 +25,20 @@ const SignInForm = () => {
     },
   });
 
-  const router = useRouter();
-  const { toast } = useToast();
-  const onSubmit = async (values: SignInDataType) => {
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.signInWithPassword({
-      email: `${values.id}@togethers.com`,
-      password: values.password,
-    });
-
-    if (error) {
-      return toast({
-        title: "로그인에 실패했습니다.",
-        description: "이메일 또는 비밀번호가 일치하지 않습니다.",
+  const onSubmit = async (data: SignInDataType) => {
+    try {
+      toast("로그인 시도 중", {
+        description: "로그인 중입니다. 잠시만 기다려주세요.",
       });
+      await signInWithEmailPassword(data);
+    } catch (error) {
+      console.error(error);
     }
-
-    toast({
-      title: "로그인되었습니다.",
-    });
-
-    // store user data to local storage
-    localStorage.setItem("user", JSON.stringify(user));
-
-    router.push("/");
-    router.refresh();
   };
 
   return (
     <Form {...form}>
-      <form className="grid gap-2" onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-2">
         {formItems.map((item) => (
           <FormField
             key={item.name}

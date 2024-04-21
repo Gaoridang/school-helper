@@ -1,12 +1,7 @@
-import React from "react";
-import axios from "axios";
+import TeacherMainComponent from "../_components/TeacherMainComponent";
 
 const TeacherMainPage = async () => {
-  const res = await axios.get("http://localhost:3000/api/check?role=teacher");
-
-  console.log(res.data);
-
-  return <div></div>;
+  return <TeacherMainComponent />;
 };
 
 export default TeacherMainPage;
