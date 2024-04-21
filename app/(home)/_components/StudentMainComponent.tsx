@@ -1,21 +1,33 @@
-import MainTitle from "../(home)/_components/MainTitle";
-import PeerReviewBox from "../(home)/_components/PeerReviewBox";
-import ScoreChartLoadingSkeleton from "../(home)/_components/ScoreChartLoadingSkeleton";
-import SelfReviewBox from "../(home)/_components/SelfReviewBox";
-import { createClient } from "../utils/supabase/server";
+import Link from "next/link";
+import MainTitle from "./MainTitle";
+import PeerReviewBox from "./PeerReviewBox";
+import SelfReviewBox from "./SelfReviewBox";
+import { createClient } from "../../utils/supabase/server";
 import dynamic from "next/dynamic";
-const ScoreChart = dynamic(() => import("../(home)/_components/ScoreChart"), {
+import ScoreChartLoadingSkeleton from "./ScoreChartLoadingSkeleton";
+const ScoreChart = dynamic(() => import("./ScoreChart"), {
   ssr: false,
   loading: () => <ScoreChartLoadingSkeleton />,
 });
 
-const ParentsMainPage = async () => {
+const StudentMainComponent = async () => {
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   if (!user) return null;
+
+  const { data } = await supabase.from("user_classes").select("class_id").eq("user_id", user?.id!);
+
+  if (!data || !data.length) {
+    return (
+      <div>
+        <p>아무 학급에도 속해있지 않습니다.</p>
+        <Link href="/classes/register">학급 가입하기</Link>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 md:p-8">
@@ -38,4 +50,4 @@ const ParentsMainPage = async () => {
   );
 };
 
-export default ParentsMainPage;
+export default StudentMainComponent;

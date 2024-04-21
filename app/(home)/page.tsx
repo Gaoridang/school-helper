@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
-import ParentsMainPage from "../components/ParentsMainPage";
-import StudentMainPage from "./_components/StudentMainPage";
-import TeacherMainPage from "../components/TeacherMainPage";
+import ParentsMainComponent from "./_components/ParentsMainComponent";
+import StudentMainComponent from "./_components/StudentMainComponent";
 import { createClient } from "../utils/supabase/server";
+import TeacherMainComponent from "./_components/TeacherMainComponent";
 
 export default async function Home() {
   const supabase = createClient();
@@ -20,9 +20,9 @@ export default async function Home() {
   return (
     <div className="flex">
       <div className="flex-1 h-full">
-        {isTeacher && <TeacherMainPage />}
-        {isStudent && <StudentMainPage />}
-        {isParents && <ParentsMainPage />}
+        {isTeacher && <TeacherMainComponent />}
+        {isStudent && <StudentMainComponent />}
+        {isParents && <ParentsMainComponent />}
       </div>
     </div>
   );
