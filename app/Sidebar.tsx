@@ -22,10 +22,10 @@ interface Props {
 }
 
 const Sidebar = async ({ children }: Props) => {
-  const supbase = createClient();
+  const supabase = createClient();
   const {
     data: { user },
-  } = await supbase.auth.getUser();
+  } = await supabase.auth.getUser();
 
   const classList = await fetchClassListByUserId(user!.id);
   const selectedClass = classList.find((c) => c.is_primary);
