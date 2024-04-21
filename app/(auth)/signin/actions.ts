@@ -14,7 +14,9 @@ export async function signInWithEmailPassword({ id, password }: SignInDataType) 
     password,
   });
 
-  if (!error) {
-    redirect(`/check/${session?.access_token}`);
+  if (error) {
+    return { error: error.message };
   }
+
+  redirect(`/check/${session?.access_token}`);
 }

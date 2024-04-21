@@ -26,13 +26,19 @@ const SignInForm = () => {
   });
 
   const onSubmit = async (data: SignInDataType) => {
-    try {
-      toast("로그인 시도 중", {
-        description: "로그인 중입니다. 잠시만 기다려주세요.",
+    toast("로그인 시도 중", {
+      description: "로그인 중입니다. 잠시만 기다려주세요.",
+    });
+    const res = await signInWithEmailPassword(data);
+
+    if (res?.error) {
+      toast("로그인 실패", {
+        description: "로그인에 실패했습니다. 다시 시도해주세요.",
       });
-      await signInWithEmailPassword(data);
-    } catch (error) {
-      console.error(error);
+    } else {
+      toast("로그인 성공", {
+        description: "홈 화면을 그리는 중입니다.",
+      });
     }
   };
 
