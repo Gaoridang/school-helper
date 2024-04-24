@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { createComment } from "../../utils/assessment";
+import { cn } from "@/lib/utils";
 
 interface FormValues {
   comment: string;
@@ -16,7 +17,7 @@ const CommentForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormValues>();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -57,7 +58,11 @@ const CommentForm = () => {
         placeholder="오늘은 3가지 다 달성해서 좋았다."
       />
       {errors.comment && <p className="text-red-500 text-sm">한 줄 평을 입력해주세요.</p>}
-      <Button type="submit" className="mt-4">
+      <Button
+        type="submit"
+        className={cn(isSubmitting && "disabled:opacity-50", "mt-4")}
+        disabled={isSubmitting}
+      >
         한 줄 평 등록하기
       </Button>
     </form>
