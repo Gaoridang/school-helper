@@ -1,9 +1,9 @@
 import { supabase } from "./supabase/client";
 
-export const insertComment = async (comment: string, sessionId: string) => {
+export const insertComment = async (comment: string, emoji: string, sessionId: string) => {
   const { data, error } = await supabase
     .from("comments")
-    .insert({ comment, session_id: sessionId })
+    .insert({ comment, emoji, session_id: sessionId })
     .select();
 
   if (error) {
@@ -14,7 +14,10 @@ export const insertComment = async (comment: string, sessionId: string) => {
 };
 
 export const getComments = async (sessionId: string) => {
-  const { data, error } = await supabase.from("comments").select("*").eq("session_id", sessionId);
+  const { data, error } = await supabase
+    .from("comments_view")
+    .select("*")
+    .eq("session_id", sessionId);
 
   if (error) {
     return [];
