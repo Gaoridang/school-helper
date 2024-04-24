@@ -96,6 +96,7 @@ export type Database = {
         Row: {
           comment: string | null
           created_at: string
+          emoji: string | null
           id: number
           parent_comment_id: number | null
           session_id: string | null
@@ -105,6 +106,7 @@ export type Database = {
         Insert: {
           comment?: string | null
           created_at?: string
+          emoji?: string | null
           id?: number
           parent_comment_id?: number | null
           session_id?: string | null
@@ -114,6 +116,7 @@ export type Database = {
         Update: {
           comment?: string | null
           created_at?: string
+          emoji?: string | null
           id?: number
           parent_comment_id?: number | null
           session_id?: string | null
@@ -126,6 +129,13 @@ export type Database = {
             columns: ["parent_comment_id"]
             isOneToOne: false
             referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_comments_parent_comment_id_fkey"
+            columns: ["parent_comment_id"]
+            isOneToOne: false
+            referencedRelation: "comments_view"
             referencedColumns: ["id"]
           },
           {
@@ -288,21 +298,21 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "fk_session_id"
+            foreignKeyName: "public_results_session_id_fkey"
             columns: ["session_id"]
             isOneToOne: false
             referencedRelation: "review_results_view"
             referencedColumns: ["session_id"]
           },
           {
-            foreignKeyName: "fk_session_id"
+            foreignKeyName: "public_results_session_id_fkey"
             columns: ["session_id"]
             isOneToOne: false
             referencedRelation: "session_results"
             referencedColumns: ["session_id"]
           },
           {
-            foreignKeyName: "fk_session_id"
+            foreignKeyName: "public_results_session_id_fkey"
             columns: ["session_id"]
             isOneToOne: false
             referencedRelation: "sessions"
@@ -691,6 +701,39 @@ export type Database = {
           user_id: string | null
         }
         Relationships: []
+      }
+      comments_view: {
+        Row: {
+          comment: string | null
+          created_at: string | null
+          emoji: string | null
+          id: number | null
+          name: string | null
+          session_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_comments_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_comments_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "review_results_view"
+            referencedColumns: ["session_id"]
+          },
+          {
+            foreignKeyName: "public_comments_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "session_results"
+            referencedColumns: ["session_id"]
+          },
+        ]
       }
       review_results_view: {
         Row: {

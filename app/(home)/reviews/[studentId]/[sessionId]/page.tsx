@@ -1,7 +1,11 @@
 import PageTitle from "@/app/components/PageTitle";
 import { createClient } from "@/app/utils/supabase/server";
-import { Checkbox } from "@/components/ui/checkbox";
 import Comments from "../../_components/Comments";
+import dynamic from "next/dynamic";
+import ReviewItem from "../../_components/ReviewItem";
+const EvaluatorToEvaluatee = dynamic(() => import("../../_components/EvaluatorToEvaluatee"), {
+  ssr: false,
+});
 
 interface Props {
   params: { sessionId: string };
@@ -20,19 +24,16 @@ const ReviewPages = async ({ params }: Props) => {
     return;
   }
 
+  const evaluator = data[0].evaluator_name!;
+  const evaluatee = data[0].evaluatee_name!;
+
   return (
     <div className="pt-14 px-4 md:pt-20 md:px-12">
-      <PageTitle
-        title="오늘의 내 점수"
-        description="하루를 되돌아보며\n더 나은 내일을 만들어 봅시다."
-      />
-      <div className="flex flex-col space-y-1 my-4">
-        {data.map((item, index) => (
-          <div key={index} className="flex items-center gap-2 border-b pb-2 mb-2">
-            <span className="font-light">{index + 1}.</span>
-            <span>{item.content}</span>
-            <Checkbox checked={item.is_passed!} className="pointer-events-none" />
-          </div>
+      <PageTitle title="나의 하루" description="하루를 되돌아보며\n더 나은 내일을 만들어 봅시다." />
+      <EvaluatorToEvaluatee evaluatee={evaluatee} evaluator={evaluator} />
+      <div className="flex flex-col gap-3 my-4">
+        {data.map((item) => (
+          <ReviewItem key={item.item_id} item={item} />
         ))}
       </div>
       <Comments sessionId={params.sessionId} />
