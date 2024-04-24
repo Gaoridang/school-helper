@@ -1,5 +1,9 @@
 import { createClient } from "@/app/utils/supabase/server";
-import CreateNewAssessmentForm from "../_components/CreateNewAssessmentForm";
+import dynamic from "next/dynamic";
+const CreateNewAssessmentForm = dynamic(() => import("../_components/CreateNewAssessmentForm"), {
+  ssr: false,
+  loading: () => <div>로딩 중...</div>,
+});
 
 interface Props {
   params: { templateId: string };

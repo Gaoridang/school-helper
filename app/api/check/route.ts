@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     } = await supabase.auth.getUser(token as string);
 
     if (userError || !user) {
-      return NextResponse.json({ error: "not authenticated user" }, { status: 401 });
+      return NextResponse.json({ redirect: "/unauthorized" }, { status: 401 });
     }
 
     if (role === "student") {
@@ -32,11 +32,11 @@ export async function GET(request: NextRequest) {
     } else if (role === "parents") {
       return NextResponse.json({ redirect: `/parents` }, { status: 200 });
     } else if (role === "teacher") {
-      return NextResponse.json({ redirec: "/teacher" }, { status: 200 });
+      return NextResponse.json({ redirect: "/teacher" }, { status: 200 });
     } else {
       return NextResponse.json({ error: "invalid role" }, { status: 400 });
     }
   }
 
-  return NextResponse.json({ error: "role not provided" }, { status: 400 });
+  return NextResponse.json({ redirect: "/unauthorized" }, { status: 400 });
 }

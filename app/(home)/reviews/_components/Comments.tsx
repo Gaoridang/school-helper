@@ -1,25 +1,58 @@
-import { createClient } from "@/app/utils/supabase/server";
-import Emojis from "./Emojis";
+"use client";
+
+import { Tables } from "@/app/types/schema";
+import { supabase } from "@/app/utils/supabase/client";
+import { useEffect, useState } from "react";
+import CommentInput from "./CommentInput";
+import { getComments } from "@/app/utils/comments";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Props {
   sessionId: string;
 }
 
-const Comments = async ({ sessionId }: Props) => {
-  const supabase = createClient();
-  const { data: comments, error } = await supabase
-    .from("comments")
-    .select("*")
-    .eq("session_id", sessionId);
+const Comments = ({ sessionId }: Props) => {
+  const [comments, setComments] = useState<Tables<"comments">[]>([]);
+  const [isLoading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      const data = await getComments(sessionId);
+      setComments(data);
+    };
+    fetchComments();
+    setLoading(false);
+  }, [sessionId]);
+
+  useEffect(() => {
+    const subscription = supabase
+      .channel("comments")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "comments" },
+        (payload) => {
+          setComments((prev) => [...prev, payload.new as Tables<"comments">]);
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(subscription);
+    };
+  }, []);
 
   return (
-    <div className="relative flex flex-col gap-2">
-      {comments?.map((comment) => (
-        <p key={comment.id} className="pl-4 px-12 py-2 rounded-lg">
-          {comment.comment}
-        </p>
-      ))}
-      <Emojis />
+    <div className="relative flex flex-col rounded-lg">
+      <CommentInput sessionId={sessionId} />
+      {!isLoading ? (
+        comments?.map((comment) => (
+          <p key={comment.id} className="pl-4 px-12 py-2 rounded-lg">
+            {comment.comment}
+          </p>
+        ))
+      ) : (
+        <Skeleton className="w-full h-12 mt-2" />
+      )}
     </div>
   );
 };

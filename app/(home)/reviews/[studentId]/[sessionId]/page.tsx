@@ -1,8 +1,6 @@
 import PageTitle from "@/app/components/PageTitle";
 import { createClient } from "@/app/utils/supabase/server";
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import Link from "next/link";
 import Comments from "../../_components/Comments";
 
 interface Props {
