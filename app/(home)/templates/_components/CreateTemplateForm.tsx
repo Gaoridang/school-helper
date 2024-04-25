@@ -100,8 +100,7 @@ const CreateTemplateForm = ({ user }: Props) => {
   };
 
   return (
-    <div className="p-4 md:p-8">
-      <PageTitle title="평가지 만들기" />
+    <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="mt-5">
           <div className="flex flex-col md:flex-row gap-8">

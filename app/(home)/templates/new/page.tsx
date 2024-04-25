@@ -1,5 +1,6 @@
 import { createClient } from "@/app/utils/supabase/server";
 import CreateTemplateForm from "../_components/CreateTemplateForm";
+import PageTitle from "@/app/components/PageTitle";
 
 const CreateTemplatePage = async () => {
   const supabase = createClient();
@@ -9,7 +10,8 @@ const CreateTemplatePage = async () => {
   } = await supabase.auth.getUser();
 
   return (
-    <div>
+    <div className="p-4 md:p-8">
+      <PageTitle title="평가지 만들기" />
       <CreateTemplateForm user={user} />
     </div>
   );
