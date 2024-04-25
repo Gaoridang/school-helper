@@ -20,7 +20,6 @@ export function CalendarDateRangePicker({ className }: { className?: string }) {
     to: new Date(),
   });
 
-  // update query params when date changes
   const updateQueryParams = () => {
     if (date?.from && date?.to) {
       const from = format(date.from, "yyyy-MM-dd");
@@ -42,13 +41,13 @@ export function CalendarDateRangePicker({ className }: { className?: string }) {
             {date?.from ? (
               date.to ? (
                 <>
-                  {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                  {format(date.from, "y. MM. d")} - {format(date.to, "y. MM. d")}
                 </>
               ) : (
-                format(date.from, "LLL dd, y")
+                format(date.from, "y. MM. d")
               )
             ) : (
-              <span>Pick a date</span>
+              <span>날짜를 선택하세요.</span>
             )}
           </Button>
         </PopoverTrigger>
