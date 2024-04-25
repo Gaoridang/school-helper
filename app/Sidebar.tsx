@@ -30,6 +30,23 @@ const Sidebar = async ({ children }: Props) => {
   const classList = await fetchClassListByUserId(user!.id);
   const selectedClass = classList.find((c) => c.is_primary);
 
+  // const { data: students, error } = await supabase
+  //   .from("student_with_class_parents")
+  //   .select("student_id")
+  //   .eq("parent_id", user!.id)
+  //   .eq("class_id", selectedClass?.class_id!);
+
+  // if (error) return null;
+
+  // const { data: reviewSeen, error: reviewSeenError } = await supabase
+  //   .from("review_seen")
+  //   .select("session_id")
+  //   .eq("parent_id", user!.id)
+  //   .eq("student_id", students[0].student_id!)
+  //   .eq("seen", false);
+
+  // console.log(reviewSeen);
+
   if (!selectedClass) return null;
 
   return (
@@ -42,6 +59,15 @@ const Sidebar = async ({ children }: Props) => {
         </div>
 
         <ul className="flex-1">{children}</ul>
+
+        {/* {reviewSeen?.map((seen) => (
+          <Link
+            key={seen.session_id}
+            href={`/reviews/${students[0].student_id}/${seen.session_id}`}
+          >
+            새로운 리뷰가 있습니다.
+          </Link>
+        ))} */}
 
         <UserInfo user={user} selectedClass={selectedClass} />
       </nav>

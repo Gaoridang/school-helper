@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import SelectStudentPopover from "./SelectStudentPopover";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { createAssessment } from "../../utils/assessment";
+import { createAssessment, createReviewSeen } from "../../utils/assessment";
 import CheckAnimation from "@/public/checkAnimation.json";
 import Lottie from "react-lottie-player";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -66,6 +66,10 @@ const CreateNewAssessmentForm = ({ data, templateId }: Props) => {
         description: "평가를 제출하지 못했습니다. 다시 시도해주세요.",
       });
     }
+
+    toast.promise(() => createReviewSeen(session.id), {
+      error: "평가를 제출하지 못했습니다. 다시 시도해주세요.",
+    });
 
     const assessmentResults = data.items.map((item) => ({
       session_id: session.id,
