@@ -29,7 +29,7 @@ export default function RootLayout({
             />
             <SidebarItem
               icon={<Settings size={22} strokeWidth={2.5} />}
-              text="프로필 설정"
+              text="프로필 보기"
               href="/settings"
             />
             <SidebarItem

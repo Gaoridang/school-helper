@@ -27,7 +27,7 @@ export const formItems: SignUpFormItemType[] = [
     label: "이름",
     name: "name",
     type: "text",
-    placeholder: "이름을 입력하세요.",
+    placeholder: "본인의 이름을 입력하세요.",
     description: "반드시 실명을 입력해주세요.",
   },
   {
