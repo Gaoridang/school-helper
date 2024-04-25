@@ -320,6 +320,91 @@ export type Database = {
           },
         ]
       }
+      review_seen: {
+        Row: {
+          parent_id: string
+          seen: boolean | null
+          session_id: string
+          student_id: string
+        }
+        Insert: {
+          parent_id: string
+          seen?: boolean | null
+          session_id: string
+          student_id?: string
+        }
+        Update: {
+          parent_id?: string
+          seen?: boolean | null
+          session_id?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_review_visibility_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "public_review_visibility_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "session_results"
+            referencedColumns: ["evaluator_id"]
+          },
+          {
+            foreignKeyName: "public_review_visibility_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "review_visibility_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "review_visibility_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "session_results"
+            referencedColumns: ["evaluator_id"]
+          },
+          {
+            foreignKeyName: "review_visibility_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "review_visibility_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "review_results_view"
+            referencedColumns: ["session_id"]
+          },
+          {
+            foreignKeyName: "review_visibility_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "session_results"
+            referencedColumns: ["session_id"]
+          },
+          {
+            foreignKeyName: "review_visibility_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sessions: {
         Row: {
           class_id: string | null

@@ -15,8 +15,13 @@ interface Props {
   studentId?: string;
 }
 
+type ReviewType = Pick<
+  Tables<"session_results">,
+  "session_id" | "session_date" | "total_passed" | "first_comment"
+>;
+
 const ReviewList = ({ user, studentId }: Props) => {
-  const [sessions, setSessions] = useState<Tables<"session_results">[]>();
+  const [sessions, setSessions] = useState<ReviewType[]>();
   const selectedClassId = useClassStore((state) => state.classId);
   const searchParams = useSearchParams();
   const type = searchParams.get("type") as "self" | "peer";
@@ -28,14 +33,14 @@ const ReviewList = ({ user, studentId }: Props) => {
       if (user.user_metadata.role === "parents") {
         const linkedStudent = await fetchLinkedStudent(user, selectedClassId);
         if (linkedStudent) {
-          const reviews = await fetchReviews(linkedStudent.student_id, type);
+          const reviews = await fetchReviews(linkedStudent.student_id, selectedClassId, type);
           setSessions(reviews);
         }
       } else if (studentId) {
-        const reviews = await fetchReviews(studentId, type);
+        const reviews = await fetchReviews(studentId, selectedClassId, type);
         setSessions(reviews);
       } else {
-        const reviews = await fetchReviews(user.id, type);
+        const reviews = await fetchReviews(user.id, selectedClassId, type);
         setSessions(reviews);
       }
     };
@@ -43,7 +48,7 @@ const ReviewList = ({ user, studentId }: Props) => {
   }, [selectedClassId, user, studentId, type]);
 
   const groupReviewsByMonth = () => {
-    const groupedReviews: { [month: string]: Tables<"session_results">[] } = {};
+    const groupedReviews: { [month: string]: ReviewType[] } = {};
 
     sessions?.forEach((review) => {
       const month = new Date(review.session_date!).toLocaleString("default", { month: "long" });
