@@ -9,7 +9,7 @@ interface Props {
 }
 
 const EvaluatorToEvaluatee = ({ evaluatee, evaluator }: Props) => {
-  if (evaluator !== evaluatee) return;
+  if (evaluator === evaluatee) return;
 
   return (
     <div className="flex gap-1 items-center">
