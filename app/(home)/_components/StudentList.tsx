@@ -97,7 +97,11 @@ const StudentList = () => {
 
   return (
     <MainBox>
-      <MainTitle title="학생목록" description="학급에 속한 학생과\n평가 결과를 확인하세요." />
+      <MainTitle
+        title="학생목록"
+        description="학급에 속한 학생과\n평가 결과를 확인하세요."
+        tooltip="학생 이름을 클릭하면 해당 학생의 평가 결과를 확인할 수 있습니다."
+      />
       {students.map((student) => {
         const done = sessions.some((session) => session.evaluatee_id === student.user_id);
         const sessionId = sessions.find(
@@ -108,7 +112,12 @@ const StudentList = () => {
             key={student.user_id}
             className="border-b border-[#e9e9e9] py-2 flex justify-between items-center"
           >
-            <span className="text-sm font-light">{student.name}</span>
+            <Link
+              href={`/reviews/${student.user_id}?type=all`}
+              className="text-sm font-light underline underline-offset-4"
+            >
+              {student.name}
+            </Link>
             {done ? (
               <Link
                 href={`/reviews/${student.user_id}/${sessionId}`}
