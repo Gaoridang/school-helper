@@ -23,7 +23,9 @@ const SidebarItem = ({ icon, text, href }: Props) => {
       )}
     >
       {icon}
-      <span className="overflow-hidden w-0 md:w-48 md:ml-4 text-lg whitespace-nowrap">{text}</span>
+      <span className="overflow-hidden w-0 md:w-48 md:ml-4 text-lg whitespace-nowrap pt-1">
+        {text}
+      </span>
       <div className="md:hidden invisible opacity-20 absolute left-full rounded-md ml-3 px-2 py-1 whitespace-nowrap bg-slate-200 text-slate-800 text-sm -translate-x-3 group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 transition-all">
         {text}
       </div>
