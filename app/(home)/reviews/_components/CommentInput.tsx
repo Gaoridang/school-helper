@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { insertComment } from "@/app/utils/comments";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
+import { insertCommentAction } from "../actions";
 
 interface Props {
   sessionId: string;
@@ -26,6 +27,10 @@ const CommentInput = ({ sessionId }: Props) => {
     formState: { isSubmitting, errors },
   } = useForm<FormValues>({
     mode: "onChange",
+    defaultValues: {
+      comment: "",
+      emoji: "좋음",
+    },
   });
 
   const selectedEmoji = watch("emoji");
@@ -36,8 +41,8 @@ const CommentInput = ({ sessionId }: Props) => {
       success: "댓글이 등록되었습니다.",
       error: "댓글 등록에 실패했습니다. 다시 시도해주세요.",
     });
+    // await insertCommentAction(data.comment, data.emoji, sessionId);
     reset();
-    // await insertComment(data.comment, data.emoji, sessionId);
   };
 
   return (

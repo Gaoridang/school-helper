@@ -26,6 +26,28 @@ const Comments = ({ sessionId }: Props) => {
     setLoading(false);
   }, [sessionId]);
 
+  useEffect(() => {
+    const subscription = supabase
+      .channel("comments")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "comments",
+        },
+        async (payload) => {
+          const data = await getComments(sessionId);
+          setComments(data);
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(subscription);
+    };
+  }, [sessionId]);
+
   return (
     <div className="relative flex flex-col rounded-lg">
       <CommentInput sessionId={sessionId} />
