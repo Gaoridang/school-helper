@@ -17,7 +17,8 @@ export const getComments = async (sessionId: string) => {
   const { data, error } = await supabase
     .from("comments_view")
     .select("*")
-    .eq("session_id", sessionId);
+    .eq("session_id", sessionId)
+    .order("created_at", { ascending: false });
 
   if (error) {
     return [];

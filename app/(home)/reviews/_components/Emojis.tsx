@@ -106,7 +106,7 @@ const Emojis = ({ register }: Props) => {
                     <Image src={emoji[1]} alt={emoji[0]} className="pointer-events-none" />
                     <input
                       type="radio"
-                      {...register("emoji", { required: "이모지를 선택하세요." })}
+                      {...register("emoji")}
                       value={emoji[0]}
                       className="hidden"
                       id={emoji[0]}
