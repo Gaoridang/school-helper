@@ -11,7 +11,7 @@ const ReviewItem = ({ item }: Props) => {
     <div
       className={cn(
         item.is_passed ? "border-green-500 bg-green-50" : "",
-        "w-full relative flex items-center justify-between text-base border px-6 py-4 cursor-pointer rounded-lg",
+        "w-full relative flex items-center justify-between text-base border px-6 py-4 rounded-lg pointer-events-none",
       )}
     >
       <span>{item.content}</span>
