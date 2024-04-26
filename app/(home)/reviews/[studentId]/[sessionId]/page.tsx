@@ -3,6 +3,7 @@ import { createClient } from "@/app/utils/supabase/server";
 import Comments from "../../_components/Comments";
 import dynamic from "next/dynamic";
 import ReviewItem from "../../_components/ReviewItem";
+import BreadCrumb from "../../_components/BreadCrumb";
 const EvaluatorToEvaluatee = dynamic(() => import("../../_components/EvaluatorToEvaluatee"), {
   ssr: false,
 });
@@ -29,6 +30,7 @@ const ReviewPages = async ({ params }: Props) => {
 
   return (
     <div className="pt-14 px-4 md:pt-20 md:px-12">
+      <BreadCrumb />
       <PageTitle title="나의 하루" description="하루를 되돌아보며\n더 나은 내일을 만들어 봅시다." />
       <EvaluatorToEvaluatee evaluatee={evaluatee} evaluator={evaluator} />
       <div className="flex flex-col gap-3 my-4">
