@@ -20,7 +20,10 @@ const LogoutButton = () => {
   };
 
   return (
-    <button className="border-none outline-none bg-transparent" onClick={handleLogout}>
+    <button
+      className="w-full text-start border-none outline-none bg-transparent"
+      onClick={handleLogout}
+    >
       로그아웃
     </button>
   );

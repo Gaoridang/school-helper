@@ -66,8 +66,10 @@ const ClassRegisterPage = () => {
 
     if (user.user_metadata.role === "student") {
       router.push("/");
+      router.refresh();
     } else if (user.user_metadata.role === "parents") {
       router.push("/students/register");
+      router.refresh();
     }
   };
 
