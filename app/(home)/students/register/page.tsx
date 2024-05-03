@@ -85,35 +85,6 @@ const StudentRegisterPage = () => {
     setIsloading(false);
   };
 
-  const handleRegister = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!foundClass || !user) return;
-
-    const { error } = await supabase.from("user_classes").insert({
-      user_id: user.id,
-      class_id: foundClass.id,
-      role: user.user_metadata.role,
-      is_primary: true,
-    });
-
-    if (error) {
-      return toast({
-        title: "학급 가입에 실패했습니다.",
-        description: "다시 시도해주세요.",
-        variant: "destructive",
-      });
-    }
-
-    if (user.user_metadata.role === "student") {
-      router.push("/");
-    } else if (user.user_metadata.role === "parents") {
-      router.push("/students/register");
-    }
-  };
-
   const handleLink = async () => {
     const {
       data: { user },
@@ -140,6 +111,9 @@ const StudentRegisterPage = () => {
       title: "자녀 연결에 성공했습니다.",
       description: "자녀와 함께 CheckMate를 이용해보세요!",
     });
+
+    router.push("/");
+    router.refresh();
   };
 
   return (

@@ -79,6 +79,17 @@ const StudentList = () => {
     };
   }, []);
 
+  if (students.length === 0) {
+    return (
+      <MainBox>
+        <MainTitle title="학생목록" description="학급에 속한 학생과\n평가 결과를 확인하세요." />
+        <div className="border-b border-[#e9e9e9] py-2 flex justify-between items-center">
+          <span className="text-sm text-gray-400">학생이 없습니다.</span>
+        </div>
+      </MainBox>
+    );
+  }
+
   if (isLoading)
     return (
       <MainBox>

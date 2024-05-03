@@ -1,10 +1,10 @@
-import Image from "next/image";
-import { ReactNode } from "react";
-import { createClient } from "./utils/supabase/server";
 import logo from "@/public/logo.webp";
+import Image from "next/image";
 import Link from "next/link";
+import { ReactNode } from "react";
 import UserInfo from "./(home)/_components/UserInfo";
 import { fetchClassListByUserId } from "./(home)/utils/fetchClassList";
+import { createClient } from "./utils/supabase/server";
 
 export interface UserClasses {
   class_id: string;
@@ -46,8 +46,6 @@ const Sidebar = async ({ children }: Props) => {
   //   .eq("seen", false);
 
   // console.log(reviewSeen);
-
-  if (!selectedClass) return null;
 
   return (
     <aside className="h-screen">

@@ -57,6 +57,7 @@ const CreateClassPage = () => {
     });
 
     router.push("/");
+    router.refresh();
   };
 
   return (
