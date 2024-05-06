@@ -25,11 +25,12 @@ import { supabase } from "@/app/utils/supabase/client";
 
 interface Props {
   user: User;
+  studentCode?: string | null;
   classList: Tables<"user_class_details">[];
   selectedStudentList: Tables<"student_with_class_parents">[];
 }
 
-const SettingsForm = ({ user, classList, selectedStudentList }: Props) => {
+const SettingsForm = ({ user, studentCode, classList, selectedStudentList }: Props) => {
   const form = useForm<SettingsFormType>({
     resolver: zodResolver(SettingsFormSchema),
     defaultValues: {
@@ -135,6 +136,9 @@ const SettingsForm = ({ user, classList, selectedStudentList }: Props) => {
               </FormItem>
             )}
           />
+        )}
+        {user?.user_metadata.role === "student" && studentCode && (
+          <Input disabled value={studentCode} />
         )}
         <div className="flex justify-end">
           <Button type="submit">저장</Button>
