@@ -74,11 +74,22 @@ const ClassRegisterPage = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col items-center">
-      <PageTitle title="학급 참여하기 🎉" description="선생님이 주신 학급 코드를 입력하세요!" />
+    <div className="pt-14 px-4 md:pt-20 md:px-12">
+      <PageTitle title="학급 참여하기 🎉" description="학급 코드를 입력하고 학급에 가입하세요!" />
       <p className="border p-4 rounded-lg text-sm text-slate-700 mb-4">
         새로운 학생을 등록하는 경우에도 <br /> 먼저 학급을 등록해야 합니다.
       </p>
+      <div className="border p-4 rounded-lg text-sm text-slate-700 mb-4">
+        <p className="text-base font-semibold mb-2 text-slate-900">학급 코드 찾는 법</p>
+        <div className="mb-2">
+          <p className="font-semibold">학생</p>
+          <p>선생님께 문의하기</p>
+        </div>
+        <div>
+          <p className="font-semibold">학부모</p>
+          <p>학생 아이디로 로그인 한 뒤 프로필 보기 클릭</p>
+        </div>
+      </div>
       {!foundClass ? (
         <CodeInput onSubmit={onSubmit} />
       ) : (
