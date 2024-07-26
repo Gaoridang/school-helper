@@ -6,6 +6,7 @@ import Sidebar from "../Sidebar";
 import SidebarItem from "../components/sidebar/SidebarItem";
 import { LayoutDashboard, MessageCircle, Settings } from "lucide-react";
 import { Toaster } from "sonner";
+import ChatSupport from "../components/ChatSupport";
 
 export const metadata: Metadata = {
   title: "CheckMate",
@@ -40,6 +41,7 @@ export default function RootLayout({
           </Sidebar>
           <main className="relative w-full h-screen overflow-auto">{children}</main>
           <Toaster position="top-center" />
+          <ChatSupport />
         </body>
       </html>
     </ReactQueryClientProvider>

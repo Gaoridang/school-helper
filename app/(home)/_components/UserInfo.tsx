@@ -6,7 +6,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -31,6 +30,7 @@ const UserInfo = ({ user, selectedClass }: Props) => {
 
   const selectedClassName = `${selectedClass?.school} ${selectedClass?.grade}학년 ${selectedClass?.class_number}반`;
   const isTeacher = user?.user_metadata.role === "teacher";
+  const isParents = user?.user_metadata.role === "parents";
 
   return (
     <>
@@ -66,7 +66,7 @@ const UserInfo = ({ user, selectedClass }: Props) => {
               <DropdownMenuItem>
                 {/* register or create class */}
                 <Link href={isTeacher ? "/classes/create" : "/classes/register"} className="w-full">
-                  {isTeacher ? "학급 만들기" : "학급 가입하기"}
+                  {isTeacher ? "학급 만들기" : isParents ? "학생 연결하기" : "학급 가입하기"}
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
