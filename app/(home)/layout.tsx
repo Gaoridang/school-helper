@@ -33,11 +33,11 @@ export default function RootLayout({
               text="프로필 보기"
               href="/settings"
             />
-            <SidebarItem
+            {/* <SidebarItem
               icon={<MessageCircle size={22} strokeWidth={2.5} />}
               text="문의하기"
               href="/contact"
-            />
+            /> */}
           </Sidebar>
           <main className="relative w-full h-screen overflow-auto">{children}</main>
           <Toaster position="top-center" />
