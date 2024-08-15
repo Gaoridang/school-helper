@@ -7,38 +7,32 @@ import SidebarItem from "../components/sidebar/SidebarItem";
 import { LayoutDashboard, MessageCircle, Settings } from "lucide-react";
 import { Toaster } from "sonner";
 import ChatSupport from "../components/ChatSupport";
+import { createClient } from "../utils/supabase/server";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "CheckMate",
   description: "For students and teachers to manage their classes and reviews.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/signin");
+  }
+
   return (
     <ReactQueryClientProvider>
       <html lang="en" suppressHydrationWarning className="h-full">
         <body className={cn("font-spoqa relative flex h-full")}>
-          <Sidebar>
-            <SidebarItem
-              icon={<LayoutDashboard size={22} strokeWidth={2.5} />}
-              text="대시보드"
-              href="/"
-            />
-            <SidebarItem
-              icon={<Settings size={22} strokeWidth={2.5} />}
-              text="프로필 보기"
-              href="/settings"
-            />
-            {/* <SidebarItem
-              icon={<MessageCircle size={22} strokeWidth={2.5} />}
-              text="문의하기"
-              href="/contact"
-            /> */}
-          </Sidebar>
           <main className="relative w-full h-screen overflow-auto">{children}</main>
           <Toaster position="top-center" />
           <ChatSupport />

@@ -8,12 +8,18 @@ import { CommonInputTypes } from "@/app/(auth)/signup/types/formTypes";
 const SignInTextInput = ({
   field,
   formField,
+  label,
 }: CommonInputTypes<SignInDataType, SignInFormItemType>) => {
   return (
     <>
-      <FormLabel></FormLabel>
+      <FormLabel>{label}</FormLabel>
       <FormControl>
-        <Input {...field} type={formField.type} placeholder={formField.placeholder} />
+        <Input
+          variant="borderBottom"
+          {...field}
+          type={formField.type}
+          placeholder={formField.placeholder}
+        />
       </FormControl>
       <FormDescription>{formField.description}</FormDescription>
       <FormMessage />

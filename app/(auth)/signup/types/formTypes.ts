@@ -31,6 +31,7 @@ export type SignUpFormItemType = {
 export interface CommonInputTypes<T extends FieldValues, VItem> {
   field: ControllerRenderProps<T, Path<T>>;
   formField: VItem;
+  label: string;
 }
 
 export interface School {

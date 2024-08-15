@@ -12,8 +12,8 @@ import { SignInDataType, SignInFormItemType, SignInSchema } from "./types/signIn
 import { toast } from "sonner";
 
 const formItems: SignInFormItemType[] = [
-  { label: "이메일", name: "id", type: "text", placeholder: "아이디를 입력하세요." },
-  { label: "비밀번호", name: "password", type: "password", placeholder: "비밀번호를 입력하세요." },
+  { label: "아이디", name: "id", type: "text", placeholder: "아이디를 입력해 주세요" },
+  { label: "비밀번호", name: "password", type: "password", placeholder: "********" },
 ];
 
 const SignInForm = () => {
@@ -44,25 +44,27 @@ const SignInForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-2">
-        {formItems.map((item) => (
-          <FormField
-            key={item.name}
-            name={item.name}
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <SignInTextInput field={field} formField={item} />
-              </FormItem>
-            )}
-          />
-        ))}
-        <div>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 w-[300px]">
+        <div className="space-y-4">
+          {formItems.map((item) => (
+            <FormField
+              key={item.name}
+              name={item.name}
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <SignInTextInput label={item.label} field={field} formField={item} />
+                </FormItem>
+              )}
+            />
+          ))}
+        </div>
+        <div className="grid">
           <Button type="submit" disabled={form.formState.isSubmitting} className="space-x-2">
-            {form.formState.isSubmitting && <Spinner />} <span>로그인</span>
+            {form.formState.isSubmitting && <Spinner />} <span>체크메이트 시작하기</span>
           </Button>
-          <Button variant="link" className="ml-2">
-            <Link href="/signup">회원가입</Link>
+          <Button variant="link">
+            <Link href="/signup">아직 아이디가 없으신가요?</Link>
           </Button>
         </div>
       </form>
