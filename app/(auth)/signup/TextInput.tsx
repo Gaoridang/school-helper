@@ -8,15 +8,21 @@ import { CommonInputTypes, SignUpData, SignUpFormItemType } from "./types/formTy
 const SignUpTextInput = ({
   field,
   formField,
+  label,
 }: CommonInputTypes<SignUpData, SignUpFormItemType>) => {
   return (
     <>
-      <FormLabel></FormLabel>
+      <FormLabel>{label}</FormLabel>
       <FormControl>
-        <Input {...field} type={formField.type} placeholder={formField.placeholder} />
+        <Input
+          variant="borderBottom"
+          {...field}
+          type={formField.type}
+          placeholder={formField.placeholder}
+        />
       </FormControl>
       <FormDescription>{formField.description}</FormDescription>
-      <FormMessage />
+      <FormMessage className="mt-2" />
     </>
   );
 };
