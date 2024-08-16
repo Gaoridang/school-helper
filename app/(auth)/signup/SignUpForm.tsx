@@ -2,36 +2,18 @@
 
 import { Form, FormField, FormItem } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
 import { useForm } from "react-hook-form";
 import SignUpTextInput from "./TextInput";
 
-import { type SignUpFormItemType, SignUpData, SignUpSchema } from "./types/formTypes";
-import SelectRole from "./SelectRole";
-import { Button } from "@/components/ui/button";
-import { supabase } from "../../utils/supabase/client";
-import { useToast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { AuthError } from "@supabase/supabase-js";
+import Spinner from "@/app/components/Spinner";
 import { AUTH_ERROR_MESSAGES } from "@/app/types/errorTypes";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { supabase } from "../../utils/supabase/client";
+import { type SignUpFormItemType, SignUpData, SignUpSchema } from "./types/formTypes";
 
 export const formItems: SignUpFormItemType[] = [
-  // { label: "역할", name: "role", type: "select", placeholder: "" },
-  // {
-  //   label: "부모선택",
-  //   name: "detail_role",
-  //   type: "select",
-  //   placeholder: "",
-  //   condition: "parents",
-  // },
-  // {
-  //   label: "이름",
-  //   name: "name",
-  //   type: "text",
-  //   placeholder: "본인의 이름을 입력하세요.",
-  //   description: "반드시 실명을 입력해주세요.",
-  // },
   {
     label: "이메일",
     name: "email",
@@ -45,14 +27,6 @@ export const formItems: SignUpFormItemType[] = [
     type: "password",
     placeholder: "********",
   },
-  // {
-  //   label: "번호",
-  //   name: "student_number",
-  //   type: "text",
-  //   placeholder: "나의 번호를 입력하세요.",
-  //   condition: "student",
-  //   description: "학생의 경우 학번을 입력해주세요.",
-  // },
 ];
 
 const SignUpForm = () => {
@@ -100,7 +74,7 @@ const SignUpForm = () => {
         })}
         <div className="grid">
           <Button type="submit" className="mt-2 font-semibold text-base">
-            체크메이트 시작하기
+            {form.formState.isSubmitting && <Spinner />} <span>체크메이트 시작하기</span>
           </Button>
           <Button variant="link">
             <Link href="/signin">로그인</Link>

@@ -8,10 +8,12 @@ import { useOnboarding } from "./provider/OnboardingProvider";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/app/utils/supabase/client";
 import { randomUUID } from "crypto";
+import { useRouter } from "next/navigation";
 
 const OnboardingPage = () => {
   const [step, setStep] = useState(0);
   const { role, name, image, detail } = useOnboarding();
+  const router = useRouter();
 
   const submit = async () => {
     const {
@@ -56,6 +58,7 @@ const OnboardingPage = () => {
     }
 
     console.log("Profile created successfully!");
+    router.replace("/");
   };
 
   const renderStep = () => {

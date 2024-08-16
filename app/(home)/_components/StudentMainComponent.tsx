@@ -5,6 +5,7 @@ import SelfReviewBox from "./SelfReviewBox";
 import { createClient } from "../../utils/supabase/server";
 import dynamic from "next/dynamic";
 import ScoreChartLoadingSkeleton from "./ScoreChartLoadingSkeleton";
+import { Button } from "@/components/ui/button";
 const ScoreChart = dynamic(() => import("./ScoreChart"), {
   ssr: false,
   loading: () => <ScoreChartLoadingSkeleton />,
@@ -22,9 +23,11 @@ const StudentMainComponent = async () => {
 
   if (!data || !data.length) {
     return (
-      <div>
-        <p>아무 학급에도 속해있지 않습니다.</p>
-        <Link href="/classes/register">학급 가입하기</Link>
+      <div className="h-screen flex flex-col justify-center items-center">
+        <p className="text-xl font-bold mb-4">새로운 학급에 가입해 보세요!</p>
+        <Link href="/classes/register">
+          <Button>학급 가입하기</Button>
+        </Link>
       </div>
     );
   }
