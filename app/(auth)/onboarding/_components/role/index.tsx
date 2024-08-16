@@ -1,9 +1,8 @@
-import SelectRole from "@/app/(auth)/signup/SelectRole";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import React, { useState } from "react";
+import React from "react";
 import { useOnboarding } from "../../provider/OnboardingProvider";
-import { Input } from "@/components/ui/input";
 
 const roleData = [
   { label: "선생님", value: "teacher" },
@@ -18,22 +17,17 @@ const detailParentData = [
 
 const OnboardingRole = () => {
   const { role, updateRole, detail, updateDetail } = useOnboarding();
-  const [isInputFocused, setIsInputFocused] = useState(false);
-  const [detailValue, setDetailValue] = useState("");
 
   const handleDetailChange = (value: string) => {
-    setDetailValue(value);
     updateDetail(value);
   };
 
   const handleInputFocus = () => {
-    setIsInputFocused(true);
-    setDetailValue("");
+    updateDetail("");
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateDetail(e.target.value);
-    setDetailValue("");
   };
 
   return (
@@ -45,6 +39,7 @@ const OnboardingRole = () => {
           onValueChange={(value) => {
             updateRole(value);
           }}
+          value={role}
         >
           {roleData.map((item) => (
             <div key={item.value}>
@@ -70,7 +65,7 @@ const OnboardingRole = () => {
                 세부 역할을 선택해 주세요.
               </p>
             </h3>
-            <RadioGroup onValueChange={handleDetailChange} value={detailValue}>
+            <RadioGroup onValueChange={handleDetailChange} value={detail}>
               {detailParentData.map((item) => (
                 <div key={item.value}>
                   <RadioGroupItem
@@ -88,12 +83,13 @@ const OnboardingRole = () => {
                 </div>
               ))}
             </RadioGroup>
+            <Label className="mt-4 block">직접 입력하기</Label>
             <Input
-              className="mt-4"
               variant="borderBottom"
               placeholder="직접 입력"
               onChange={handleInputChange}
               onFocus={handleInputFocus}
+              value={detail}
             />
           </div>
         )}

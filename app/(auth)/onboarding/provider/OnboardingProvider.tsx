@@ -3,12 +3,12 @@ import React, { createContext, useState, useContext, PropsWithChildren } from "r
 type OnboardingContextType = {
   name: string;
   role: string;
-  image: string | null;
-  detail: string | null;
+  image: File | null;
+  detail: string;
   updateName: (newName: string) => void;
   updateRole: (newRole: string) => void;
-  updateImage: (newImage: string | null) => void;
-  updateDetail: (newDetail: string | null) => void;
+  updateImage: (newImage: File | null) => void;
+  updateDetail: (newDetail: string) => void;
 };
 
 // Context 생성
@@ -16,7 +16,7 @@ const OnboardingContext = createContext<OnboardingContextType>({
   name: "",
   role: "",
   image: null,
-  detail: null,
+  detail: "",
   updateName: () => {},
   updateRole: () => {},
   updateImage: () => {},
@@ -27,13 +27,13 @@ const OnboardingContext = createContext<OnboardingContextType>({
 export const OnboardingProvider = ({ children }: PropsWithChildren) => {
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
-  const [image, setImage] = useState<string | null>(null);
-  const [detail, setDetail] = useState<string | null>(null);
+  const [image, setImage] = useState<File | null>(null);
+  const [detail, setDetail] = useState("");
 
   const updateName = (newName: string) => setName(newName);
   const updateRole = (newRole: string) => setRole(newRole);
-  const updateImage = (newImage: string | null) => setImage(newImage);
-  const updateDetail = (newDetail: string | null) => setDetail(newDetail);
+  const updateImage = (newImage: File | null) => setImage(newImage);
+  const updateDetail = (newDetail: string) => setDetail(newDetail);
 
   const value = {
     name,
