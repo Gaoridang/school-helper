@@ -12,7 +12,7 @@ import { SignInDataType, SignInFormItemType, SignInSchema } from "./types/signIn
 import { toast } from "sonner";
 
 const formItems: SignInFormItemType[] = [
-  { label: "아이디", name: "id", type: "text", placeholder: "아이디를 입력해 주세요" },
+  { label: "이메일", name: "email", type: "text", placeholder: "이메일을 입력해 주세요" },
   { label: "비밀번호", name: "password", type: "password", placeholder: "********" },
 ];
 
@@ -20,7 +20,7 @@ const SignInForm = () => {
   const form = useForm<SignInDataType>({
     resolver: zodResolver(SignInSchema),
     defaultValues: {
-      id: "",
+      email: "",
       password: "",
     },
   });
