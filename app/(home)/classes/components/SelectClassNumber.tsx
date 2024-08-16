@@ -24,7 +24,14 @@ const SelectClassNumber = ({
   field,
   formField,
 }: CommonInputTypes<CreateClassData, CreateClassFormItemType>) => {
-  return <SelectInput field={field} formField={formField} data={data} />;
+  return (
+    <SelectInput<CreateClassData, CreateClassFormItemType>
+      field={field}
+      formField={formField}
+      data={data}
+      label="반"
+    />
+  );
 };
 
 export default SelectClassNumber;

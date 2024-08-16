@@ -79,7 +79,7 @@ const CreateClassPage = () => {
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <Component field={field} formField={item} />
+                    <Component field={field} formField={item} label={item.label} />
                   </FormItem>
                 )}
               />

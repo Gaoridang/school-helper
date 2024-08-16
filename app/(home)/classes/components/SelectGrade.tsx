@@ -16,7 +16,14 @@ const SelectGrade = ({
   field,
   formField,
 }: CommonInputTypes<CreateClassData, CreateClassFormItemType>) => {
-  return <SelectInput field={field} formField={formField} data={data} />;
+  return (
+    <SelectInput<CreateClassData, CreateClassFormItemType>
+      field={field}
+      formField={formField}
+      data={data}
+      label="학년"
+    />
+  );
 };
 
 export default SelectGrade;
