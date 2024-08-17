@@ -195,6 +195,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "fk_class"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "user_class_info"
+            referencedColumns: ["class_id"]
+          },
+          {
             foreignKeyName: "fk_creator"
             columns: ["creator_id"]
             isOneToOne: false
@@ -472,6 +479,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "sessions_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "user_class_info"
+            referencedColumns: ["class_id"]
+          },
+          {
             foreignKeyName: "sessions_evaluatee_id_fkey"
             columns: ["evaluatee_id"]
             isOneToOne: false
@@ -551,6 +565,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "classes"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_students_parents_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "user_class_info"
+            referencedColumns: ["class_id"]
           },
           {
             foreignKeyName: "students_parents_parent_id_fkey"
@@ -676,23 +697,33 @@ export type Database = {
             referencedRelation: "classes"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "public_templates_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "user_class_info"
+            referencedColumns: ["class_id"]
+          },
         ]
       }
       user_classes: {
         Row: {
           class_id: string
+          created_at: string | null
           is_primary: boolean | null
           role: string | null
           user_id: string
         }
         Insert: {
           class_id: string
+          created_at?: string | null
           is_primary?: boolean | null
           role?: string | null
           user_id: string
         }
         Update: {
           class_id?: string
+          created_at?: string | null
           is_primary?: boolean | null
           role?: string | null
           user_id?: string
@@ -732,6 +763,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "classes"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_classes_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "user_class_info"
+            referencedColumns: ["class_id"]
           },
         ]
       }
@@ -867,6 +905,13 @@ export type Database = {
             referencedRelation: "class_students_view"
             referencedColumns: ["class_id"]
           },
+          {
+            foreignKeyName: "sessions_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "user_class_info"
+            referencedColumns: ["class_id"]
+          },
         ]
       }
       session_results: {
@@ -896,6 +941,13 @@ export type Database = {
             columns: ["class_id"]
             isOneToOne: false
             referencedRelation: "class_students_view"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "sessions_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "user_class_info"
             referencedColumns: ["class_id"]
           },
           {
@@ -941,6 +993,13 @@ export type Database = {
             columns: ["class_id"]
             isOneToOne: false
             referencedRelation: "class_students_view"
+            referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "public_students_parents_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "user_class_info"
             referencedColumns: ["class_id"]
           },
           {
@@ -1012,6 +1071,13 @@ export type Database = {
             referencedRelation: "class_students_view"
             referencedColumns: ["class_id"]
           },
+          {
+            foreignKeyName: "sessions_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "user_class_info"
+            referencedColumns: ["class_id"]
+          },
         ]
       }
       user_class_details: {
@@ -1059,6 +1125,49 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "class_students_view"
             referencedColumns: ["class_id"]
+          },
+          {
+            foreignKeyName: "user_classes_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "user_class_info"
+            referencedColumns: ["class_id"]
+          },
+        ]
+      }
+      user_class_info: {
+        Row: {
+          class_id: string | null
+          class_number: number | null
+          grade: number | null
+          is_primary: boolean | null
+          joined_at: string | null
+          school: string | null
+          teacher_image_url: string | null
+          teacher_name: string | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_user_classes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_user_classes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "class_students_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "public_user_classes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "session_results"
+            referencedColumns: ["evaluator_id"]
           },
         ]
       }

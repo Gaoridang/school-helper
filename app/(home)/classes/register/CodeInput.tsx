@@ -41,7 +41,7 @@ const CodeInput = ({ onSubmit }: Props) => {
   };
 
   return (
-    <form className="flex gap-2">
+    <form className="flex gap-2 justify-center sm:justify-start">
       {code.map((value, index) => (
         <Input
           ref={(ref) => {
@@ -55,7 +55,7 @@ const CodeInput = ({ onSubmit }: Props) => {
           onKeyDown={(e) => handleOnKeyDown(index, e)}
           maxLength={1}
           type="text"
-          className="w-12 h-12 text-center"
+          className="w-8 h-8 text-sm sm:text-base sm:w-12 sm:h-12 text-center"
         />
       ))}
     </form>
