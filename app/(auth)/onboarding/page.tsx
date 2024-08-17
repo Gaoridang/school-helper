@@ -7,7 +7,6 @@ import OnboardingImage from "./_components/image";
 import { useOnboarding } from "./provider/OnboardingProvider";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/app/utils/supabase/client";
-import { randomUUID } from "crypto";
 import { useRouter } from "next/navigation";
 
 const OnboardingPage = () => {
@@ -28,10 +27,13 @@ const OnboardingPage = () => {
 
     let image_url = null;
     if (image) {
+      const fileExt = image.name.split(".").pop();
+      const fileName = `${user?.id}/avatar.${fileExt}`;
+
       const { data, error: UPLOAD_IMAGE_ERROR } = await supabase.storage
         .from("avatars")
-        .upload(`${user?.id}/avatar.${randomUUID}`, image, {
-          cacheControl: "3600",
+        .upload(fileName, image, {
+          cacheControl: "no-cache",
           upsert: false,
         });
 

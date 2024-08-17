@@ -23,7 +23,7 @@ const StudentMainComponent = async () => {
 
   if (!data || !data.length) {
     return (
-      <div className="h-screen flex flex-col justify-center items-center">
+      <div className="h-full flex flex-col justify-center items-center">
         <p className="text-xl font-bold mb-4">새로운 학급에 가입해 보세요!</p>
         <Link href="/classes/register">
           <Button>학급 가입하기</Button>

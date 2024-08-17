@@ -1,14 +1,12 @@
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import "../globals.css";
-import { ReactQueryClientProvider } from "../QueryClientProvider";
-import Sidebar from "../Sidebar";
-import SidebarItem from "../components/sidebar/SidebarItem";
-import { LayoutDashboard, MessageCircle, Settings } from "lucide-react";
+import { redirect } from "next/navigation";
 import { Toaster } from "sonner";
 import ChatSupport from "../components/ChatSupport";
+import Header from "../components/header";
+import "../globals.css";
+import { ReactQueryClientProvider } from "../QueryClientProvider";
 import { createClient } from "../utils/supabase/server";
-import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "CheckMate",
@@ -32,8 +30,9 @@ export default async function RootLayout({
   return (
     <ReactQueryClientProvider>
       <html lang="en" suppressHydrationWarning className="h-full">
-        <body className={cn("font-spoqa relative flex h-full")}>
-          <main className="relative w-full h-screen overflow-auto">{children}</main>
+        <body className={cn("font-spoqa h-full grid grid-rows-[56px_1fr]")}>
+          <Header />
+          <main className="relative h-full flex-1 p-4">{children}</main>
           <Toaster position="top-center" />
           <ChatSupport />
         </body>

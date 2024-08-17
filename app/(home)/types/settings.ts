@@ -2,8 +2,8 @@ import { z } from "zod";
 
 export const SettingsFormSchema = z.object({
   name: z.string().min(1),
-  school: z.string(),
-  student: z.string().optional(),
+  role: z.string().min(1),
+  email: z.string().email(),
 });
 
 export type SettingsFormType = z.infer<typeof SettingsFormSchema>;

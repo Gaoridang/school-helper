@@ -28,7 +28,7 @@ export default async function Home() {
 
   if (!data.role || !data.name) {
     return (
-      <div className="h-screen flex flex-col justify-center items-center">
+      <div className="h-full flex flex-col justify-center items-center">
         <p className="text-xl font-bold mb-4">아직 프로필을 설정하지 않으셨네요!</p>
         <Link href="/settings">
           <Button>역할, 이름 추가하러 가기</Button>
@@ -38,12 +38,10 @@ export default async function Home() {
   }
 
   return (
-    <div className="flex">
-      <div className="flex-1 h-full">
-        {data.role === "teacher" && <TeacherMainComponent />}
-        {data.role === "student" && <StudentMainComponent />}
-        {data.role === "parents" && <ParentsMainComponent />}
-      </div>
+    <div className="h-full">
+      {data.role === "teacher" && <TeacherMainComponent />}
+      {data.role === "student" && <StudentMainComponent />}
+      {data.role === "parents" && <ParentsMainComponent />}
     </div>
   );
 }

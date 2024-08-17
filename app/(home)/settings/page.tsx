@@ -1,9 +1,6 @@
-import PageTitle from "@/app/components/PageTitle";
-import React from "react";
-import SettingsForm from "./_components/Form";
 import { createClient } from "@/app/utils/supabase/server";
-import { fetchClassListByUserId } from "../utils/fetchClassList";
-import { fetchLinkedStudent } from "../utils/fetchLinkedStudent";
+import dynamic from "next/dynamic";
+const SettingsForm = dynamic(() => import("./_components/SettingsForm"), { ssr: false });
 
 const SettingsPage = async () => {
   const supabase = createClient();
@@ -11,23 +8,21 @@ const SettingsPage = async () => {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data } = await supabase.from("users").select("student_code").eq("id", user?.id!).single();
+  // 프로필 정보를 가져올 때, 캐시를 사용하지 않도록 합니다.
+  const { data: profile, error: PROFILE_ERROR } = await supabase
+    .from("profiles")
+    .select("id, role, name, image_url, email, updated_at")
+    .eq("id", user?.id!)
+    .single();
 
-  const classList = await fetchClassListByUserId(user!.id);
-  const selectedClass = classList.find((c) => c.is_primary);
-  const selectedStudentList = await fetchLinkedStudent(user?.id!, selectedClass?.class_id!);
+  if (PROFILE_ERROR) {
+    console.error(PROFILE_ERROR);
+    return;
+  }
 
   return (
     <div>
-      {/* 이름 */}
-      {/* 학급 */}
-      {/* 학부모: 학생 / 학생: 고유번호 / 선생님: 학급코드 */}
-      <SettingsForm
-        user={user!}
-        classList={classList}
-        selectedStudentList={selectedStudentList}
-        studentCode={data?.student_code}
-      />
+      <SettingsForm profile={profile} />
     </div>
   );
 };

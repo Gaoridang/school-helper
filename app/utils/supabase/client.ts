@@ -1,4 +1,4 @@
-import { Database } from "@/app/types/schema";
+import { Database } from "@/database.types";
 import { createBrowserClient } from "@supabase/ssr";
 
 // Create a single supabase client for interacting with your database

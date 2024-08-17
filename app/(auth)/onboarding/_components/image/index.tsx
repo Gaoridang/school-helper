@@ -7,7 +7,7 @@ import React, { useState, useRef } from "react";
 import { useOnboarding } from "../../provider/OnboardingProvider";
 
 const OnboardingImage = () => {
-  const { image, updateImage } = useOnboarding();
+  const { updateImage } = useOnboarding();
   const [url, setUrl] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
